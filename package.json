@@ -11,5 +11,11 @@
   "bugs": {
     "url": "https://github.com/Harvard-ATG/wordmapper/issues"
   },
-  "homepage": "https://github.com/Harvard-ATG/wordmapper#readme"
+  "homepage": "https://github.com/Harvard-ATG/wordmapper#readme",
+  "devDependencies": {
+    "webpack": "~1.13.1"
+  },
+  "dependencies": {
+    "express": "~4.13.4"
+  }
 }
