@@ -20,6 +20,14 @@ The core functionality should include the ability to:
 
 The project has two parts: a client-side bookmarklet that can run as an overlay and then a server-side component that can persist word alignments.
 
+### Usage
+
+1. Install the bookmarklet [from here](http://harvard-atg.github.io/wordmapper/bookmarklet.html).**
+2. Navigate to [Ars Medica ch. 10](http://www.graeco-arabic-studies.org/compare-texts/work/ars-medica-2/left/1/right/2/section/10/active/2%2C1.html) to compare the greek and arabic side by side. This is just an example, feel free to navigate to other works.
+3. Run the bookmarklet. When the bookmarklet is activated, you should see instructions on what to do next.
+
+**  For more on installing and using bookmarklets, see [Mozilla's documentation](https://support.mozilla.org/en-US/kb/bookmarklets-perform-common-web-page-tasks).
+
 ### Reference Implementation
 
 See the project github page [http://harvard-atg.github.io/wordmapper/](http://harvard-atg.github.io/wordmapper/) for a link to the reference implementation by Mark Schiefsky.
