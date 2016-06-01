@@ -10,8 +10,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = "vagrant/manifests"
   end
+  config.ssh.forward_agent = true
   config.vm.provider "virtualbox" do |v|
-	v.memory = 1024
+    # Seems to be required for Ubuntu
+    # https://www.virtualbox.org/manual/ch03.html#settings-processor
+    v.customize ["modifyvm", :id, "--pae", "on"]
+    # Recommended for Ubuntu
 	v.cpus = 2
+	v.memory = 1024
   end
 end

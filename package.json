@@ -1,0 +1,15 @@
+{
+  "name": "wordmapper",
+  "version": "1.0.0",
+  "description": "Word Mapper",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Harvard-ATG/wordmapper.git"
+  },
+  "author": "",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/Harvard-ATG/wordmapper/issues"
+  },
+  "homepage": "https://github.com/Harvard-ATG/wordmapper#readme"
+}
