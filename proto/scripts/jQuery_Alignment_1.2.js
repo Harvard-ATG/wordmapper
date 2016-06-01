@@ -1,4 +1,3 @@
-
 jQuery(document).ready(function($) {
   $('span:has(refs)').addClass("aligned");
 
