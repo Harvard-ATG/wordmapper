@@ -8,5 +8,5 @@ Infrastructure
 
 Coding
 ======
-- [ ] Discontinuous selection
 - [ ] Friendly message displayed to user when bookmarklet is loaded.
+- [ ] Discontinuous selection
