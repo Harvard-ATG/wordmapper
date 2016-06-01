@@ -14,7 +14,7 @@ The project has two parts: a client-side bookmarklet that can run as an overlay 
 
 ### Usage
 
-1. Install the bookmarklet [from here](http://harvard-atg.github.io/wordmapper/bookmarklet.html).**
+1. Install the bookmarklet.**
 2. Navigate to [Ars Medica ch. 10](http://www.graeco-arabic-studies.org/compare-texts/work/ars-medica-2/left/1/right/2/section/10/active/2%2C1.html) to compare the greek and arabic side by side. This is just an example, feel free to navigate to other works.
 3. Run the bookmarklet. When the bookmarklet is activated, you should see instructions on what to do next.
 
@@ -27,9 +27,23 @@ See the project github page [http://harvard-atg.github.io/wordmapper/](http://ha
 
 ### Development Quickstart
 
+Setup your environment:
+
 ```sh
 $ vagrant up
 $ vagrant ssh
 $ cd /vagrant
 $ npm install
+```
+
+Run the dev server:
+
+```sh
+$ node wordmapper/server/app.js 
+```
+
+Install bookmarklet by creating a new bookmark and copying this code into the URL field:
+
+```javascript
+javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:8000/static/js/bookmarklet.js';})();
 ```
