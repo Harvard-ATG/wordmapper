@@ -48,11 +48,7 @@
 	main = __webpack_require__(5)
 	console.log(main)
 
-	/*
-	var overlayDiv = document.createElement("div");
-	overlayDiv.id = "wordmapper-overlay";
-	document.body.appendChild(overlayDiv);
-	*/
+
 
 /***/ },
 /* 1 */
@@ -89,7 +85,7 @@
 
 
 	// module
-	exports.push([module.id, "#wordmapper-overlay {\n    position: absolute;\n    top: 0;\n    bottom: 0;\n    right: 0;\n    left: 0;\n    opacity: 0.75;\n}", ""]);
+	exports.push([module.id, "#wordmapper-overlay {\n    position: absolute;\n    top: 0;\n    bottom: 0;\n    right: 0;\n    left: 0;\n    opacity: 0.5;\n    background-color: #fff;\n    font-size: 128px;\n    text-align: center;\n}", ""]);
 
 	// exports
 
@@ -406,7 +402,11 @@
 /* 5 */
 /***/ function(module, exports) {
 
-	var output = "Hello, World! xx.";
+	var output = "Hello, World! xxxxx.";
+	var overlayDiv = document.createElement("div");
+	overlayDiv.id = "wordmapper-overlay";
+	overlayDiv.innerHTML = "Bookmarklet Activated";
+	document.body.appendChild(overlayDiv);
 	module.exports = output;
 
 
