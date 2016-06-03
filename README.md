@@ -34,6 +34,8 @@ $ vagrant up
 $ vagrant ssh
 $ cd /vagrant
 $ npm install
+$ export PATH=/vagrant/node_modules/.bin:$PATH
+$ gulp build
 ```
 
 Run the dev server:
