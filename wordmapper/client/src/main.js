@@ -1,2 +1,2 @@
-var output = "Hello, World!";
+var output = "Hello, World! xx.";
 module.exports = output;

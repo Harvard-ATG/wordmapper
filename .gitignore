@@ -1,3 +1,4 @@
 /.vagrant
 /node_modules
-/wordmapper/client/dist/*.js
+/wordmapper/client/dist/
+!/wordmapper/client/dist/empty
