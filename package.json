@@ -13,7 +13,10 @@
   },
   "homepage": "https://github.com/Harvard-ATG/wordmapper#readme",
   "devDependencies": {
-    "webpack": "~1.13.1"
+    "webpack": "~1.13.1",
+    "gulp": "~3.9.1",
+    "webpack-stream": "~3.2.0",
+    "css-loader": "~0.23.1"
   },
   "dependencies": {
     "express": "~4.13.4"
