@@ -18,6 +18,10 @@ exec {'apt-get-update':
     command => 'apt-get update'
 }
 
+exec {'setup-nodejs-source':
+	command => 'curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -'
+}
+
 # Make sure we have some basic tools and libraries available
 package {'git':
     ensure => latest,
@@ -25,13 +29,24 @@ package {'git':
 }
 package {'nodejs':
     ensure => latest,
-    require => Exec['apt-get-update'],
+    require => [Exec['apt-get-update'],Exec['setup-nodejs-source']],
 }
-package {'nodejs-legacy':
-    ensure => latest,
-    require => Package['nodejs']
+
+# Install npm libraries
+exec {'install-node-modules':
+	cwd => '/vagrant',
+	command => 'npm install',
+	require => Package['nodejs'],
+	user => 'vagrant',
+	group => 'vagrant',
+	logoutput => true,
 }
-package {'npm':
-    ensure => latest,
-    require => Package['nodejs-legacy']
+
+# Make sure PATH is set
+file_line {'update PATH for node_modules':
+    ensure => present,
+    line => 'export PATH=/vagrant/node_modules/.bin:$PATH',
+    path => '/home/vagrant/.profile',
+    require => Exec['install-node-modules'],
 }
+

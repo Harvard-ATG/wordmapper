@@ -45,8 +45,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	main = __webpack_require__(5)
-	console.log(main)
+	main = __webpack_require__(5);
+	console.log(main);
 
 
 
