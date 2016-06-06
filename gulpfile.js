@@ -1,3 +1,4 @@
+var path = require('path');
 var gulp = require('gulp');
 var webpack = require('webpack-stream');
 
@@ -7,9 +8,14 @@ gulp.task('webpack', function() {
         output: {
             filename: 'bookmarklet.js'
         },
+        resolve: {
+          alias: {
+            jquery: '../vendor/jquery-1.12.4.min.js'
+          }
+        },
         module: {
           preLoaders: [
-            { test: /\.js$/, exclude: /node_modules/, loader: 'jshint-loader' }
+            { test: /\.js$/, include: [path.resolve('wordmapper/client/src')], loader: 'jshint-loader' }
           ],
           loaders: [
             { test: /\.css$/, loader: 'style!css' },
