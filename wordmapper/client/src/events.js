@@ -29,7 +29,7 @@ Events.prototype.trigger = function(event) {
     _this._events[event][i].apply(_this, Array.prototype.slice.call(arguments, 1));
   }
 };
-Events.prototype.mixin = function(dest) {
+Events.mixin = function(dest) {
   ['on','off','trigger'].forEach(function(method) {
     if (typeof dest === 'function') {
       dest.prototype[method] = Events.prototype[method]; 

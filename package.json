@@ -15,8 +15,11 @@
   "devDependencies": {
     "css-loader": "~0.23.1",
     "gulp": "~3.9.1",
+    "jasmine-core": "^2.4.1",
     "jshint": "^2.9.2",
     "jshint-loader": "^0.8.3",
+    "karma": "^0.13.22",
+    "karma-jasmine": "^1.0.2",
     "style-loader": "~0.13.1",
     "webpack": "~1.13.1",
     "webpack-stream": "~3.2.0"
