@@ -9,8 +9,8 @@ var Application = function() {
 Application.prototype.init = function() {
   var panel = new Panel();
   panel.render();
-  var sourceTexts = new SourceTexts();
-  sourceTexts.setupWords();
+  var boxes = new TextBoxes();
+  boxes.setupWords();
 };
 
 //---------------------------------------------------------------------
@@ -44,10 +44,10 @@ Panel.prototype.render = function() {
 };
 
 //---------------------------------------------------------------------
-var SourceTexts = function() {
+var TextBoxes = function() {
   this.init();
 };
-SourceTexts.prototype.init = function() {
+TextBoxes.prototype.init = function() {
   this.onClickWord = this.onClickWord.bind(this);
   this.onMouseoverWord = this.onMouseoverWord.bind(this);
   this.onMouseoutWord = this.onMouseoutWord.bind(this);
@@ -59,35 +59,35 @@ SourceTexts.prototype.init = function() {
   }.bind(this);
   this.addListeners();
 };
-SourceTexts.prototype.addListeners = function() {
+TextBoxes.prototype.addListeners = function() {
   this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
   this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
   this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
   events.hub.on('CLEAR_HIGHLIGHTS', this.clearHighlights);
 };
-SourceTexts.prototype.onClickWord = function(evt) {
+TextBoxes.prototype.onClickWord = function(evt) {
   //console.log("click", evt.target);
   $(evt.target).addClass("highlight");
 };
-SourceTexts.prototype.onMouseoverWord = function(evt) {
+TextBoxes.prototype.onMouseoverWord = function(evt) {
   //console.log("mouseover", evt.target);
 };
-SourceTexts.prototype.onMouseoutWord = function(evt) {
+TextBoxes.prototype.onMouseoutWord = function(evt) {
   //console.log("mouseout", evt.target);
 };
-SourceTexts.prototype.clearHighlights = function() {
+TextBoxes.prototype.clearHighlights = function() {
   this.textBoxes.find('.wordmapper-word.highlight').removeClass('highlight');
 };
-SourceTexts.prototype.selectTextBoxes = function() {
+TextBoxes.prototype.selectTextBoxes = function() {
   return $(".textboxcontent");
 };
-SourceTexts.prototype.setupWords = function() {
+TextBoxes.prototype.setupWords = function() {
   this.textBoxes.each(this.convertTextNodes.bind(this));
 };
-SourceTexts.prototype.hasWords = function(el) {
+TextBoxes.prototype.hasWords = function(el) {
   return $(el).find('.wordmapper-word').length > 0;
 };
-SourceTexts.prototype.convertTextNodes = function(index, el) {
+TextBoxes.prototype.convertTextNodes = function(index, el) {
   if (this.hasWords(el)) {
     return;
   }
@@ -104,7 +104,7 @@ SourceTexts.prototype.convertTextNodes = function(index, el) {
   this.wordId = 0;
   traverse(el, this.convertText.bind(this));
 };
-SourceTexts.prototype.convertText = function(textNode, sourceId) {
+TextBoxes.prototype.convertText = function(textNode, sourceId) {
   var spans = this.textToWords(textNode.nodeValue).map(function(word) {
     return this.makeSpan(word, this.nextWordId(), sourceId);
   }, this);
@@ -117,12 +117,12 @@ SourceTexts.prototype.convertText = function(textNode, sourceId) {
 
   textNode.parentNode.replaceChild(span, textNode);
 };
-SourceTexts.prototype.textToWords = function(content) {
+TextBoxes.prototype.textToWords = function(content) {
   return content.split(/\s+/).filter(function(word) {
     return word.length > 0;
   });
 };
-SourceTexts.prototype.makeSpan = function(word, wordId, sourceId) {
+TextBoxes.prototype.makeSpan = function(word, wordId, sourceId) {
   var span = document.createElement('span');
   span.className = 'wordmapper-word';
   span.innerHTML = word;
