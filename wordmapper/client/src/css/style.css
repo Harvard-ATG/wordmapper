@@ -50,3 +50,6 @@
 .wordmapper-buttons > button {
     margin: 4px 2px;
 }
+.wordmapper-word:hover {
+    background-color: yellow;
+}
