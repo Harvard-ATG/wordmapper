@@ -105,7 +105,7 @@
 
 
 	// module
-	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n}\n#wordmapper-panel {\n    position: fixed;\n    top: 0;\n    height: 45px;\n    width: 100%;\n    opacity: 0.75;\n    background-color: #000;\n}\n#wordmapper-panel button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n}\n#wordmapper-panel button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n#wordmapper-panel button:hover,\n#wordmapper-panel button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n#wordmapper-panel button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word:hover {\n    background-color: yellow;\n}", ""]);
+	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n}\n#wordmapper-panel {\n    position: fixed;\n    top: 0;\n    height: 45px;\n    width: 100%;\n    opacity: 0.75;\n    background-color: #000;\n}\n#wordmapper-panel:hover {\n    opacity: 0.9;\n}\n#wordmapper-panel button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n}\n#wordmapper-panel button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n#wordmapper-panel button:hover,\n#wordmapper-panel button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n#wordmapper-panel button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}", ""]);
 
 	// exports
 
@@ -453,7 +453,9 @@
 	  var btnMap = {
 	    align: 'ALIGN',
 	    clear_highlights: 'CLEAR_HIGHLIGHTS',
-	    build_index: 'BUILD_INDEX'
+	    clear_alignments: 'CLEAR_ALIGNMENTS',
+	    build_index: 'BUILD_INDEX',
+	    export: 'EXPORT'
 	  };
 	  var t = evt.target;
 	  if (t.nodeName == 'BUTTON' && t.name in btnMap) {
@@ -470,39 +472,48 @@
 	};
 	SourceTexts.prototype.init = function() {
 	  this.onClickWord = this.onClickWord.bind(this);
-	  this.onHoverWord = this.onHoverWord.bind(this);
+	  this.onMouseoverWord = this.onMouseoverWord.bind(this);
+	  this.onMouseoutWord = this.onMouseoutWord.bind(this);
+	  this.clearHighlights = this.clearHighlights.bind(this);
 	  this.textBoxes = this.selectTextBoxes();
-	  this.nextWordId = (function() {
-	    var id = 0;
-	    return function() {
-	      return ++id;
-	    };
-	  })();
-	  this.wordify();
+	  this.wordId = 0;
+	  this.nextWordId = function() {
+	    return ++this.wordId;
+	  }.bind(this);
+	  this.setupWords();
 	  this.addListeners();
 	};
 	SourceTexts.prototype.addListeners = function() {
-	  
+	  this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
+	  this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
+	  this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
+	  events.hub.on('CLEAR_HIGHLIGHTS', this.clearHighlights);
 	};
 	SourceTexts.prototype.onClickWord = function(evt) {
-	  
+	  //console.log("click", evt.target);
+	  $(evt.target).addClass("highlight");
 	};
-	SourceTexts.prototype.onHoverWord = function(evt) {
-	  
+	SourceTexts.prototype.onMouseoverWord = function(evt) {
+	  //console.log("mouseover", evt.target);
+	};
+	SourceTexts.prototype.onMouseoutWord = function(evt) {
+	  //console.log("mouseout", evt.target);
+	};
+	SourceTexts.prototype.clearHighlights = function() {
+	  this.textBoxes.find('.wordmapper-word.highlight').removeClass('highlight');
 	};
 	SourceTexts.prototype.selectTextBoxes = function() {
 	  return $(".textboxcontent");
 	};
-	SourceTexts.prototype.wordify = function() {
-	  console.log("wordify");
+	SourceTexts.prototype.setupWords = function() {
 	  var _this = this;
 	  this.textBoxes.each(function(i, el) {
-	    if (!_this.isWordified(el)) {
+	    if (!_this.hasWords(el)) {
 	      _this.convertTextNodes(el);
 	    }
 	  });
 	};
-	SourceTexts.prototype.isWordified = function(el) {
+	SourceTexts.prototype.hasWords = function(el) {
 	  return $(el).find('.wordmapper-word').length > 0;
 	};
 	SourceTexts.prototype.convertTextNodes = function(root) {
@@ -538,8 +549,9 @@
 	SourceTexts.prototype.makeSpan = function(word, id) {
 	  var span = document.createElement('span');
 	  span.className = 'wordmapper-word';
-	  span.id = "wordmapper-word-" + id;
+	  //span.id = "wordmapper-word-" + id;
 	  span.innerHTML = word;
+	  span.dataset.word = id;
 	  return span;
 	};
 
@@ -629,7 +641,7 @@
 	obj || (obj = {});
 	var __t, __p = '';
 	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper" id="wordmapper-panel">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary">Align</button>\n    <button name="clear_highlights">Clear Highlights</button>\n    <button name="build_index">Build Index</button>\n  </div>\n</div>';
+	__p += '\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper" id="wordmapper-panel">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary">Align</button>\n    <button name="clear_highlights">Clear Highlights</button>\n    <!--button name="clear_alignments">Clear Alignments</button-->\n    <button name="build_index">Build Index</button>\n    <button name="export">Export</button>\n  </div>\n</div>';
 
 	}
 	return __p

@@ -9,6 +9,9 @@
     opacity: 0.75;
     background-color: #000;
 }
+#wordmapper-panel:hover {
+    opacity: 0.9;
+}
 #wordmapper-panel button {
     font-family: inherit;
     font-size: 100%;
@@ -50,6 +53,6 @@
 .wordmapper-buttons > button {
     margin: 4px 2px;
 }
-.wordmapper-word:hover {
+.wordmapper-word.highlight {
     background-color: yellow;
 }

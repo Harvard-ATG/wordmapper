@@ -29,7 +29,9 @@ Panel.prototype.onClickButton = function(evt) {
   var btnMap = {
     align: 'ALIGN',
     clear_highlights: 'CLEAR_HIGHLIGHTS',
-    build_index: 'BUILD_INDEX'
+    clear_alignments: 'CLEAR_ALIGNMENTS',
+    build_index: 'BUILD_INDEX',
+    export: 'EXPORT'
   };
   var t = evt.target;
   if (t.nodeName == 'BUTTON' && t.name in btnMap) {
@@ -46,39 +48,48 @@ var SourceTexts = function() {
 };
 SourceTexts.prototype.init = function() {
   this.onClickWord = this.onClickWord.bind(this);
-  this.onHoverWord = this.onHoverWord.bind(this);
+  this.onMouseoverWord = this.onMouseoverWord.bind(this);
+  this.onMouseoutWord = this.onMouseoutWord.bind(this);
+  this.clearHighlights = this.clearHighlights.bind(this);
   this.textBoxes = this.selectTextBoxes();
-  this.nextWordId = (function() {
-    var id = 0;
-    return function() {
-      return ++id;
-    };
-  })();
-  this.wordify();
+  this.wordId = 0;
+  this.nextWordId = function() {
+    return ++this.wordId;
+  }.bind(this);
+  this.setupWords();
   this.addListeners();
 };
 SourceTexts.prototype.addListeners = function() {
-  
+  this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
+  this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
+  this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
+  events.hub.on('CLEAR_HIGHLIGHTS', this.clearHighlights);
 };
 SourceTexts.prototype.onClickWord = function(evt) {
-  
+  //console.log("click", evt.target);
+  $(evt.target).addClass("highlight");
 };
-SourceTexts.prototype.onHoverWord = function(evt) {
-  
+SourceTexts.prototype.onMouseoverWord = function(evt) {
+  //console.log("mouseover", evt.target);
+};
+SourceTexts.prototype.onMouseoutWord = function(evt) {
+  //console.log("mouseout", evt.target);
+};
+SourceTexts.prototype.clearHighlights = function() {
+  this.textBoxes.find('.wordmapper-word.highlight').removeClass('highlight');
 };
 SourceTexts.prototype.selectTextBoxes = function() {
   return $(".textboxcontent");
 };
-SourceTexts.prototype.wordify = function() {
-  console.log("wordify");
+SourceTexts.prototype.setupWords = function() {
   var _this = this;
   this.textBoxes.each(function(i, el) {
-    if (!_this.isWordified(el)) {
+    if (!_this.hasWords(el)) {
       _this.convertTextNodes(el);
     }
   });
 };
-SourceTexts.prototype.isWordified = function(el) {
+SourceTexts.prototype.hasWords = function(el) {
   return $(el).find('.wordmapper-word').length > 0;
 };
 SourceTexts.prototype.convertTextNodes = function(root) {
@@ -114,8 +125,9 @@ SourceTexts.prototype.textToWords = function(content) {
 SourceTexts.prototype.makeSpan = function(word, id) {
   var span = document.createElement('span');
   span.className = 'wordmapper-word';
-  span.id = "wordmapper-word-" + id;
+  //span.id = "wordmapper-word-" + id;
   span.innerHTML = word;
+  span.dataset.word = id;
   return span;
 };
 
