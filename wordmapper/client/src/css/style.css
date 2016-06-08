@@ -56,3 +56,9 @@
 .wordmapper-word.highlight {
     background-color: yellow;
 }
+.wordmapper-word.highlight2 {
+    background-color: lightblue;
+}
+.wordmapper-word.aligned {
+    color: red;
+}
