@@ -48,7 +48,13 @@
 	__webpack_require__(3);
 
 	var components = __webpack_require__(7);
-	var app = new components.Application();
+
+	if (window.WordMapper) {
+	  console.log("WordMapper already loaded! To reload the bookmarklet,please refresh the page.");
+	} else {
+	  var app = new components.Application();
+	  window.WordMapper = app;
+	}
 
 
 /***/ },
@@ -431,10 +437,10 @@
 	  this.init();
 	};
 	Application.prototype.init = function() {
-	  var panel = new Panel();
-	  panel.render();
-	  var boxes = new TextBoxes();
-	  boxes.setupWords();
+	  this.panel = new Panel();
+	  this.panel.render();
+	  this.boxes = new TextBoxes();
+	  this.boxes.setupWords();
 	};
 
 	//---------------------------------------------------------------------

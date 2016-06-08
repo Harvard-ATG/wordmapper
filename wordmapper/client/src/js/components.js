@@ -7,10 +7,10 @@ var Application = function() {
   this.init();
 };
 Application.prototype.init = function() {
-  var panel = new Panel();
-  panel.render();
-  var boxes = new TextBoxes();
-  boxes.setupWords();
+  this.panel = new Panel();
+  this.panel.render();
+  this.boxes = new TextBoxes();
+  this.boxes.setupWords();
 };
 
 //---------------------------------------------------------------------
