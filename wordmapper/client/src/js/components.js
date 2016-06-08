@@ -57,6 +57,9 @@ TextBoxes.prototype.init = function() {
   this.nextWordId = function() {
     return ++this.wordId;
   }.bind(this);
+  this.resetWordId = function() {
+    this.wordId = 0;
+  }.bind(this);
   this.addListeners();
 };
 TextBoxes.prototype.addListeners = function() {
@@ -101,7 +104,7 @@ TextBoxes.prototype.convertTextNodes = function(index, el) {
       callback(node, sourceId);
     }
   };
-  this.wordId = 0;
+  this.resetWordId();
   traverse(el, this.convertText.bind(this));
 };
 TextBoxes.prototype.convertText = function(textNode, sourceId) {
