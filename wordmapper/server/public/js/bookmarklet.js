@@ -47,11 +47,10 @@
 	__webpack_require__(1);
 	__webpack_require__(3);
 
-	var components = __webpack_require__(7);
-
 	if (window.WordMapper) {
 	  console.log("WordMapper already loaded! To reload the bookmarklet,please refresh the page.");
 	} else {
+	  var components = __webpack_require__(7);
 	  var app = new components.Application();
 	  window.WordMapper = app;
 	}
