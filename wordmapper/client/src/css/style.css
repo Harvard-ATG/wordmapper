@@ -1,0 +1,52 @@
+.wordmapper {
+    font-size: 14px;
+}
+#wordmapper-panel {
+    position: fixed;
+    top: 0;
+    height: 45px;
+    width: 100%;
+    opacity: 0.75;
+    background-color: #000;
+}
+#wordmapper-panel button {
+    font-family: inherit;
+    font-size: 100%;
+    padding: 0.5em 1em;
+    color: rgba(0, 0, 0, 0.80); 
+    border: none rgba(0, 0, 0, 0);
+    background-color: #E6E6E6;
+    text-decoration: none;
+    border-radius: 2px;
+}
+#wordmapper-panel button.primary {
+    background-color: rgb(0, 120, 231);
+    color: #fff;
+}
+#wordmapper-panel button:hover,
+#wordmapper-panel button:focus {
+    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));
+}
+#wordmapper-panel button:active {
+    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;
+    border-color: #000;
+}
+.wordmapper-logo {
+    display: block;
+    float: left;
+    line-height: 45px;
+    font-size: 22.5px;
+    vertical-align: middle;
+    margin: 0 5px;
+    color: #fff;
+}
+.wordmapper-logo > small {
+    font-size: 16px;
+    color: #ccc;
+}
+.wordmapper-buttons {
+    margin: 2px 0;
+}
+.wordmapper-buttons > button {
+    margin: 4px 2px;
+}

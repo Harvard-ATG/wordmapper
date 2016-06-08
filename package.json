@@ -20,7 +20,9 @@
     "jshint-loader": "^0.8.3",
     "karma": "^0.13.22",
     "karma-jasmine": "^1.0.2",
+    "lodash": "^4.13.1",
     "style-loader": "~0.13.1",
+    "underscore-template-loader": "^0.7.3",
     "webpack": "~1.13.1",
     "webpack-stream": "~3.2.0"
   },

@@ -1,6 +1,5 @@
-require('./style.css');
-components = require('./components.js');
+require('jquery');
+require('./css/style.css');
 
+var components = require('./js/components.js');
 var app = new components.Application();
-
-
