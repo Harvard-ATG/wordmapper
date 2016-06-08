@@ -10,6 +10,7 @@ Application.prototype.init = function() {
   var panel = new Panel();
   panel.render();
   var sourceTexts = new SourceTexts();
+  sourceTexts.setupWords();
 };
 
 //---------------------------------------------------------------------
@@ -56,7 +57,6 @@ SourceTexts.prototype.init = function() {
   this.nextWordId = function() {
     return ++this.wordId;
   }.bind(this);
-  this.setupWords();
   this.addListeners();
 };
 SourceTexts.prototype.addListeners = function() {
@@ -82,31 +82,31 @@ SourceTexts.prototype.selectTextBoxes = function() {
   return $(".textboxcontent");
 };
 SourceTexts.prototype.setupWords = function() {
-  var _this = this;
-  this.textBoxes.each(function(i, el) {
-    if (!_this.hasWords(el)) {
-      _this.convertTextNodes(el);
-    }
-  });
+  this.textBoxes.each(this.convertTextNodes.bind(this));
 };
 SourceTexts.prototype.hasWords = function(el) {
   return $(el).find('.wordmapper-word').length > 0;
 };
-SourceTexts.prototype.convertTextNodes = function(root) {
+SourceTexts.prototype.convertTextNodes = function(index, el) {
+  if (this.hasWords(el)) {
+    return;
+  }
+  var sourceId = index+1;
   var traverse = function traverse(node, callback) {
     var children = Array.prototype.slice.call(node.childNodes);
     for(var i = 0; i < children.length; i++) {
       traverse(children[i], callback);
     }
     if (node.nodeType == 3) {
-      callback(node);
+      callback(node, sourceId);
     }
   };
-  traverse(root, this.convertText.bind(this));
+  this.wordId = 0;
+  traverse(el, this.convertText.bind(this));
 };
-SourceTexts.prototype.convertText = function(textNode) {
+SourceTexts.prototype.convertText = function(textNode, sourceId) {
   var spans = this.textToWords(textNode.nodeValue).map(function(word) {
-    return this.makeSpan(word, this.nextWordId());
+    return this.makeSpan(word, this.nextWordId(), sourceId);
   }, this);
 
   var span = spans.reduce(function(parentSpan, currentSpan, index) {
@@ -122,12 +122,12 @@ SourceTexts.prototype.textToWords = function(content) {
     return word.length > 0;
   });
 };
-SourceTexts.prototype.makeSpan = function(word, id) {
+SourceTexts.prototype.makeSpan = function(word, wordId, sourceId) {
   var span = document.createElement('span');
   span.className = 'wordmapper-word';
-  //span.id = "wordmapper-word-" + id;
   span.innerHTML = word;
-  span.dataset.word = id;
+  span.dataset.word = wordId;
+  span.dataset.source = sourceId;
   return span;
 };
 
