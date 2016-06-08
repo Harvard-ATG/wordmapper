@@ -21,6 +21,7 @@
     background-color: #E6E6E6;
     text-decoration: none;
     border-radius: 2px;
+    height: 32px;
 }
 #wordmapper-panel button.primary {
     background-color: rgb(0, 120, 231);
@@ -61,4 +62,32 @@
 }
 .wordmapper-word.aligned {
     color: red;
+}
+.wordmapper-tooltip {
+    display: inline;
+    position: relative;
+}
+.wordmapper-tooltip:hover:after{
+    font-size: 12px;
+    background: #333;
+    background: rgba(0,0,0,.8);
+    border-radius: 5px;
+    top: 38px;
+    color: #fff;
+    content: attr(title);
+    left: 20%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    width: 220px;
+}
+.wordmapper-tooltip:hover:before{
+    border: solid;
+    border-color: #333 transparent;
+    border-width: 6px 6px 0 6px;
+    top: 32px;
+    content: "";
+    left: 50%;
+    position: absolute;
+    z-index: 99;
 }
