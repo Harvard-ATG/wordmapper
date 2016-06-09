@@ -429,7 +429,16 @@
 
 	var events = __webpack_require__(8);
 	var services = __webpack_require__(9);
-	var templates = __webpack_require__(10);
+	var models = __webpack_require__(10);
+	var templates = __webpack_require__(11);
+
+	var EVT = {
+	  ALIGN: 'align',
+	  CLEAR_HIGHLIGHTS: 'clear_highlights',
+	  CLEAR_ALIGNMENTS: 'clear_alignments',
+	  BUILD_INDEX: 'build_index',
+	  EXPORT: 'export'
+	};
 
 	//---------------------------------------------------------------------
 	var Application = function() {
@@ -437,19 +446,23 @@
 	};
 	Application.prototype.init = function() {
 	  this.panel = new Panel();
-	  this.panel.render();
-	  this.boxes = new TextBoxes();
-	  this.boxes.setupWords();
+	  this.alignments = new models.Alignments();
+	  this.boxes = new TextBoxes({
+	    alignments: this.alignments,
+	    selector: '.textboxcontent'
+	  });
 	};
+
 
 	//---------------------------------------------------------------------
 	var Panel = function() {
 	  this.el = null;
+	  this.onClickButton = this.onClickButton.bind(this);
 	  this.init();
 	};
 	Panel.prototype.init = function() {
 	  this.el = $('<div>').appendTo("body");
-	  this.onClickButton = this.onClickButton.bind(this);
+	  this.render();
 	  this.addListeners();
 	};
 	Panel.prototype.addListeners = function() {
@@ -457,11 +470,11 @@
 	};
 	Panel.prototype.onClickButton = function(evt) {
 	  var btnMap = {
-	    align: 'ALIGN',
-	    clear_highlights: 'CLEAR_HIGHLIGHTS',
-	    clear_alignments: 'CLEAR_ALIGNMENTS',
-	    build_index: 'BUILD_INDEX',
-	    export: 'EXPORT'
+	    align: EVT.ALIGN,
+	    clear_highlights: EVT.CLEAR_HIGHLIGHTS,
+	    clear_alignments: EVT.CLEAR_ALIGNMENTS,
+	    build_index: EVT.BUILD_INDEX,
+	    export: EVT.EXPORT
 	  };
 	  var t = evt.target;
 	  if (t.nodeName == 'BUTTON' && t.name in btnMap) {
@@ -470,97 +483,110 @@
 	};
 	Panel.prototype.render = function() {
 	  this.el.html(templates.panel());
+	  return this;
 	};
 
 	//---------------------------------------------------------------------
-	var TextBoxes = function() {
+	var TextBoxes = function(options) {
+	  this.selector = options.selector;
+	  this.alignments = options.alignments;
+	  this.sources = null;
+	  this.textBoxes = null;
+	  this.bindMethods.forEach(function(method) {
+	    this[method] = this[method].bind(this);
+	  }, this);
 	  this.init();
 	};
+	TextBoxes.prototype.bindMethods = [
+	  'onClickWord',
+	  'onMouseoverWord',
+	  'onMouseoutWord',
+	  'clearHighlights',
+	  'align'
+	];
 	TextBoxes.prototype.init = function() {
-	  this.onClickWord = this.onClickWord.bind(this);
-	  this.onMouseoverWord = this.onMouseoverWord.bind(this);
-	  this.onMouseoutWord = this.onMouseoutWord.bind(this);
-	  this.clearHighlights = this.clearHighlights.bind(this);
-	  this.textBoxes = this.selectTextBoxes();
-	  this.wordId = 0;
-	  this.nextWordId = function() {
-	    return ++this.wordId;
-	  }.bind(this);
-	  this.resetWordId = function() {
-	    this.wordId = 0;
-	  }.bind(this);
+	  this.loadSources();
+	  this.transform();
+	  this.textBoxes = this.select();
 	  this.addListeners();
 	};
 	TextBoxes.prototype.addListeners = function() {
 	  this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
 	  this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
 	  this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
-	  events.hub.on('CLEAR_HIGHLIGHTS', this.clearHighlights);
+	  events.hub.on(EVT.CLEAR_HIGHLIGHTS, this.clearHighlights);
+	  events.hub.on(EVT.ALIGN, this.align);
 	};
 	TextBoxes.prototype.onClickWord = function(evt) {
 	  //console.log("click", evt.target);
-	  $(evt.target).addClass("highlight");
+	  this.showHighlight(evt.target);
 	};
 	TextBoxes.prototype.onMouseoverWord = function(evt) {
 	  //console.log("mouseover", evt.target);
+	  var spans = this.selectAlignedWith(evt.target);
+	  if (spans.length > 0) {
+	    this.showAlignmentHighlight(spans);
+	  }
 	};
 	TextBoxes.prototype.onMouseoutWord = function(evt) {
 	  //console.log("mouseout", evt.target);
+	  this.clearAlignmentHighlight();
 	};
-	TextBoxes.prototype.clearHighlights = function() {
-	  this.textBoxes.find('.wordmapper-word.highlight').removeClass('highlight');
+	TextBoxes.prototype.align = function() {
+	  var spans = this.selectHighlighted();
+	  var words = models.Source.createWords(spans.toArray(), this.sources);
+	  var alignment = this.alignments.createAlignment(words);
+	  this.alignments.add(alignment);
+	  this.setAlignedTo(spans, alignment); 
+	  this.clearHighlights();
+	  this.showAligned(spans);
 	};
-	TextBoxes.prototype.selectTextBoxes = function() {
-	  return $(".textboxcontent");
+	TextBoxes.prototype.showAligned = function(spans) {
+	  return $(spans).addClass("aligned");
 	};
-	TextBoxes.prototype.setupWords = function() {
-	  this.textBoxes.each(this.convertTextNodes.bind(this));
-	};
-	TextBoxes.prototype.hasWords = function(el) {
-	  return $(el).find('.wordmapper-word').length > 0;
-	};
-	TextBoxes.prototype.convertTextNodes = function(index, el) {
-	  if (this.hasWords(el)) {
-	    return;
-	  }
-	  var sourceId = index+1;
-	  var traverse = function traverse(node, callback) {
-	    var children = Array.prototype.slice.call(node.childNodes);
-	    for(var i = 0; i < children.length; i++) {
-	      traverse(children[i], callback);
-	    }
-	    if (node.nodeType == 3) {
-	      callback(node, sourceId);
-	    }
-	  };
-	  this.resetWordId();
-	  traverse(el, this.convertText.bind(this));
-	};
-	TextBoxes.prototype.convertText = function(textNode, sourceId) {
-	  var spans = this.textToWords(textNode.nodeValue).map(function(word) {
-	    return this.makeSpan(word, this.nextWordId(), sourceId);
-	  }, this);
-
-	  var span = spans.reduce(function(parentSpan, currentSpan, index) {
-	    parentSpan.appendChild(currentSpan);
-	    parentSpan.appendChild(document.createTextNode(" "));
-	    return parentSpan;
-	  }, document.createElement("span"));
-
-	  textNode.parentNode.replaceChild(span, textNode);
-	};
-	TextBoxes.prototype.textToWords = function(content) {
-	  return content.split(/\s+/).filter(function(word) {
-	    return word.length > 0;
+	TextBoxes.prototype.setAlignedTo = function(spans, alignment) {
+	  $(spans).each(function(index, el) {
+	    el.dataset.alignment = alignment.id;
 	  });
 	};
-	TextBoxes.prototype.makeSpan = function(word, wordId, sourceId) {
-	  var span = document.createElement('span');
-	  span.className = 'wordmapper-word';
-	  span.innerHTML = word;
-	  span.dataset.word = wordId;
-	  span.dataset.source = sourceId;
-	  return span;
+	TextBoxes.prototype.showAlignmentHighlight = function(spans) {
+	  $(spans).addClass('highlight2');
+	};
+	TextBoxes.prototype.clearAlignmentHighlight = function() {
+	  this.textBoxes.find('.highlight2').removeClass('highlight2');
+	};
+	TextBoxes.prototype.selectAlignedWith = function(el) {
+	  var alignment_id = el.dataset.alignment;
+	  var selector = '[data-alignment="'+alignment_id+'"]';
+	  return this.textBoxes.find(selector);
+	};
+	TextBoxes.prototype.showHighlight = function(el) {
+	  $(el).addClass("highlight");
+	};
+	TextBoxes.prototype.selectHighlighted = function() {
+	  return this.textBoxes.find('.highlight');
+	};
+	TextBoxes.prototype.clearHighlights = function() {
+	  this.selectHighlighted().removeClass('highlight');
+	};
+
+	TextBoxes.prototype.loadSources = function() {
+	  this.sources = this.select().toArray().map(this.createSource);
+	};
+	TextBoxes.prototype.createSource = function(el) {
+	  return new models.Source.fromDOM(el);
+	};
+	TextBoxes.prototype.select = function() {
+	  return $(this.selector);
+	};
+	TextBoxes.prototype.transform = function() {
+	  var textBoxes = this.select();
+	  this.sources.forEach(function(source, index) {
+	    this.replace(textBoxes[index], source.transform().copyElement());
+	  }, this);
+	};
+	TextBoxes.prototype.replace = function(textBox, el) {
+	  textBox.parentNode.replaceChild(el, textBox);
 	};
 
 
@@ -634,17 +660,186 @@
 
 /***/ },
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
+
+	//---------------------------------------------------------------------
+	var Alignments = function() {
+	  this.alignments = [];
+	};
+	Alignments.prototype.createAlignment = function(words) {
+	  return new Alignment({id: this.nextId(), words: words});
+	};
+	Alignments.prototype.add = function(alignment) {
+	  this.alignments.push(alignment);
+	};
+	Alignments.prototype.remove = function(alignment) {
+	  var idx = this.alignments.indexOf(alignment);
+	  if (idx >= 0) {
+	    this.alignments.splice(idx, 1);
+	  }
+	};
+	Alignments.prototype.reset = function() {
+	  this.alignments = [];
+	};
+	Alignments.prototype.toString = function() {
+	  return this.alignments.reduce(function(str, alignment) {
+	    str += alignment.toString();
+	    return str;
+	  }, '');
+	};
+	Alignments.prototype.nextId = (function() {
+	  var id = 0;
+	  return function() {
+	    id++;
+	    return id;
+	  };
+	})();
+
+	//---------------------------------------------------------------------
+	var Alignment = function(options) {
+	  this.id = options.id;
+	  this.words = Array.prototype.slice.call(options.words);
+	};
+	Alignment.prototype.toString = function() {
+	  return this.words.reduce(function(str, word) {
+	    str += word.toString() + " ";
+	    return str;
+	  }, '');
+	};
+
+	//---------------------------------------------------------------------
+	var Word = function(options) {
+	  var self = this;
+	  ['id', 'source', 'value'].forEach(function(attr) {
+	    if (options.hasOwnProperty(attr) && options[attr]) {
+	      self[attr] = options[attr];
+	    } else {
+	      throw "Missing required attribute to construct Word: " + attr;
+	    }
+	  });
+	};
+	Word.get = function(options) {
+	  return new Word(options);
+	};
+	Word.prototype.toString = function() {
+	  return this.value;
+	};
+
+	//---------------------------------------------------------------------
+	var Source = function(options) {
+	  this.el = options.el;
+	  this.normalizedText = this.el.textContent.replace(/\s+/g, ' ').trim();
+	  this.sourceId = Source.instances++;
+	  this.textHash = null;
+	};
+	Source.instances = 0;
+	Source.fromDOM = function(el) {
+	  return new Source({ el: el.cloneNode(true) });
+	};
+	Source.fromHTML = function(html) {
+	  var temp = document.createElement('template');
+	  temp.innerHTML = html;
+	  var fragment = temp.content;
+	  return new Source({ el: fragment });
+	};
+	Source.createWords = function(spans, sources) {
+	  var source_for = {};
+	  sources.forEach(function(source) {
+	    source_for[source.sourceId] = source;
+	  });
+	  return spans.map(function(span) {
+	    return Word.get({
+	      id: span.dataset.word,
+	      source: source_for[span.dataset.source],
+	      value: span.textContent
+	    });
+	  });
+	};
+	Source.prototype.copyElement = function() {
+	  return this.el.cloneNode(true);
+	};
+	Source.prototype.containsSpans = function(el) {
+	  return $(this.el).find('.wordmapper-word').length > 0;
+	};
+	Source.prototype.transform = function() {
+	  if (this.containsSpans()) { return this; }
+
+	  var callback = function(node) {
+	    this.transformTextNode(this.sourceId, node);
+	  }.bind(this);
+
+	  this.traverse(this.el, callback);
+
+	  return this;
+	};
+	Source.prototype.traverse = function(node, callback) {
+	  var children = Array.prototype.slice.call(node.childNodes);
+	  for(var i = 0; i < children.length; i++) {
+	    this.traverse(children[i], callback);
+	  }
+	  if (node.nodeType == 3) {
+	    callback(node);
+	  }
+	};
+	Source.prototype.transformTextNode = function(sourceId, textNode) {
+	  var makeSpan = function(word) {
+	    return this.makeSpan(word, this.nextWordId(), sourceId);
+	  }.bind(this);
+
+	  var spans = this.textToWords(textNode.nodeValue).map(makeSpan);
+
+	  var span = spans.reduce(function(parentSpan, currentSpan, index) {
+	    parentSpan.appendChild(currentSpan);
+	    parentSpan.appendChild(document.createTextNode(" "));
+	    return parentSpan;
+	  }, document.createElement("span"));
+
+	  textNode.parentNode.replaceChild(span, textNode);
+	};
+	Source.prototype.textToWords = function(text) {
+	  return text.split(/\s+/).filter(function(word) {
+	    return word.length > 0;
+	  });
+	};
+	Source.prototype.makeSpan = function(word, wordId, sourceId) {
+	  var span = document.createElement('span');
+	  span.className = 'wordmapper-word';
+	  span.innerHTML = word;
+	  span.dataset.word = wordId;
+	  span.dataset.source = sourceId;
+	  return span;
+	};
+	Source.prototype.nextWordId = (function() {
+	  var wordId = 0;
+	  return function() {
+	    return wordId++;
+	  };
+	})();
+
+	//---------------------------------------------------------------------
+	var SiteContext = function(options) {
+	  this.url = options.url;
+	  this.pageContent = options.content;
+	};
 
 	module.exports = {
-	  panel: __webpack_require__(11)
+	  Alignments: Alignments,
+	  Source: Source
 	};
 
 /***/ },
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(12);
+	module.exports = {
+	  panel: __webpack_require__(12)
+	};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(13);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
 	obj || (obj = {});
 	var __t, __p = '';
@@ -657,7 +852,7 @@
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -17065,10 +17260,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14)(module), (function() { return this; }())))
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {

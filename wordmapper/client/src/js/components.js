@@ -1,6 +1,15 @@
 var events = require('./events.js');
 var services = require('./services.js');
+var models = require('./models.js');
 var templates = require('./templates.js');
+
+var EVT = {
+  ALIGN: 'align',
+  CLEAR_HIGHLIGHTS: 'clear_highlights',
+  CLEAR_ALIGNMENTS: 'clear_alignments',
+  BUILD_INDEX: 'build_index',
+  EXPORT: 'export'
+};
 
 //---------------------------------------------------------------------
 var Application = function() {
@@ -8,19 +17,23 @@ var Application = function() {
 };
 Application.prototype.init = function() {
   this.panel = new Panel();
-  this.panel.render();
-  this.boxes = new TextBoxes();
-  this.boxes.setupWords();
+  this.alignments = new models.Alignments();
+  this.boxes = new TextBoxes({
+    alignments: this.alignments,
+    selector: '.textboxcontent'
+  });
 };
+
 
 //---------------------------------------------------------------------
 var Panel = function() {
   this.el = null;
+  this.onClickButton = this.onClickButton.bind(this);
   this.init();
 };
 Panel.prototype.init = function() {
   this.el = $('<div>').appendTo("body");
-  this.onClickButton = this.onClickButton.bind(this);
+  this.render();
   this.addListeners();
 };
 Panel.prototype.addListeners = function() {
@@ -28,11 +41,11 @@ Panel.prototype.addListeners = function() {
 };
 Panel.prototype.onClickButton = function(evt) {
   var btnMap = {
-    align: 'ALIGN',
-    clear_highlights: 'CLEAR_HIGHLIGHTS',
-    clear_alignments: 'CLEAR_ALIGNMENTS',
-    build_index: 'BUILD_INDEX',
-    export: 'EXPORT'
+    align: EVT.ALIGN,
+    clear_highlights: EVT.CLEAR_HIGHLIGHTS,
+    clear_alignments: EVT.CLEAR_ALIGNMENTS,
+    build_index: EVT.BUILD_INDEX,
+    export: EVT.EXPORT
   };
   var t = evt.target;
   if (t.nodeName == 'BUTTON' && t.name in btnMap) {
@@ -41,97 +54,110 @@ Panel.prototype.onClickButton = function(evt) {
 };
 Panel.prototype.render = function() {
   this.el.html(templates.panel());
+  return this;
 };
 
 //---------------------------------------------------------------------
-var TextBoxes = function() {
+var TextBoxes = function(options) {
+  this.selector = options.selector;
+  this.alignments = options.alignments;
+  this.sources = null;
+  this.textBoxes = null;
+  this.bindMethods.forEach(function(method) {
+    this[method] = this[method].bind(this);
+  }, this);
   this.init();
 };
+TextBoxes.prototype.bindMethods = [
+  'onClickWord',
+  'onMouseoverWord',
+  'onMouseoutWord',
+  'clearHighlights',
+  'align'
+];
 TextBoxes.prototype.init = function() {
-  this.onClickWord = this.onClickWord.bind(this);
-  this.onMouseoverWord = this.onMouseoverWord.bind(this);
-  this.onMouseoutWord = this.onMouseoutWord.bind(this);
-  this.clearHighlights = this.clearHighlights.bind(this);
-  this.textBoxes = this.selectTextBoxes();
-  this.wordId = 0;
-  this.nextWordId = function() {
-    return ++this.wordId;
-  }.bind(this);
-  this.resetWordId = function() {
-    this.wordId = 0;
-  }.bind(this);
+  this.loadSources();
+  this.transform();
+  this.textBoxes = this.select();
   this.addListeners();
 };
 TextBoxes.prototype.addListeners = function() {
   this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
   this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
   this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
-  events.hub.on('CLEAR_HIGHLIGHTS', this.clearHighlights);
+  events.hub.on(EVT.CLEAR_HIGHLIGHTS, this.clearHighlights);
+  events.hub.on(EVT.ALIGN, this.align);
 };
 TextBoxes.prototype.onClickWord = function(evt) {
   //console.log("click", evt.target);
-  $(evt.target).addClass("highlight");
+  this.showHighlight(evt.target);
 };
 TextBoxes.prototype.onMouseoverWord = function(evt) {
   //console.log("mouseover", evt.target);
+  var spans = this.selectAlignedWith(evt.target);
+  if (spans.length > 0) {
+    this.showAlignmentHighlight(spans);
+  }
 };
 TextBoxes.prototype.onMouseoutWord = function(evt) {
   //console.log("mouseout", evt.target);
+  this.clearAlignmentHighlight();
 };
-TextBoxes.prototype.clearHighlights = function() {
-  this.textBoxes.find('.wordmapper-word.highlight').removeClass('highlight');
+TextBoxes.prototype.align = function() {
+  var spans = this.selectHighlighted();
+  var words = models.Source.createWords(spans.toArray(), this.sources);
+  var alignment = this.alignments.createAlignment(words);
+  this.alignments.add(alignment);
+  this.setAlignedTo(spans, alignment); 
+  this.clearHighlights();
+  this.showAligned(spans);
 };
-TextBoxes.prototype.selectTextBoxes = function() {
-  return $(".textboxcontent");
+TextBoxes.prototype.showAligned = function(spans) {
+  return $(spans).addClass("aligned");
 };
-TextBoxes.prototype.setupWords = function() {
-  this.textBoxes.each(this.convertTextNodes.bind(this));
-};
-TextBoxes.prototype.hasWords = function(el) {
-  return $(el).find('.wordmapper-word').length > 0;
-};
-TextBoxes.prototype.convertTextNodes = function(index, el) {
-  if (this.hasWords(el)) {
-    return;
-  }
-  var sourceId = index+1;
-  var traverse = function traverse(node, callback) {
-    var children = Array.prototype.slice.call(node.childNodes);
-    for(var i = 0; i < children.length; i++) {
-      traverse(children[i], callback);
-    }
-    if (node.nodeType == 3) {
-      callback(node, sourceId);
-    }
-  };
-  this.resetWordId();
-  traverse(el, this.convertText.bind(this));
-};
-TextBoxes.prototype.convertText = function(textNode, sourceId) {
-  var spans = this.textToWords(textNode.nodeValue).map(function(word) {
-    return this.makeSpan(word, this.nextWordId(), sourceId);
-  }, this);
-
-  var span = spans.reduce(function(parentSpan, currentSpan, index) {
-    parentSpan.appendChild(currentSpan);
-    parentSpan.appendChild(document.createTextNode(" "));
-    return parentSpan;
-  }, document.createElement("span"));
-
-  textNode.parentNode.replaceChild(span, textNode);
-};
-TextBoxes.prototype.textToWords = function(content) {
-  return content.split(/\s+/).filter(function(word) {
-    return word.length > 0;
+TextBoxes.prototype.setAlignedTo = function(spans, alignment) {
+  $(spans).each(function(index, el) {
+    el.dataset.alignment = alignment.id;
   });
 };
-TextBoxes.prototype.makeSpan = function(word, wordId, sourceId) {
-  var span = document.createElement('span');
-  span.className = 'wordmapper-word';
-  span.innerHTML = word;
-  span.dataset.word = wordId;
-  span.dataset.source = sourceId;
-  return span;
+TextBoxes.prototype.showAlignmentHighlight = function(spans) {
+  $(spans).addClass('highlight2');
+};
+TextBoxes.prototype.clearAlignmentHighlight = function() {
+  this.textBoxes.find('.highlight2').removeClass('highlight2');
+};
+TextBoxes.prototype.selectAlignedWith = function(el) {
+  var alignment_id = el.dataset.alignment;
+  var selector = '[data-alignment="'+alignment_id+'"]';
+  return this.textBoxes.find(selector);
+};
+TextBoxes.prototype.showHighlight = function(el) {
+  $(el).addClass("highlight");
+};
+TextBoxes.prototype.selectHighlighted = function() {
+  return this.textBoxes.find('.highlight');
+};
+TextBoxes.prototype.clearHighlights = function() {
+  this.selectHighlighted().removeClass('highlight');
+};
+
+TextBoxes.prototype.loadSources = function() {
+  this.sources = this.select().toArray().map(this.createSource);
+};
+TextBoxes.prototype.createSource = function(el) {
+  return new models.Source.fromDOM(el);
+};
+TextBoxes.prototype.select = function() {
+  return $(this.selector);
+};
+TextBoxes.prototype.transform = function() {
+  var textBoxes = this.select();
+  this.sources.forEach(function(source, index) {
+    this.replace(textBoxes[index], source.transform().copyElement());
+  }, this);
+};
+TextBoxes.prototype.replace = function(textBox, el) {
+  textBox.parentNode.replaceChild(el, textBox);
 };
 
 

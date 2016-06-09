@@ -6,7 +6,7 @@ gulp.task('webpack', function() {
   return gulp.src('wordmapper/client/src/app.js')
     .pipe(webpack({
         output: {
-            filename: 'bookmarklet.js'
+          filename: 'bookmarklet.js'
         },
         resolve: {
           alias: {
