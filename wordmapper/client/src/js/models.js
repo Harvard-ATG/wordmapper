@@ -1,3 +1,5 @@
+var sha1 = require('sha1');
+
 //---------------------------------------------------------------------
 var Alignments = function(options) {
   this.allowDuplicates = options.allowDuplicates || false;
@@ -163,9 +165,9 @@ Word.prototype.toJSON = function() {
 var Source = function(options) {
   this.el = options.el;
   this.normalizedText = this.el.textContent.replace(/\s+/g, ' ').trim();
+  this.hash = sha1(this.normalizedText);
   this.index = Source.instances++;
   this.id = this.index;
-  this.textHash = null;
 };
 Source.instances = 0;
 Source.fromDOM = function(el) {
