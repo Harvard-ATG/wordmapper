@@ -17,7 +17,7 @@ var Application = function() {
 };
 Application.prototype.init = function() {
   this.panel = new Panel();
-  this.alignments = new models.Alignments();
+  this.alignments = new models.Alignments({allowDuplicates: false});
   this.boxes = new TextBoxes({
     alignments: this.alignments,
     selector: '.textboxcontent'

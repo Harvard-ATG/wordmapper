@@ -446,7 +446,7 @@
 	};
 	Application.prototype.init = function() {
 	  this.panel = new Panel();
-	  this.alignments = new models.Alignments();
+	  this.alignments = new models.Alignments({allowDuplicates: false});
 	  this.boxes = new TextBoxes({
 	    alignments: this.alignments,
 	    selector: '.textboxcontent'
@@ -663,14 +663,32 @@
 /***/ function(module, exports) {
 
 	//---------------------------------------------------------------------
-	var Alignments = function() {
+	var Alignments = function(options) {
+	  this.allowDuplicates = options.allowDuplicates || false;
 	  this.alignments = [];
 	};
 	Alignments.prototype.createAlignment = function(words) {
 	  return new Alignment({id: this.nextId(), words: words});
 	};
 	Alignments.prototype.add = function(alignment) {
+	  if (!this.allowDuplicates) {
+	    this.removeDuplicates(alignment);
+	  }
 	  this.alignments.push(alignment);
+	};
+	// If the given alignment contains a word that has already been used in an alignment,
+	// that should take precedence over any previous usage of that word. So this function
+	// removes any duplicates in existing alignments.
+	Alignments.prototype.removeDuplicates = function(given_alignment) {
+	  this.alignments.forEach(function(alignment) {
+	    for(var i = 0, words = alignment.words, word; i < words.length; i++) {
+	      word = words[i];
+	      if (given_alignment.containsWord(word)) {
+	        alignment.removeWord(word);
+	      }
+	    }
+	  });
+	  return this;
 	};
 	Alignments.prototype.remove = function(alignment) {
 	  var idx = this.alignments.indexOf(alignment);
@@ -700,6 +718,23 @@
 	  this.id = options.id;
 	  this.words = Array.prototype.slice.call(options.words);
 	};
+	Alignment.prototype.containsWord = function(word) {
+	  return this.findWord(word) !== false;
+	};
+	Alignment.prototype.findWord = function(word) {
+	  for(var index = 0; index < this.words.length; index++) {
+	    if (word.isEqual(this.words[index])) {
+	      return {word: this.words[index], index: index};
+	    }
+	  }
+	  return false;
+	};
+	Alignment.prototype.removeWord = function(word) {
+	  var found = this.findWord(word);
+	  if (found !== false) {
+	    this.words.splice(found.index, 1);
+	  }
+	};
 	Alignment.prototype.toString = function() {
 	  return this.words.reduce(function(str, word) {
 	    str += word.toString() + " ";
@@ -710,7 +745,7 @@
 	//---------------------------------------------------------------------
 	var Word = function(options) {
 	  var self = this;
-	  ['id', 'source', 'value'].forEach(function(attr) {
+	  ['index', 'source', 'value'].forEach(function(attr) {
 	    if (options.hasOwnProperty(attr) && options[attr]) {
 	      self[attr] = options[attr];
 	    } else {
@@ -718,7 +753,10 @@
 	    }
 	  });
 	};
-	Word.get = function(options) {
+	Word.prototype.isEqual = function(word) {
+	  return this.index == word.index && this.source.id == word.source.id;
+	};
+	Word.create = function(options) {
 	  return new Word(options);
 	};
 	Word.prototype.toString = function() {
@@ -729,7 +767,8 @@
 	var Source = function(options) {
 	  this.el = options.el;
 	  this.normalizedText = this.el.textContent.replace(/\s+/g, ' ').trim();
-	  this.sourceId = Source.instances++;
+	  this.index = Source.instances++;
+	  this.id = this.index;
 	  this.textHash = null;
 	};
 	Source.instances = 0;
@@ -743,14 +782,14 @@
 	  return new Source({ el: fragment });
 	};
 	Source.createWords = function(spans, sources) {
-	  var source_for = {};
-	  sources.forEach(function(source) {
-	    source_for[source.sourceId] = source;
-	  });
+	  var source_dict = sources.reduce(function(dict, source) {
+	    dict[source.index] = source;
+	    return dict;
+	  }, {});
 	  return spans.map(function(span) {
-	    return Word.get({
-	      id: span.dataset.word,
-	      source: source_for[span.dataset.source],
+	    return Word.create({
+	      index: span.dataset.word,
+	      source: source_dict[span.dataset.source],
 	      value: span.textContent
 	    });
 	  });
@@ -765,7 +804,7 @@
 	  if (this.containsSpans()) { return this; }
 
 	  var callback = function(node) {
-	    this.transformTextNode(this.sourceId, node);
+	    this.transformTextNode(this.index, node);
 	  }.bind(this);
 
 	  this.traverse(this.el, callback);
@@ -781,9 +820,9 @@
 	    callback(node);
 	  }
 	};
-	Source.prototype.transformTextNode = function(sourceId, textNode) {
+	Source.prototype.transformTextNode = function(sourceIndex, textNode) {
 	  var makeSpan = function(word) {
-	    return this.makeSpan(word, this.nextWordId(), sourceId);
+	    return this.makeSpan(word, this.nextWordIndex(), sourceIndex);
 	  }.bind(this);
 
 	  var spans = this.textToWords(textNode.nodeValue).map(makeSpan);
@@ -801,18 +840,18 @@
 	    return word.length > 0;
 	  });
 	};
-	Source.prototype.makeSpan = function(word, wordId, sourceId) {
+	Source.prototype.makeSpan = function(word, wordIndex, sourceIndex) {
 	  var span = document.createElement('span');
 	  span.className = 'wordmapper-word';
 	  span.innerHTML = word;
-	  span.dataset.word = wordId;
-	  span.dataset.source = sourceId;
+	  span.dataset.word = wordIndex;
+	  span.dataset.source = sourceIndex;
 	  return span;
 	};
-	Source.prototype.nextWordId = (function() {
-	  var wordId = 0;
+	Source.prototype.nextWordIndex = (function() {
+	  var index = 0;
 	  return function() {
-	    return wordId++;
+	    return index++;
 	  };
 	})();
 
