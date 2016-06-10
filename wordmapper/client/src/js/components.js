@@ -165,6 +165,9 @@ TextBoxes.prototype.onMouseoutWord = function(evt) {
 };
 TextBoxes.prototype.align = function() {
   var spans = this.selectHighlighted();
+  if (spans.length === 0) {
+    return;
+  }
   var words = models.Source.createWords(spans.toArray(), this.sources);
   var alignment = this.alignments.createAlignment(words);
   this.alignments.add(alignment);

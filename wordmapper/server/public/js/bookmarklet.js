@@ -595,6 +595,9 @@
 	};
 	TextBoxes.prototype.align = function() {
 	  var spans = this.selectHighlighted();
+	  if (spans.length === 0) {
+	    return;
+	  }
 	  var words = models.Source.createWords(spans.toArray(), this.sources);
 	  var alignment = this.alignments.createAlignment(words);
 	  this.alignments.add(alignment);
@@ -738,6 +741,7 @@
 	    this.removeDuplicates(alignment);
 	  }
 	  this.alignments.push(alignment);
+	  this.alignments.sort();
 	};
 	// If the given alignment contains a word that has already been used in an alignment,
 	// that should take precedence over any previous usage of that word. So this function
@@ -764,6 +768,11 @@
 	};
 	Alignments.prototype.reset = function() {
 	  this.alignments = [];
+	};
+	Alignments.prototype.sort = function() {
+	  this.alignments.sort(function(a, b) {
+	    return a.sortIndex() - b.sortIndex();
+	  });
 	};
 	Alignments.prototype.isEmpty = function() {
 	  return this.alignments.length === 0;
@@ -803,7 +812,11 @@
 	    throw "Invalid alignment: must provide at least one Word object to construct an alignment";
 	  }
 	  this.words.sort(function(a, b) {
-	    return a.source.index - b.source.index;
+	    if (a.source.index == b.source.index) {
+	      return a.index - b.index;
+	    } else {
+	      return a.source.index - b.source.index;
+	    }
 	  });
 	};
 	Alignment.prototype.containsWord = function(word) {
@@ -822,6 +835,12 @@
 	  if (found !== false) {
 	    this.words.splice(found.index, 1);
 	  }
+	};
+	Alignment.prototype.sortIndex = function() {
+	  var word_indexes = this.words.map(function(word) {
+	    return word.index;
+	  });
+	  return Math.min.apply(Math, word_indexes);
 	};
 	Alignment.prototype.size = function() {
 	  return this.words.length;
