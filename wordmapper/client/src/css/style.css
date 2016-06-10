@@ -135,6 +135,7 @@
     border: 1px solid #000;
 }
 .wordmapper-alignments textarea.json {
+    display: block;
     min-height: 25%;
     height: 50%;
     width: 100%;

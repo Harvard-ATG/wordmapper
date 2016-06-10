@@ -40,6 +40,9 @@ Alignments.prototype.remove = function(alignment) {
 Alignments.prototype.reset = function() {
   this.alignments = [];
 };
+Alignments.prototype.isEmpty = function() {
+  return this.alignments.length === 0;
+};
 Alignments.prototype.toString = function() {
   return this.alignments.reduce(function(str, alignment) {
     str += alignment.toString();

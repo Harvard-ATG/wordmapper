@@ -1,12 +1,16 @@
 <div class="wordmapper wordmapper-overlay <%= cls %>">
   <div class="wordmapper-alignments">
+    <b>Index:</b>
     <div class="wordmapper-table">
-    <% _.forEach(alignments.alignments, function(alignment) { %>
-      <div class="row">
-        <% _.forEach(alignment.wordGroups(), function(word) { %>
-          <div class="cell"><%- word.toString() %></div>
-        <% }); %>
-      </div>
-    <% }); %>
+      <% if (alignments.isEmpty()) { %>
+        <div class="row">No words have been aligned yet</div>
+      <% } %>
+      <% _.forEach(alignments.alignments, function(alignment) { %>
+        <div class="row">
+          <% _.forEach(alignment.wordGroups(), function(word) { %>
+            <div class="cell"><%- word.toString() %></div>
+          <% }); %>
+        </div>
+      <% }); %>
   </div>
 </div>
