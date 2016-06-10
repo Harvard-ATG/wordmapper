@@ -1,7 +1,7 @@
 .wordmapper {
     font-size: 14px;
+    z-index: 1000;
 }
-
 .wordmapper-panel {
     position: fixed;
     opacity: 0.75;
@@ -28,15 +28,15 @@
     right: 0;
     left: 0;
     bottom: 0;
-    opacity: 0.75;
+    opacity: 0.85;
+    background-color: #fff;
+    color: #000;
     padding: 1em;
-    z-index: 10000;
-}
-.wordmapper-panel-top+.wordmapper-overlay{
     top: 45px;
 }
-.wordmapper-panel-right+.wordmapper-overlay{
-    right: 130px;
+.wordmapper-overlay-hidden {
+    z-index: -1;
+    display: none;
 }
 .wordmapper-panel button {
     font-family: inherit;
@@ -98,6 +98,7 @@
 .wordmapper-tooltip {
     display: inline;
     position: relative;
+    z-index: 1002;
 }
 .wordmapper-tooltip:hover:after{
     font-size: 11px;
@@ -110,7 +111,6 @@
     left: 20%;
     padding: 5px 15px;
     position: absolute;
-    z-index: 98;
     width: 220px;
 }
 .wordmapper-tooltip:hover:before{
@@ -121,5 +121,19 @@
     content: "";
     left: 50%;
     position: absolute;
-    z-index: 99;
+}
+.wordmapper-table {display:table;}
+.wordmapper-table .row {display:table-row; }
+.wordmapper-table .cell{display:table-cell;}
+.wordmapper-alignments .wordmapper-table {
+    font-size: 16px;
+    border-collapse: separate;
+    border-spacing: 20px;
+}
+.wordmapper-alignments .cell {
+    min-width: 150px;
+}
+.wordmapper-alignments .row {
+    border-bottom: 1px solid #000;
+    padding: .25em;
 }

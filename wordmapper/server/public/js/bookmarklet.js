@@ -52,6 +52,7 @@
 	} else {
 	  var components = __webpack_require__(7);
 	  var app = new components.Application();
+	  app.render();
 	  window.WordMapper = app;
 	}
 
@@ -110,7 +111,7 @@
 
 
 	// module
-	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n}\n\n.wordmapper-panel {\n    position: fixed;\n    opacity: 0.75;\n    background-color: #000;\n}\n.wordmapper-panel:hover {\n    opacity: 0.9;\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.75;\n    padding: 1em;\n    z-index: 10000;\n}\n.wordmapper-panel-top+.wordmapper-overlay{\n    top: 45px;\n}\n.wordmapper-panel-right+.wordmapper-overlay{\n    right: 130px;\n}\n.wordmapper-panel button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper-panel button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper-panel button:hover,\n.wordmapper-panel button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper-panel button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 11px;\n    background: #333;\n    background: rgba(0,0,0,.8);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(title);\n    left: 20%;\n    padding: 5px 15px;\n    position: absolute;\n    z-index: 98;\n    width: 220px;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n    z-index: 99;\n}", ""]);
+	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    z-index: 1000;\n}\n.wordmapper-panel {\n    position: fixed;\n    opacity: 0.75;\n    background-color: #000;\n}\n.wordmapper-panel:hover {\n    opacity: 0.9;\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.85;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-panel button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper-panel button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper-panel button:hover,\n.wordmapper-panel button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper-panel button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n    z-index: 1002;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 11px;\n    background: #333;\n    background: rgba(0,0,0,.8);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(title);\n    left: 20%;\n    padding: 5px 15px;\n    position: absolute;\n    width: 220px;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n.wordmapper-table {display:table;}\n.wordmapper-table .row {display:table-row; }\n.wordmapper-table .cell{display:table-cell;}\n.wordmapper-alignments .wordmapper-table {\n    font-size: 16px;\n    border-collapse: separate;\n    border-spacing: 20px;\n}\n.wordmapper-alignments .cell {\n    min-width: 150px;\n}\n.wordmapper-alignments .row {\n    border-bottom: 1px solid #000;\n    padding: .25em;\n}", ""]);
 
 	// exports
 
@@ -445,14 +446,52 @@
 	  this.init();
 	};
 	Application.prototype.init = function() {
+	  this.el = $('<div>').appendTo('body');
 	  this.panel = new Panel();
-	  this.alignments = new models.Alignments({allowDuplicates: false});
+	  this.alignments = new models.Alignments({
+	    allowDuplicates: false
+	  });
 	  this.boxes = new TextBoxes({
 	    alignments: this.alignments,
 	    selector: '.textboxcontent'
 	  });
+	  this.index = new Index({
+	    alignments: this.alignments
+	  });
+	};
+	Application.prototype.render = function() {
+	  this.el.append(this.panel.render().el);
+	  this.el.append(this.index.render().el);
+	  return this;
 	};
 
+	//---------------------------------------------------------------------
+	var Index = function(options) {
+	  this.alignments = options.alignments;
+	  this.state = false;
+	  this.toggle = this.toggle.bind(this);
+	  this.render = this.render.bind(this);
+	  this.init();
+	};
+	Index.prototype.init = function() {
+	  this.el = $("<div>");
+	  this.addListeners();
+	};
+	Index.prototype.addListeners = function() {
+	  events.hub.on(EVT.BUILD_INDEX, this.toggle);
+	  events.hub.on(EVT.BUILD_INDEX, this.render);
+	};
+	Index.prototype.toggle = function() {
+	  this.state = !this.state;
+	};
+	Index.prototype.render = function() {
+	  var cls = (this.state ? '' : 'wordmapper-overlay-hidden');
+	  this.el.html(templates.index({
+	    cls: cls,
+	    alignments: this.alignments
+	  }));
+	  return this;
+	};
 
 	//---------------------------------------------------------------------
 	var Panel = function() {
@@ -461,8 +500,7 @@
 	  this.init();
 	};
 	Panel.prototype.init = function() {
-	  this.el = $('<div>').appendTo("body");
-	  this.render();
+	  this.el = $('<div>');
 	  this.addListeners();
 	};
 	Panel.prototype.addListeners = function() {
@@ -688,6 +726,9 @@
 	      }
 	    }
 	  });
+	  this.alignments = this.alignments.filter(function(alignment) {
+	    return alignment.size() > 0;
+	  });
 	  return this;
 	};
 	Alignments.prototype.remove = function(alignment) {
@@ -717,6 +758,12 @@
 	var Alignment = function(options) {
 	  this.id = options.id;
 	  this.words = Array.prototype.slice.call(options.words);
+	  if (this.words.length === 0) {
+	    throw "Invalid alignment: must provide at least one Word object to construct an alignment";
+	  }
+	  this.words.sort(function(a, b) {
+	    return a.source.index - b.source.index;
+	  });
 	};
 	Alignment.prototype.containsWord = function(word) {
 	  return this.findWord(word) !== false;
@@ -735,11 +782,29 @@
 	    this.words.splice(found.index, 1);
 	  }
 	};
+	Alignment.prototype.size = function() {
+	  return this.words.length;
+	};
+	Alignment.prototype.wordGroups = function() {
+	  var word_groups = {}, sources = [], groups = [], i, word;
+	  for(i = 0; i < this.words.length; i++) {
+	    word = this.words[i];
+	    if (!word_groups[word.source.index]) {
+	      sources.push(word.source.index);
+	      word_groups[word.source.index] = [];
+	    }
+	    word_groups[word.source.index].push(word);
+	  }
+	  for(i = 0; i < sources.length; i++) {
+	    groups[i] = word_groups[sources[i]];
+	  }
+	  return groups;
+	};
 	Alignment.prototype.toString = function() {
-	  return this.words.reduce(function(str, word) {
-	    str += word.toString() + " ";
-	    return str;
-	  }, '');
+	  var groups = this.wordGroups();
+	  return groups.map(function(group) {
+	    return group.join(' ');
+	  }).join(' - ');
 	};
 
 	//---------------------------------------------------------------------
@@ -760,7 +825,7 @@
 	  return new Word(options);
 	};
 	Word.prototype.toString = function() {
-	  return this.value;
+	  return this.value.toString();
 	};
 
 	//---------------------------------------------------------------------
@@ -17325,9 +17390,22 @@
 	var _ = __webpack_require__(13);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
 	obj || (obj = {});
-	var __t, __p = '';
+	var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+	function print() { __p += __j.call(arguments, '') }
 	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/index.html -->\n<div class="wordmapper wordmapper-overlay">\n  Testing\n</div>';
+	__p += '\n<!-- wordmapper/client/src/html/index.html -->\n<div class="wordmapper wordmapper-overlay ' +
+	((__t = ( cls )) == null ? '' : __t) +
+	'">\n  <div class="wordmapper-alignments">\n    <div class="wordmapper-table">\n    ';
+	 _.forEach(alignments.alignments, function(alignment) { ;
+	__p += '\n      <div class="row">\n        ';
+	 _.forEach(alignment.wordGroups(), function(word) { ;
+	__p += '\n          <div class="cell">' +
+	__e( word.toString() ) +
+	'</div>\n        ';
+	 }); ;
+	__p += '\n      </div>\n    ';
+	 }); ;
+	__p += '\n  </div>\n</div>';
 
 	}
 	return __p

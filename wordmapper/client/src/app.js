@@ -6,5 +6,6 @@ if (window.WordMapper) {
 } else {
   var components = require('./js/components.js');
   var app = new components.Application();
+  app.render();
   window.WordMapper = app;
 }

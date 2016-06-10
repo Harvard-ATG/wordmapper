@@ -16,14 +16,52 @@ var Application = function() {
   this.init();
 };
 Application.prototype.init = function() {
+  this.el = $('<div>').appendTo('body');
   this.panel = new Panel();
-  this.alignments = new models.Alignments({allowDuplicates: false});
+  this.alignments = new models.Alignments({
+    allowDuplicates: false
+  });
   this.boxes = new TextBoxes({
     alignments: this.alignments,
     selector: '.textboxcontent'
   });
+  this.index = new Index({
+    alignments: this.alignments
+  });
+};
+Application.prototype.render = function() {
+  this.el.append(this.panel.render().el);
+  this.el.append(this.index.render().el);
+  return this;
 };
 
+//---------------------------------------------------------------------
+var Index = function(options) {
+  this.alignments = options.alignments;
+  this.state = false;
+  this.toggle = this.toggle.bind(this);
+  this.render = this.render.bind(this);
+  this.init();
+};
+Index.prototype.init = function() {
+  this.el = $("<div>");
+  this.addListeners();
+};
+Index.prototype.addListeners = function() {
+  events.hub.on(EVT.BUILD_INDEX, this.toggle);
+  events.hub.on(EVT.BUILD_INDEX, this.render);
+};
+Index.prototype.toggle = function() {
+  this.state = !this.state;
+};
+Index.prototype.render = function() {
+  var cls = (this.state ? '' : 'wordmapper-overlay-hidden');
+  this.el.html(templates.index({
+    cls: cls,
+    alignments: this.alignments
+  }));
+  return this;
+};
 
 //---------------------------------------------------------------------
 var Panel = function() {
@@ -32,8 +70,7 @@ var Panel = function() {
   this.init();
 };
 Panel.prototype.init = function() {
-  this.el = $('<div>').appendTo("body");
-  this.render();
+  this.el = $('<div>');
   this.addListeners();
 };
 Panel.prototype.addListeners = function() {

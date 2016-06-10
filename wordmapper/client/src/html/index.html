@@ -1,3 +1,12 @@
-<div class="wordmapper wordmapper-overlay">
-  Testing
+<div class="wordmapper wordmapper-overlay <%= cls %>">
+  <div class="wordmapper-alignments">
+    <div class="wordmapper-table">
+    <% _.forEach(alignments.alignments, function(alignment) { %>
+      <div class="row">
+        <% _.forEach(alignment.wordGroups(), function(word) { %>
+          <div class="cell"><%- word.toString() %></div>
+        <% }); %>
+      </div>
+    <% }); %>
+  </div>
 </div>

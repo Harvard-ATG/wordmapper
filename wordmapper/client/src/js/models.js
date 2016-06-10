@@ -24,6 +24,9 @@ Alignments.prototype.removeDuplicates = function(given_alignment) {
       }
     }
   });
+  this.alignments = this.alignments.filter(function(alignment) {
+    return alignment.size() > 0;
+  });
   return this;
 };
 Alignments.prototype.remove = function(alignment) {
@@ -53,6 +56,12 @@ Alignments.prototype.nextId = (function() {
 var Alignment = function(options) {
   this.id = options.id;
   this.words = Array.prototype.slice.call(options.words);
+  if (this.words.length === 0) {
+    throw "Invalid alignment: must provide at least one Word object to construct an alignment";
+  }
+  this.words.sort(function(a, b) {
+    return a.source.index - b.source.index;
+  });
 };
 Alignment.prototype.containsWord = function(word) {
   return this.findWord(word) !== false;
@@ -71,11 +80,29 @@ Alignment.prototype.removeWord = function(word) {
     this.words.splice(found.index, 1);
   }
 };
+Alignment.prototype.size = function() {
+  return this.words.length;
+};
+Alignment.prototype.wordGroups = function() {
+  var word_groups = {}, sources = [], groups = [], i, word;
+  for(i = 0; i < this.words.length; i++) {
+    word = this.words[i];
+    if (!word_groups[word.source.index]) {
+      sources.push(word.source.index);
+      word_groups[word.source.index] = [];
+    }
+    word_groups[word.source.index].push(word);
+  }
+  for(i = 0; i < sources.length; i++) {
+    groups[i] = word_groups[sources[i]];
+  }
+  return groups;
+};
 Alignment.prototype.toString = function() {
-  return this.words.reduce(function(str, word) {
-    str += word.toString() + " ";
-    return str;
-  }, '');
+  var groups = this.wordGroups();
+  return groups.map(function(group) {
+    return group.join(' ');
+  }).join(' - ');
 };
 
 //---------------------------------------------------------------------
@@ -96,7 +123,7 @@ Word.create = function(options) {
   return new Word(options);
 };
 Word.prototype.toString = function() {
-  return this.value;
+  return this.value.toString();
 };
 
 //---------------------------------------------------------------------
