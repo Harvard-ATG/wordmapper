@@ -127,13 +127,11 @@
 .wordmapper-table .cell{display:table-cell;}
 .wordmapper-alignments .wordmapper-table {
     font-size: 16px;
-    border-collapse: separate;
-    border-spacing: 20px;
+    border-collapse: collapse;
 }
 .wordmapper-alignments .cell {
     min-width: 150px;
+    padding: .5em 1em;
+    border: 1px solid #000;
 }
-.wordmapper-alignments .row {
-    border-bottom: 1px solid #000;
-    padding: .25em;
-}
+
