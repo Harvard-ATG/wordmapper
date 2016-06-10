@@ -44,6 +44,19 @@ Alignments.prototype.toString = function() {
     return str;
   }, '');
 };
+Alignments.prototype.toJSON = function(serialize) {
+  var alignments = this.alignments.map(function(alignment) {
+    return alignment.toJSON();
+  });
+  var data = {
+    'type': 'alignments',
+    'data': alignments
+  };
+  if (serialize) {
+    return JSON.stringify(data, null, '\t');
+  }
+  return data;
+};
 Alignments.prototype.nextId = (function() {
   var id = 0;
   return function() {
@@ -104,6 +117,16 @@ Alignment.prototype.toString = function() {
     return group.join(' ');
   }).join(' - ');
 };
+Alignment.prototype.toJSON = function() {
+  var words = this.words.map(function(word) {
+    return word.toJSON();
+  });
+  var data = {
+    "type": "alignment",
+    "data": words
+  };
+  return data;
+};
 
 //---------------------------------------------------------------------
 var Word = function(options) {
@@ -125,7 +148,17 @@ Word.create = function(options) {
 Word.prototype.toString = function() {
   return this.value.toString();
 };
-
+Word.prototype.toJSON = function() {
+  var data = {
+    'type': 'word',
+    'data': {
+      'index': this.index,
+      'source': (this.source.hash ? this.source.hash : ''),
+      'value': this.value
+    }
+  };
+  return data;
+};
 //---------------------------------------------------------------------
 var Source = function(options) {
   this.el = options.el;

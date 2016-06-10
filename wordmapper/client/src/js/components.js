@@ -25,42 +25,65 @@ Application.prototype.init = function() {
     alignments: this.alignments,
     selector: '.textboxcontent'
   });
-  this.index = new Index({
+  this.overlay = new Overlay({
     alignments: this.alignments
   });
 };
 Application.prototype.render = function() {
   this.el.append(this.panel.render().el);
-  this.el.append(this.index.render().el);
+  this.el.append(this.overlay.render().el);
   return this;
 };
 
 //---------------------------------------------------------------------
-var Index = function(options) {
+var Overlay = function(options) {
   this.alignments = options.alignments;
-  this.state = false;
-  this.toggle = this.toggle.bind(this);
-  this.render = this.render.bind(this);
+  this.renderIndex = this.renderIndex.bind(this);
+  this.renderExport = this.renderExport.bind(this);
+  this.lastRenderer = null;
+  this.hiddenCls = 'wordmapper-overlay-hidden';
   this.init();
 };
-Index.prototype.init = function() {
-  this.el = $("<div>");
+Overlay.prototype.init = function() {
+  this.el = $("<div>").append('<div class="'+this.hiddenCls+'"></div>');
   this.addListeners();
 };
-Index.prototype.addListeners = function() {
-  events.hub.on(EVT.BUILD_INDEX, this.toggle);
-  events.hub.on(EVT.BUILD_INDEX, this.render);
+Overlay.prototype.addListeners = function() {
+  events.hub.on(EVT.BUILD_INDEX, this.renderIndex);
+  events.hub.on(EVT.EXPORT, this.renderExport);
 };
-Index.prototype.toggle = function() {
-  this.state = !this.state;
+Overlay.prototype.visible = function() {
+  return this.el.andSelf().find('.' + this.hiddenCls).length === 0;
 };
-Index.prototype.render = function() {
-  var cls = (this.state ? '' : 'wordmapper-overlay-hidden');
-  this.el.html(templates.index({
-    cls: cls,
+Overlay.prototype.render = function() {
+  return this;
+};
+Overlay.prototype.renderExport = function() {
+  var renderer = "export";
+  this.el.html(templates.export({
+    cls: this.getCls(renderer),
     alignments: this.alignments
   }));
+  this.lastRenderer = renderer;
   return this;
+};
+Overlay.prototype.renderIndex = function() {
+  var renderer = "index";
+  this.el.html(templates.index({
+    cls: this.getCls(renderer),
+    alignments: this.alignments
+  }));
+  this.lastRenderer = renderer;
+  return this;
+};
+Overlay.prototype.getCls = function(renderer) {
+  var cls = '';
+  if (this.visible()) {
+    if (renderer === this.lastRenderer) {
+      cls = this.hiddenCls;
+    }
+  }
+  return cls;
 };
 
 //---------------------------------------------------------------------
