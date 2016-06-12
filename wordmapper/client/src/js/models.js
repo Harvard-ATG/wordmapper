@@ -13,7 +13,7 @@ Alignments.prototype.add = function(alignment) {
     this.removeDuplicates(alignment);
   }
   this.alignments.push(alignment);
-  this.alignments.sort();
+  this.sort();
 };
 // If the given alignment contains a word that has already been used in an alignment,
 // that should take precedence over any previous usage of that word. So this function
@@ -187,6 +187,7 @@ var Source = function(options) {
   this.hash = sha1(this.normalizedText);
   this.index = Source.instances++;
   this.id = this.index;
+  this.nextWordIndex = this.createWordIndexer();
 };
 Source.instances = 0;
 Source.fromDOM = function(el) {
@@ -265,12 +266,12 @@ Source.prototype.makeSpan = function(word, wordIndex, sourceIndex) {
   span.dataset.source = sourceIndex;
   return span;
 };
-Source.prototype.nextWordIndex = (function() {
+Source.prototype.createWordIndexer = function() {
   var index = 0;
   return function() {
     return index++;
   };
-})();
+};
 
 //---------------------------------------------------------------------
 var SiteContext = function(options) {

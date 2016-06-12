@@ -203,7 +203,6 @@ TextBoxes.prototype.selectHighlighted = function() {
 TextBoxes.prototype.clearHighlights = function() {
   this.selectHighlighted().removeClass('highlight');
 };
-
 TextBoxes.prototype.loadSources = function() {
   this.sources = this.select().toArray().map(this.createSource);
 };

@@ -633,7 +633,6 @@
 	TextBoxes.prototype.clearHighlights = function() {
 	  this.selectHighlighted().removeClass('highlight');
 	};
-
 	TextBoxes.prototype.loadSources = function() {
 	  this.sources = this.select().toArray().map(this.createSource);
 	};
@@ -741,7 +740,7 @@
 	    this.removeDuplicates(alignment);
 	  }
 	  this.alignments.push(alignment);
-	  this.alignments.sort();
+	  this.sort();
 	};
 	// If the given alignment contains a word that has already been used in an alignment,
 	// that should take precedence over any previous usage of that word. So this function
@@ -915,6 +914,7 @@
 	  this.hash = sha1(this.normalizedText);
 	  this.index = Source.instances++;
 	  this.id = this.index;
+	  this.nextWordIndex = this.createWordIndexer();
 	};
 	Source.instances = 0;
 	Source.fromDOM = function(el) {
@@ -993,12 +993,12 @@
 	  span.dataset.source = sourceIndex;
 	  return span;
 	};
-	Source.prototype.nextWordIndex = (function() {
+	Source.prototype.createWordIndexer = function() {
 	  var index = 0;
 	  return function() {
 	    return index++;
 	  };
-	})();
+	};
 
 	//---------------------------------------------------------------------
 	var SiteContext = function(options) {
