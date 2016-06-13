@@ -127,7 +127,8 @@ TextBoxes.prototype.bindMethods = [
   'onClickWord',
   'onMouseoverWord',
   'onMouseoutWord',
-  'updateAligned',
+  'updateAlignments',
+  'resetAlignments',
   'clearHighlighted',
   'align'
 ];
@@ -141,8 +142,9 @@ TextBoxes.prototype.addListeners = function() {
   this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
   this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
   this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
-  this.alignments.on('change', this.updateAligned);
+  this.alignments.on('change', this.updateAlignments);
   events.hub.on(EVT.CLEAR_HIGHLIGHTS, this.clearHighlighted);
+  events.hub.on(EVT.CLEAR_ALIGNMENTS, this.resetAlignments);
   events.hub.on(EVT.ALIGN, this.align);
 };
 TextBoxes.prototype.onClickWord = function(evt) {
@@ -169,7 +171,7 @@ TextBoxes.prototype.align = function() {
   }
   this.clearHighlighted();
 };
-TextBoxes.prototype.updateAligned = function() {
+TextBoxes.prototype.updateAlignments = function() {
   var _this = this;
   var alignments = this.alignments.alignments;
 
@@ -185,6 +187,9 @@ TextBoxes.prototype.updateAligned = function() {
     });
     _this.addAligned(spans);
   });
+};
+TextBoxes.prototype.resetAlignments = function() {
+  this.alignments.reset();
 };
 TextBoxes.prototype.addAligned = function(spans) {
   return $(spans).addClass("aligned");
