@@ -45,6 +45,8 @@ Install bookmarklet by creating a new bookmark and copying this code into the UR
 javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:8000/static/js/bookmarklet.js';})();
 ```
 
+Or dragging [this link](javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:8000/static/js/bookmarklet.js';})();) into your bookmarks bar.
+
 ### Testing
 
 1. Ars Medica:
