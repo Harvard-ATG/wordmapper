@@ -14,9 +14,9 @@ The project has two parts: a client-side bookmarklet that can run as an overlay 
 
 ### Usage
 
-1. Install the bookmarklet.**
+1. Install the bookmarklet link from [http://harvard-atg.github.io/wordmapper/](http://harvard-atg.github.io/wordmapper/). **
 2. Navigate to [Ars Medica ch. 10](http://www.graeco-arabic-studies.org/compare-texts/work/ars-medica-2/left/1/right/2/section/10/active/2%2C1.html) to compare the greek and arabic side by side. This is just an example, feel free to navigate to other works.
-3. Run the bookmarklet. When the bookmarklet is activated, you should see instructions on what to do next.
+3. Click on the bookmark to activate it (you should see a toolbar appear at the top of your screen that says **WordMapper** if it worked).
 
 **  For more on installing and using bookmarklets, see [Mozilla's documentation](https://support.mozilla.org/en-US/kb/bookmarklets-perform-common-web-page-tasks).
 
