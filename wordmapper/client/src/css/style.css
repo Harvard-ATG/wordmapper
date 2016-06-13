@@ -33,6 +33,7 @@
     color: #000;
     padding: 1em;
     top: 45px;
+    overflow: scroll;
 }
 .wordmapper-overlay-hidden {
     z-index: -1;

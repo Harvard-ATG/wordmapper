@@ -18,9 +18,7 @@ var Application = function() {
 Application.prototype.init = function() {
   this.el = $('<div>').appendTo('body');
   this.panel = new Panel();
-  this.alignments = new models.Alignments({
-    allowDuplicates: false
-  });
+  this.alignments = new models.Alignments();
   this.boxes = new TextBoxes({
     alignments: this.alignments,
     selector: '.textboxcontent'
@@ -38,8 +36,6 @@ Application.prototype.render = function() {
 //---------------------------------------------------------------------
 var Overlay = function(options) {
   this.alignments = options.alignments;
-  this.renderIndex = this.renderIndex.bind(this);
-  this.renderExport = this.renderExport.bind(this);
   this.lastRenderer = null;
   this.hiddenCls = 'wordmapper-overlay-hidden';
   this.init();
@@ -49,8 +45,8 @@ Overlay.prototype.init = function() {
   this.addListeners();
 };
 Overlay.prototype.addListeners = function() {
-  events.hub.on(EVT.BUILD_INDEX, this.renderIndex);
-  events.hub.on(EVT.EXPORT, this.renderExport);
+  events.hub.on(EVT.BUILD_INDEX, this.makeRenderer("index"));
+  events.hub.on(EVT.EXPORT, this.makeRenderer("export"));
 };
 Overlay.prototype.visible = function() {
   return this.el.andSelf().find('.' + this.hiddenCls).length === 0;
@@ -58,23 +54,16 @@ Overlay.prototype.visible = function() {
 Overlay.prototype.render = function() {
   return this;
 };
-Overlay.prototype.renderExport = function() {
-  var renderer = "export";
-  this.el.html(templates.export({
-    cls: this.getCls(renderer),
-    alignments: this.alignments
-  }));
-  this.lastRenderer = renderer;
-  return this;
-};
-Overlay.prototype.renderIndex = function() {
-  var renderer = "index";
-  this.el.html(templates.index({
-    cls: this.getCls(renderer),
-    alignments: this.alignments
-  }));
-  this.lastRenderer = renderer;
-  return this;
+Overlay.prototype.makeRenderer = function(name) {
+  return function() {
+    var template = templates[name];
+    this.el.html(template({
+      cls: this.getCls(name),
+      alignments: this.alignments
+    }));
+    this.lastRenderer = name;
+    return this;
+  }.bind(this);
 };
 Overlay.prototype.getCls = function(renderer) {
   var cls = '';
@@ -132,6 +121,7 @@ TextBoxes.prototype.bindMethods = [
   'onClickWord',
   'onMouseoverWord',
   'onMouseoutWord',
+  'onAlignmentsAdd',
   'clearHighlights',
   'align'
 ];
@@ -145,6 +135,7 @@ TextBoxes.prototype.addListeners = function() {
   this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
   this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
   this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
+  this.alignments.on('add', this.onAlignmentsAdd);
   events.hub.on(EVT.CLEAR_HIGHLIGHTS, this.clearHighlights);
   events.hub.on(EVT.ALIGN, this.align);
 };
@@ -163,20 +154,25 @@ TextBoxes.prototype.onMouseoutWord = function(evt) {
   //console.log("mouseout", evt.target);
   this.clearAlignmentHighlight();
 };
+TextBoxes.prototype.onAlignmentsAdd = function(alignment) {
+  var spans = this.selectWords(alignment.words);
+  this.setAlignedTo(spans, alignment);
+  this.showAligned(spans);
+};
 TextBoxes.prototype.align = function() {
   var spans = this.selectHighlighted();
-  if (spans.length === 0) {
-    return;
+  if (spans.length > 0) {
+    var words = models.Source.createWords(spans.toArray(), this.sources);
+    var alignment = this.alignments.createAlignment(words);
+    this.alignments.add(alignment);
   }
-  var words = models.Source.createWords(spans.toArray(), this.sources);
-  var alignment = this.alignments.createAlignment(words);
-  this.alignments.add(alignment);
-  this.setAlignedTo(spans, alignment); 
   this.clearHighlights();
-  this.showAligned(spans);
 };
 TextBoxes.prototype.showAligned = function(spans) {
   return $(spans).addClass("aligned");
+};
+TextBoxes.prototype.clearAligned = function() {
+  this.textBoxes.find('.aligned').removeClass('aligned');
 };
 TextBoxes.prototype.setAlignedTo = function(spans, alignment) {
   $(spans).each(function(index, el) {
@@ -191,8 +187,21 @@ TextBoxes.prototype.clearAlignmentHighlight = function() {
 };
 TextBoxes.prototype.selectAlignedWith = function(el) {
   var alignment_id = el.dataset.alignment;
+  return this.selectAlignment(alignment_id);
+};
+TextBoxes.prototype.selectAlignment = function(alignment_id) {
   var selector = '[data-alignment="'+alignment_id+'"]';
   return this.textBoxes.find(selector);
+};
+TextBoxes.prototype.selectWord = function(word) {
+  var selector = '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
+  return this.textBoxes.find(selector);
+};
+TextBoxes.prototype.selectWords = function(words) {
+  var selectors = words.map(function(word) {
+    return '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
+  });
+  return this.textBoxes.find(selectors.join(", "));
 };
 TextBoxes.prototype.showHighlight = function(el) {
   $(el).addClass("highlight");

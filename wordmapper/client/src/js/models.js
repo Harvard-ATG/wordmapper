@@ -1,19 +1,18 @@
 var sha1 = require('sha1');
+var events = require('./events.js');
 
 //---------------------------------------------------------------------
 var Alignments = function(options) {
-  this.allowDuplicates = options.allowDuplicates || false;
   this.alignments = [];
 };
 Alignments.prototype.createAlignment = function(words) {
-  return new Alignment({id: this.nextId(), words: words});
+  return new Alignment({id: this.generateId(), words: words});
 };
 Alignments.prototype.add = function(alignment) {
-  if (!this.allowDuplicates) {
-    this.removeDuplicates(alignment);
-  }
+  this.removeDuplicates(alignment);
   this.alignments.push(alignment);
   this.sort();
+  this.trigger('add', alignment);
 };
 // If the given alignment contains a word that has already been used in an alignment,
 // that should take precedence over any previous usage of that word. So this function
@@ -36,14 +35,25 @@ Alignments.prototype.remove = function(alignment) {
   var idx = this.alignments.indexOf(alignment);
   if (idx >= 0) {
     this.alignments.splice(idx, 1);
+    this.trigger('remove', alignment);
   }
 };
 Alignments.prototype.reset = function() {
   this.alignments = [];
+  this.trigger('reset');
 };
 Alignments.prototype.sort = function() {
   this.alignments.sort(function(a, b) {
-    return a.sortIndex() - b.sortIndex();
+    var a_index = a.minWordIndex();
+    var b_index = b.minWordIndex();
+    console.log("alignments.sort():", a_index, b_index);
+    if (a_index == b_index) {
+      console.log("equal:", a.minSourceIndex() - b.minSourceIndex());
+      return a.minSourceIndex() - b.minSourceIndex();
+    } else {
+      console.log("notequal:", a_index - b_index);
+      return a_index - b_index;
+    }
   });
 };
 Alignments.prototype.isEmpty = function() {
@@ -68,13 +78,16 @@ Alignments.prototype.toJSON = function(serialize) {
   }
   return data;
 };
-Alignments.prototype.nextId = (function() {
+Alignments.prototype.generateId = (function() {
   var id = 0;
   return function() {
     id++;
-    return id;
+    // NOTE: Appending underscore to signify it's a temproary, generated ID (not from remote server).
+    // Should be able to use parseInt() on the generated ID to get the numeric value if needed.
+    return id+"_"; 
   };
 })();
+events.Events.mixin(Alignments.prototype);
 
 //---------------------------------------------------------------------
 var Alignment = function(options) {
@@ -108,11 +121,15 @@ Alignment.prototype.removeWord = function(word) {
     this.words.splice(found.index, 1);
   }
 };
-Alignment.prototype.sortIndex = function() {
-  var word_indexes = this.words.map(function(word) {
+Alignment.prototype.minWordIndex = function() {
+  return Math.min.apply(Math, this.words.map(function(word) {
     return word.index;
-  });
-  return Math.min.apply(Math, word_indexes);
+  }));
+};
+Alignment.prototype.minSourceIndex = function() {
+  return Math.min.apply(Math, this.words.map(function(word) {
+    return word.source.index;
+  }));
 };
 Alignment.prototype.size = function() {
   return this.words.length;
