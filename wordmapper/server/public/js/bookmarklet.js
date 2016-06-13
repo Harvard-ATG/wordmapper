@@ -431,7 +431,7 @@
 	var events = __webpack_require__(8);
 	var services = __webpack_require__(9);
 	var models = __webpack_require__(10);
-	var templates = __webpack_require__(18);
+	var templates = __webpack_require__(23);
 
 	var EVT = {
 	  ALIGN: 'align',
@@ -750,10 +750,19 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var sha1 = __webpack_require__(11);
-	var events = __webpack_require__(8);
+	module.exports = {
+	  Alignments: __webpack_require__(11),
+	  Source: __webpack_require__(13),
+	  SiteContext: __webpack_require__(22)
+	};
 
-	//---------------------------------------------------------------------
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var events = __webpack_require__(8);
+	var Alignment = __webpack_require__(12);
+
 	var Alignments = function(options) {
 	  this.alignments = [];
 	};
@@ -837,7 +846,12 @@
 	})();
 	events.Events.mixin(Alignments.prototype);
 
-	//---------------------------------------------------------------------
+	module.exports = Alignments;
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
 	var Alignment = function(options) {
 	  this.id = options.id;
 	  this.words = Array.prototype.slice.call(options.words);
@@ -926,38 +940,15 @@
 	  return data;
 	};
 
-	//---------------------------------------------------------------------
-	var Word = function(options) {
-	  var self = this;
-	  ['index', 'source', 'value'].forEach(function(attr) {
-	    if (options.hasOwnProperty(attr) && options[attr]) {
-	      self[attr] = options[attr];
-	    } else {
-	      throw "Missing required attribute to construct Word: " + attr;
-	    }
-	  });
-	};
-	Word.prototype.isEqual = function(word) {
-	  return this.index == word.index && this.source.hash == word.source.hash;
-	};
-	Word.create = function(options) {
-	  return new Word(options);
-	};
-	Word.prototype.toString = function() {
-	  return this.value.toString();
-	};
-	Word.prototype.toJSON = function() {
-	  var data = {
-	    'type': 'word',
-	    'data': {
-	      'index': this.index,
-	      'source': (this.source.hash ? this.source.hash : ''),
-	      'value': this.value
-	    }
-	  };
-	  return data;
-	};
-	//---------------------------------------------------------------------
+	module.exports = Alignment;
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var sha1 = __webpack_require__(14);
+	var Word = __webpack_require__(21);
+
 	var Source = function(options) {
 	  this.el = options.el;
 	  this.index = options.index;
@@ -1054,35 +1045,16 @@
 	  };
 	};
 
-	//---------------------------------------------------------------------
-	var SiteContext = function(options) {
-	  this.url = options.url || '';
-	};
-	SiteContext.prototype.serializeAlignments = function(alignments, serialize) {
-	  var result = {};
-	  result.type = "site";
-	  result.url = this.url;
-	  result.data = alignments.toJSON();
-	  if (serialize) {
-	    return JSON.stringify(result, null, '\t');
-	  }
-	  return result;
-	};
-
-	module.exports = {
-	  Alignments: Alignments,
-	  Source: Source,
-	  SiteContext: SiteContext
-	};
+	module.exports = Source;
 
 /***/ },
-/* 11 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(16),
-	      utf8 = __webpack_require__(17).utf8,
-	      bin = __webpack_require__(17).bin,
+	  var crypt = __webpack_require__(19),
+	      utf8 = __webpack_require__(20).utf8,
+	      bin = __webpack_require__(20).bin,
 
 	  // The core
 	  sha1 = function (message) {
@@ -1162,10 +1134,10 @@
 	  module.exports = api;
 	})();
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15).Buffer))
 
 /***/ },
-/* 12 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
@@ -1178,9 +1150,9 @@
 
 	'use strict'
 
-	var base64 = __webpack_require__(13)
-	var ieee754 = __webpack_require__(14)
-	var isArray = __webpack_require__(15)
+	var base64 = __webpack_require__(16)
+	var ieee754 = __webpack_require__(17)
+	var isArray = __webpack_require__(18)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -2717,10 +2689,10 @@
 	  return i
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 13 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -2850,7 +2822,7 @@
 
 
 /***/ },
-/* 14 */
+/* 17 */
 /***/ function(module, exports) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2940,7 +2912,7 @@
 
 
 /***/ },
-/* 15 */
+/* 18 */
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -2951,7 +2923,7 @@
 
 
 /***/ },
-/* 16 */
+/* 19 */
 /***/ function(module, exports) {
 
 	(function() {
@@ -3053,7 +3025,7 @@
 
 
 /***/ },
-/* 17 */
+/* 20 */
 /***/ function(module, exports) {
 
 	var charenc = {
@@ -3092,20 +3064,77 @@
 
 
 /***/ },
-/* 18 */
+/* 21 */
+/***/ function(module, exports) {
+
+	var Word = function(options) {
+	  var self = this;
+	  ['index', 'source', 'value'].forEach(function(attr) {
+	    if (options.hasOwnProperty(attr) && options[attr]) {
+	      self[attr] = options[attr];
+	    } else {
+	      throw "Missing required attribute to construct Word: " + attr;
+	    }
+	  });
+	};
+	Word.prototype.isEqual = function(word) {
+	  return this.index == word.index && this.source.hash == word.source.hash;
+	};
+	Word.create = function(options) {
+	  return new Word(options);
+	};
+	Word.prototype.toString = function() {
+	  return this.value.toString();
+	};
+	Word.prototype.toJSON = function() {
+	  var data = {
+	    'type': 'word',
+	    'data': {
+	      'index': this.index,
+	      'source': (this.source.hash ? this.source.hash : ''),
+	      'value': this.value
+	    }
+	  };
+	  return data;
+	};
+
+	module.exports = Word;
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	var SiteContext = function(options) {
+	  this.url = options.url || '';
+	};
+	SiteContext.prototype.serializeAlignments = function(alignments, serialize) {
+	  var result = {};
+	  result.type = "site";
+	  result.url = this.url;
+	  result.data = alignments.toJSON();
+	  if (serialize) {
+	    return JSON.stringify(result, null, '\t');
+	  }
+	  return result;
+	};
+
+	module.exports = SiteContext;
+
+/***/ },
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  panel: __webpack_require__(19),
-	  index: __webpack_require__(22),
-	  export: __webpack_require__(23)
+	  panel: __webpack_require__(24),
+	  index: __webpack_require__(27),
+	  export: __webpack_require__(28)
 	};
 
 /***/ },
-/* 19 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(20);
+	var _ = __webpack_require__(25);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
 	obj || (obj = {});
 	var __t, __p = '';
@@ -3118,7 +3147,7 @@
 
 
 /***/ },
-/* 20 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -19526,10 +19555,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)(module), (function() { return this; }())))
 
 /***/ },
-/* 21 */
+/* 26 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -19545,10 +19574,10 @@
 
 
 /***/ },
-/* 22 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(20);
+	var _ = __webpack_require__(25);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
 	obj || (obj = {});
 	var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
@@ -19578,10 +19607,10 @@
 
 
 /***/ },
-/* 23 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(20);
+	var _ = __webpack_require__(25);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
 	obj || (obj = {});
 	var __t, __p = '';
