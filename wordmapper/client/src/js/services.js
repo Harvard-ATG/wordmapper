@@ -39,8 +39,23 @@ StorageService.prototype._load = function() {
 StorageService.prototype._save = function() {
   throw "Subclass responsibility";
 };
-StorageService.prototype._serialize = function() {
-  throw "Subclass responsibility";
+StorageService.prototype._serialize = function(obj) {
+  return obj.serialize();
+};
+StorageService.prototype._parse = function(jsonData) {
+  var sourceMap = this.getSourceMap();
+  var result = JSON.parse(jsonData);
+  var alignments = result.data.map(function(alignment) {
+    var words = alignment.data.map(function(word) {
+      return models.Word.create({
+        index: word.data.index,
+        value: word.data.value,
+        source: sourceMap[word.data.source]
+      });
+    });
+    return models.Alignments.createAlignment(words);
+  });
+  return alignments;
 };
 
 //---------------------------------------------------------------------
@@ -51,40 +66,38 @@ var LocalStorageService = function() {
   StorageService.apply(this, arguments);
 };
 LocalStorageService.prototype = new StorageService();
-LocalStorageService.prototype._serialize = function(obj) {
-  return obj.serialize();
-};
 LocalStorageService.prototype._load = function(deferred) {
   var jsonData = localStorage.getItem(this.getDataKey());
-  var sourceMap = this.getSourceMap();
-  var result = null;
-  var alignments = [];
-  
   if (jsonData === null) {
     deferred.resolve([]);
-    return;
+  } else {
+    deferred.resolve(this._parse(jsonData));
   }
-
-  result = JSON.parse(jsonData);
-  alignments = result.data.map(function(alignment) {
-    var words = alignment.data.map(function(word) {
-      return models.Word.create({
-        index: word.data.index,
-        value: word.data.value,
-        source: sourceMap[word.data.source]
-      });
-    });
-    return models.Alignments.createAlignment(words);
-  });
-
-  deferred.resolve(alignments);
-  return;
 };
 LocalStorageService.prototype._save = function(deferred, serialized) {
   localStorage.setItem(this.getDataKey(), serialized);
   deferred.resolve();
 };
 
+//---------------------------------------------------------------------
+var SettingsService = {
+  _settings: {
+    'www.graeco-arabic-studies.org': {
+      'sourceSelector': '.textboxcontent'
+    }
+  },
+  get: function(siteContext) {
+    var settings = false;
+    if (siteContext.id in this._settings) {
+      settings = this._settings[siteContext.id];
+    } else {
+      throw "Settings not found for site ID: " + siteContext.id;
+    }
+    return settings;
+  }
+};
+
 module.exports = {
-  LocalStorageService: LocalStorageService
+  LocalStorageService: LocalStorageService,
+  SettingsService: SettingsService
 };

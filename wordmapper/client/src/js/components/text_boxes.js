@@ -21,7 +21,7 @@ TextBoxes.prototype.bindMethods = [
   'align'
 ];
 TextBoxes.prototype.init = function() {
-  this.loadSources();
+  this.sources = this.loadSources();
   this.transform();
   this.textBoxes = this.select();
   this.addListeners();
@@ -122,7 +122,7 @@ TextBoxes.prototype.selectWords = function(words) {
   return this.textBoxes.find(selector);
 };
 TextBoxes.prototype.loadSources = function() {
-  this.sources = this.select().toArray().map(this.createSource);
+  return this.select().toArray().map(this.createSource);
 };
 TextBoxes.prototype.createSource = function(el, index) {
   return new models.Source.fromDOM(el, index);

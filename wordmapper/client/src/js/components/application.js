@@ -15,9 +15,10 @@ Application.prototype.init = function() {
     id: window.location.hostname,
     url: window.location.toString()
   });
+  this.settings = services.SettingsService.get(this.siteContext);
   this.boxes = new TextBoxes({
     alignments: this.alignments,
-    selector: '.textboxcontent'
+    selector: this.settings.sourceSelector
   });
   this.overlay = new Overlay({
     siteContext: this.siteContext,

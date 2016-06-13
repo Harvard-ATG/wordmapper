@@ -453,9 +453,10 @@
 	    id: window.location.hostname,
 	    url: window.location.toString()
 	  });
+	  this.settings = services.SettingsService.get(this.siteContext);
 	  this.boxes = new TextBoxes({
 	    alignments: this.alignments,
-	    selector: '.textboxcontent'
+	    selector: this.settings.sourceSelector
 	  });
 	  this.overlay = new Overlay({
 	    siteContext: this.siteContext,
@@ -539,8 +540,23 @@
 	StorageService.prototype._save = function() {
 	  throw "Subclass responsibility";
 	};
-	StorageService.prototype._serialize = function() {
-	  throw "Subclass responsibility";
+	StorageService.prototype._serialize = function(obj) {
+	  return obj.serialize();
+	};
+	StorageService.prototype._parse = function(jsonData) {
+	  var sourceMap = this.getSourceMap();
+	  var result = JSON.parse(jsonData);
+	  var alignments = result.data.map(function(alignment) {
+	    var words = alignment.data.map(function(word) {
+	      return models.Word.create({
+	        index: word.data.index,
+	        value: word.data.value,
+	        source: sourceMap[word.data.source]
+	      });
+	    });
+	    return models.Alignments.createAlignment(words);
+	  });
+	  return alignments;
 	};
 
 	//---------------------------------------------------------------------
@@ -551,42 +567,40 @@
 	  StorageService.apply(this, arguments);
 	};
 	LocalStorageService.prototype = new StorageService();
-	LocalStorageService.prototype._serialize = function(obj) {
-	  return obj.serialize();
-	};
 	LocalStorageService.prototype._load = function(deferred) {
 	  var jsonData = localStorage.getItem(this.getDataKey());
-	  var sourceMap = this.getSourceMap();
-	  var result = null;
-	  var alignments = [];
-	  
 	  if (jsonData === null) {
 	    deferred.resolve([]);
-	    return;
+	  } else {
+	    deferred.resolve(this._parse(jsonData));
 	  }
-
-	  result = JSON.parse(jsonData);
-	  alignments = result.data.map(function(alignment) {
-	    var words = alignment.data.map(function(word) {
-	      return models.Word.create({
-	        index: word.data.index,
-	        value: word.data.value,
-	        source: sourceMap[word.data.source]
-	      });
-	    });
-	    return models.Alignments.createAlignment(words);
-	  });
-
-	  deferred.resolve(alignments);
-	  return;
 	};
 	LocalStorageService.prototype._save = function(deferred, serialized) {
 	  localStorage.setItem(this.getDataKey(), serialized);
 	  deferred.resolve();
 	};
 
+	//---------------------------------------------------------------------
+	var SettingsService = {
+	  _settings: {
+	    'www.graeco-arabic-studies.org': {
+	      'sourceSelector': '.textboxcontent'
+	    }
+	  },
+	  get: function(siteContext) {
+	    var settings = false;
+	    if (siteContext.id in this._settings) {
+	      settings = this._settings[siteContext.id];
+	    } else {
+	      throw "Settings not found for site ID: " + siteContext.id;
+	    }
+	    return settings;
+	  }
+	};
+
 	module.exports = {
-	  LocalStorageService: LocalStorageService
+	  LocalStorageService: LocalStorageService,
+	  SettingsService: SettingsService
 	};
 
 /***/ },
@@ -19552,7 +19566,7 @@
 	 }); ;
 	__p += '\n        </div>\n      ';
 	 }); ;
-	__p += '\n  </div>\n</div>';
+	__p += '\n  </div>\n  <p class="openWindow"><button>Pop out in a new window</button></p>\n</div>';
 
 	}
 	return __p
@@ -19572,7 +19586,7 @@
 	((__t = ( cls )) == null ? '' : __t) +
 	'">\n  <div class="wordmapper-alignments" style="height: 100%">\n    <b>JSON:</b>\n    <textarea class="json">' +
 	((__t = ( siteContext.serializeAlignments(alignments, true) )) == null ? '' : __t) +
-	'</textarea>\n  </div>\n</div>';
+	'</textarea>\n    <p class="openWindow"><button>Pop out in a new window</button></p>\n  </div>\n</div>';
 
 	}
 	return __p
@@ -19591,6 +19605,7 @@
 	  this.siteContext = options.siteContext;
 	  this.lastRenderer = null;
 	  this.hiddenCls = 'wordmapper-overlay-hidden';
+	  this.popout = this.popout.bind(this);
 	  this.init();
 	};
 	Overlay.prototype.init = function() {
@@ -19600,6 +19615,7 @@
 	Overlay.prototype.addListeners = function() {
 	  events.hub.on(events.EVT.BUILD_INDEX, this.makeRenderer("index"));
 	  events.hub.on(events.EVT.EXPORT, this.makeRenderer("export"));
+	  this.el.on('click', '.openWindow', null, this.popout);
 	};
 	Overlay.prototype.visible = function() {
 	  return this.el.andSelf().find('.' + this.hiddenCls).length === 0;
@@ -19627,6 +19643,36 @@
 	    }
 	  }
 	  return cls;
+	};
+	Overlay.prototype.popout = function() {
+	  var opts = [
+	    "toolbar=no",
+	    "location=no",
+	    "directories=no",
+	    "status=no",
+	    "menubar=no",
+	    "scrollbars=yes",
+	    "resizable=yes",
+	    "width=400",
+	    "height=600", 
+	    'top="'+(window.screen.height-400)+'"',
+	    'left="'+(window.screen.width-840)+'"'
+	  ];
+	  var win = window.open("", this.lastRenderer, opts.join(","));
+	  var cloned = $(this.el)[0].cloneNode(true);
+	  
+	  // remove the popout button
+	  $(cloned).find('.openWindow').remove();
+	  
+	  // set the content of the new window
+	  win.document.body.innerHTML = $(cloned).html();
+	  
+	  // copy our stylesheet(s) to the new window
+	  for (var children = window.document.head.children, i = 0; i < children.length; i++) {
+	    if (children[i].tagName === "STYLE" && children[i].textContent.indexOf(".wordmapper") >= 0) {
+	      win.document.head.appendChild(children[i].cloneNode(true)); 
+	    }
+	  }
 	};
 
 	module.exports = Overlay;
@@ -19658,7 +19704,7 @@
 	  'align'
 	];
 	TextBoxes.prototype.init = function() {
-	  this.loadSources();
+	  this.sources = this.loadSources();
 	  this.transform();
 	  this.textBoxes = this.select();
 	  this.addListeners();
@@ -19759,7 +19805,7 @@
 	  return this.textBoxes.find(selector);
 	};
 	TextBoxes.prototype.loadSources = function() {
-	  this.sources = this.select().toArray().map(this.createSource);
+	  return this.select().toArray().map(this.createSource);
 	};
 	TextBoxes.prototype.createSource = function(el, index) {
 	  return new models.Source.fromDOM(el, index);
