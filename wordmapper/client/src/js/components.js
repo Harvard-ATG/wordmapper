@@ -19,7 +19,10 @@ Application.prototype.init = function() {
   this.el = $('<div>').appendTo('body');
   this.panel = new Panel();
   this.alignments = new models.Alignments();
-  this.siteContext = new models.SiteContext({ id: window.location.hostname });
+  this.siteContext = new models.SiteContext({
+    id: window.location.hostname,
+    url: window.location.toString()
+  });
   this.boxes = new TextBoxes({
     alignments: this.alignments,
     selector: '.textboxcontent'
