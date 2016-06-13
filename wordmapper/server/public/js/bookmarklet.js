@@ -457,6 +457,7 @@
 	    selector: '.textboxcontent'
 	  });
 	  this.overlay = new Overlay({
+	    siteContext: this.siteContext,
 	    alignments: this.alignments
 	  });
 	};
@@ -469,6 +470,7 @@
 	//---------------------------------------------------------------------
 	var Overlay = function(options) {
 	  this.alignments = options.alignments;
+	  this.siteContext = options.siteContext;
 	  this.lastRenderer = null;
 	  this.hiddenCls = 'wordmapper-overlay-hidden';
 	  this.init();
@@ -492,7 +494,8 @@
 	    var template = templates[name];
 	    this.el.html(template({
 	      cls: this.getCls(name),
-	      alignments: this.alignments
+	      alignments: this.alignments,
+	      siteContext: this.siteContext
 	    }));
 	    this.lastRenderer = name;
 	    return this;
@@ -1053,7 +1056,17 @@
 
 	//---------------------------------------------------------------------
 	var SiteContext = function(options) {
-	  this.url = options.url;
+	  this.url = options.url || '';
+	};
+	SiteContext.prototype.serializeAlignments = function(alignments, serialize) {
+	  var result = {};
+	  result.type = "site";
+	  result.url = this.url;
+	  result.data = alignments.toJSON();
+	  if (serialize) {
+	    return JSON.stringify(result, null, '\t');
+	  }
+	  return result;
 	};
 
 	module.exports = {
@@ -19576,7 +19589,7 @@
 	__p += '\n<!-- wordmapper/client/src/html/export.html -->\n<div class="wordmapper wordmapper-overlay ' +
 	((__t = ( cls )) == null ? '' : __t) +
 	'">\n  <div class="wordmapper-alignments" style="height: 100%">\n    <b>JSON:</b>\n    <textarea class="json">' +
-	((__t = ( alignments.toJSON(true) )) == null ? '' : __t) +
+	((__t = ( siteContext.serializeAlignments(alignments, true) )) == null ? '' : __t) +
 	'</textarea>\n  </div>\n</div>';
 
 	}

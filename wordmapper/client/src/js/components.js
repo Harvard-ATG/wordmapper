@@ -27,6 +27,7 @@ Application.prototype.init = function() {
     selector: '.textboxcontent'
   });
   this.overlay = new Overlay({
+    siteContext: this.siteContext,
     alignments: this.alignments
   });
 };
@@ -39,6 +40,7 @@ Application.prototype.render = function() {
 //---------------------------------------------------------------------
 var Overlay = function(options) {
   this.alignments = options.alignments;
+  this.siteContext = options.siteContext;
   this.lastRenderer = null;
   this.hiddenCls = 'wordmapper-overlay-hidden';
   this.init();
@@ -62,7 +64,8 @@ Overlay.prototype.makeRenderer = function(name) {
     var template = templates[name];
     this.el.html(template({
       cls: this.getCls(name),
-      alignments: this.alignments
+      alignments: this.alignments,
+      siteContext: this.siteContext
     }));
     this.lastRenderer = name;
     return this;
