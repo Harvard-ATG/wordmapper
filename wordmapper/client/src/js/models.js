@@ -9,8 +9,8 @@ Alignments.prototype.createAlignment = function(words) {
   return new Alignment({id: this.generateId(), words: words});
 };
 Alignments.prototype.add = function(alignment) {
-  this.removeDuplicates(alignment);
-  this.removeEmpty();
+  this._removeDuplicates(alignment);
+  this._removeEmpty();
   this.alignments.push(alignment);
   this.sort();
   this.trigger('change');
@@ -18,7 +18,7 @@ Alignments.prototype.add = function(alignment) {
 // If the given alignment contains a word that has already been used in an alignment,
 // that should take precedence over any previous usage of that word. So this function
 // removes any duplicates in existing alignments.
-Alignments.prototype.removeDuplicates = function(given_alignment) {
+Alignments.prototype._removeDuplicates = function(given_alignment) {
   this.alignments.forEach(function(alignment) {
     for(var i = 0, words = alignment.words, word; i < words.length; i++) {
       word = words[i];
@@ -28,7 +28,7 @@ Alignments.prototype.removeDuplicates = function(given_alignment) {
     }
   });
 };
-Alignments.prototype.removeEmpty = function() {
+Alignments.prototype._removeEmpty = function() {
   this.alignments = this.alignments.filter(function(alignment) {
     return !alignment.isEmpty();
   });
