@@ -41,5 +41,12 @@ Events.mixin = function(dest) {
 
 module.exports = {
   Events: Events,
+  EVT: {
+    ALIGN: 'align',
+    CLEAR_HIGHLIGHTS: 'clear_highlights',
+    CLEAR_ALIGNMENTS: 'clear_alignments',
+    BUILD_INDEX: 'build_index',
+    EXPORT: 'export'
+  },
   hub: new Events({debug: true})
 };

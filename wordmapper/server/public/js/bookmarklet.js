@@ -428,20 +428,20 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var events = __webpack_require__(8);
-	var services = __webpack_require__(9);
-	var models = __webpack_require__(10);
-	var templates = __webpack_require__(23);
-
-	var EVT = {
-	  ALIGN: 'align',
-	  CLEAR_HIGHLIGHTS: 'clear_highlights',
-	  CLEAR_ALIGNMENTS: 'clear_alignments',
-	  BUILD_INDEX: 'build_index',
-	  EXPORT: 'export'
+	module.exports = {
+	    Application: __webpack_require__(8)
 	};
 
-	//---------------------------------------------------------------------
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var services = __webpack_require__(9);
+	var models = __webpack_require__(10);
+	var Panel = __webpack_require__(24);
+	var Overlay = __webpack_require__(31);
+	var TextBoxes = __webpack_require__(32);
+
 	var Application = function() {
 	  this.init();
 	};
@@ -492,278 +492,7 @@
 	  }.bind(this));
 	};
 
-	//---------------------------------------------------------------------
-	var Overlay = function(options) {
-	  this.alignments = options.alignments;
-	  this.siteContext = options.siteContext;
-	  this.lastRenderer = null;
-	  this.hiddenCls = 'wordmapper-overlay-hidden';
-	  this.init();
-	};
-	Overlay.prototype.init = function() {
-	  this.el = $("<div>").append('<div class="'+this.hiddenCls+'"></div>');
-	  this.addListeners();
-	};
-	Overlay.prototype.addListeners = function() {
-	  events.hub.on(EVT.BUILD_INDEX, this.makeRenderer("index"));
-	  events.hub.on(EVT.EXPORT, this.makeRenderer("export"));
-	};
-	Overlay.prototype.visible = function() {
-	  return this.el.andSelf().find('.' + this.hiddenCls).length === 0;
-	};
-	Overlay.prototype.render = function() {
-	  return this;
-	};
-	Overlay.prototype.makeRenderer = function(name) {
-	  return function() {
-	    var template = templates[name];
-	    this.el.html(template({
-	      cls: this.getCls(name),
-	      alignments: this.alignments,
-	      siteContext: this.siteContext
-	    }));
-	    this.lastRenderer = name;
-	    return this;
-	  }.bind(this);
-	};
-	Overlay.prototype.getCls = function(renderer) {
-	  var cls = '';
-	  if (this.visible()) {
-	    if (renderer === this.lastRenderer) {
-	      cls = this.hiddenCls;
-	    }
-	  }
-	  return cls;
-	};
-
-	//---------------------------------------------------------------------
-	var Panel = function() {
-	  this.el = null;
-	  this.onClickButton = this.onClickButton.bind(this);
-	  this.init();
-	};
-	Panel.prototype.init = function() {
-	  this.el = $('<div>');
-	  this.addListeners();
-	};
-	Panel.prototype.addListeners = function() {
-	  this.el.on('click', this.onClickButton);
-	};
-	Panel.prototype.onClickButton = function(evt) {
-	  var btnMap = {
-	    align: EVT.ALIGN,
-	    clear_highlights: EVT.CLEAR_HIGHLIGHTS,
-	    clear_alignments: EVT.CLEAR_ALIGNMENTS,
-	    build_index: EVT.BUILD_INDEX,
-	    export: EVT.EXPORT
-	  };
-	  var t = evt.target;
-	  if (t.nodeName == 'BUTTON' && t.name in btnMap) {
-	    events.hub.trigger(btnMap[t.name]);
-	  }  
-	};
-	Panel.prototype.render = function() {
-	  this.el.html(templates.panel());
-	  return this;
-	};
-
-	//---------------------------------------------------------------------
-	var TextBoxes = function(options) {
-	  this.selector = options.selector;
-	  this.alignments = options.alignments;
-	  this.sources = null;
-	  this.textBoxes = null;
-	  this.bindMethods.forEach(function(method) {
-	    this[method] = this[method].bind(this);
-	  }, this);
-	  this.init();
-	};
-	TextBoxes.prototype.bindMethods = [
-	  'onClickWord',
-	  'onMouseoverWord',
-	  'onMouseoutWord',
-	  'updateAlignments',
-	  'resetAlignments',
-	  'clearHighlighted',
-	  'align'
-	];
-	TextBoxes.prototype.init = function() {
-	  this.loadSources();
-	  this.transform();
-	  this.textBoxes = this.select();
-	  this.addListeners();
-	};
-	TextBoxes.prototype.addListeners = function() {
-	  this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
-	  this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
-	  this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
-	  this.alignments.on('change', this.updateAlignments);
-	  events.hub.on(EVT.CLEAR_HIGHLIGHTS, this.clearHighlighted);
-	  events.hub.on(EVT.CLEAR_ALIGNMENTS, this.resetAlignments);
-	  events.hub.on(EVT.ALIGN, this.align);
-	};
-	TextBoxes.prototype.onClickWord = function(evt) {
-	  //console.log("click", evt.target);
-	  this.addHighlight(evt.target);
-	};
-	TextBoxes.prototype.onMouseoverWord = function(evt) {
-	  //console.log("mouseover", evt.target);
-	  var spans = this.selectAlignedWith(evt.target);
-	  if (spans.length > 0) {
-	    this.addHighlight2(spans);
-	  }
-	};
-	TextBoxes.prototype.onMouseoutWord = function(evt) {
-	  //console.log("mouseout", evt.target);
-	  this.clearHighlight2();
-	};
-	TextBoxes.prototype.align = function() {
-	  var spans = this.selectHighlighted();
-	  if (spans.length > 0) {
-	    var words = models.Source.createWords(spans.toArray(), this.sources);
-	    var alignment = this.alignments.createAlignment(words);
-	    this.alignments.add(alignment);
-	  }
-	  this.clearHighlighted();
-	};
-	TextBoxes.prototype.updateAlignments = function() {
-	  var _this = this;
-	  var alignments = this.alignments.alignments;
-
-	  this.selectAlignments().each(function(index, el) {
-	    delete el.dataset.alignment;
-	    _this.removeAligned(el);
-	  });
-
-	  alignments.forEach(function(alignment, index) {
-	    var spans = _this.selectWords(alignment.words);
-	    $(spans).each(function(index, el) {
-	      el.dataset.alignment = alignment.id;
-	    });
-	    _this.addAligned(spans);
-	  });
-	};
-	TextBoxes.prototype.resetAlignments = function() {
-	  this.alignments.reset();
-	};
-	TextBoxes.prototype.addAligned = function(spans) {
-	  return $(spans).addClass("aligned");
-	};
-	TextBoxes.prototype.addHighlight = function(spans) {
-	  return $(spans).addClass("highlight");
-	};
-	TextBoxes.prototype.addHighlight2 = function(spans) {
-	  return $(spans).addClass('highlight2');
-	};
-	TextBoxes.prototype.clearHighlight2 = function() {
-	  return this.textBoxes.find('.highlight2').removeClass('highlight2');
-	};
-	TextBoxes.prototype.clearHighlighted = function() {
-	  return this.selectHighlighted().removeClass('highlight');
-	};
-	TextBoxes.prototype.clearAligned = function() {
-	  return this.textBoxes.find('.aligned').removeClass('aligned');
-	};
-	TextBoxes.prototype.removeAligned = function(spans) {
-	  return $(spans).removeClass("aligned");
-	};
-	TextBoxes.prototype.selectHighlighted = function() {
-	  return this.textBoxes.find('.highlight');
-	};
-	TextBoxes.prototype.selectAlignedWith = function(el) {
-	  return this.selectAlignment(el.dataset.alignment);
-	};
-	TextBoxes.prototype.selectAlignment = function(alignment_id) {
-	  return this.textBoxes.find('[data-alignment="'+alignment_id+'"]');
-	};
-	TextBoxes.prototype.selectAlignments = function() {
-	  return this.textBoxes.find('[data-alignment]');
-	};
-	TextBoxes.prototype.selectWord = function(word) {
-	  return this.textBoxes.find('[data-word="'+word.index+'"][data-source="'+word.source.index+'"]');
-	};
-	TextBoxes.prototype.selectWords = function(words) {
-	  var selector = words.map(function(word) {
-	    return '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
-	  }).join(", ");
-	  return this.textBoxes.find(selector);
-	};
-	TextBoxes.prototype.loadSources = function() {
-	  this.sources = this.select().toArray().map(this.createSource);
-	};
-	TextBoxes.prototype.createSource = function(el, index) {
-	  return new models.Source.fromDOM(el, index);
-	};
-	TextBoxes.prototype.select = function() {
-	  return $(this.selector);
-	};
-	TextBoxes.prototype.transform = function() {
-	  var textBoxes = this.select();
-	  this.sources.forEach(function(source, index) {
-	    this.replace(textBoxes[index], source.transform().copyElement());
-	  }, this);
-	};
-	TextBoxes.prototype.replace = function(textBox, el) {
-	  textBox.parentNode.replaceChild(el, textBox);
-	};
-
-
-	//---------------------------------------------------------------------
-	module.exports = {
-	    Application: Application,
-	    Panel: Panel
-	};
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	var Events = function(options) {
-	  options = options || {};
-	  this.debug = options.debug || false;
-	};
-	Events.prototype.on = function(event, fn) {
-	  var _this = this;
-	  _this._events = _this._events || {};
-	  _this._events[event] = this._events[event] || [];
-	  _this._events[event].push(fn);
-	};
-	Events.prototype.off = function(event, fn) {
-	  var _this = this;
-	  _this._events = _this._events || {};
-	  if (event in _this._events === false) {
-	    return;
-	  }
-	  _this._events[event].splice(_this._events[event].indexOf(fn), 1);
-	};
-	Events.prototype.trigger = function(event) {
-	  var _this = this;
-	  _this._events = _this._events || {};
-	  if (event in _this._events === false) {
-	    return;
-	  }
-	  if (_this.debug) {
-	    console.log("trigger: ", event);
-	  }
-	  for(var i = 0; i < _this._events[event].length; i++) {
-	    _this._events[event][i].apply(_this, Array.prototype.slice.call(arguments, 1));
-	  }
-	};
-	Events.mixin = function(dest) {
-	  ['on','off','trigger'].forEach(function(method) {
-	    if (typeof dest === 'function') {
-	      dest.prototype[method] = Events.prototype[method]; 
-	    } else {
-	      dest[method] = Events.prototype[method];
-	    }
-	  });
-	};
-
-	module.exports = {
-	  Events: Events,
-	  hub: new Events({debug: true})
-	};
-
+	module.exports = Application;
 
 /***/ },
 /* 9 */
@@ -866,18 +595,18 @@
 
 	module.exports = {
 	  Alignments: __webpack_require__(11),
-	  Alignment: __webpack_require__(12),
-	  Word: __webpack_require__(13),
-	  Source: __webpack_require__(14),
-	  SiteContext: __webpack_require__(22)
+	  Alignment: __webpack_require__(13),
+	  Word: __webpack_require__(14),
+	  Source: __webpack_require__(15),
+	  SiteContext: __webpack_require__(23)
 	};
 
 /***/ },
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var events = __webpack_require__(8);
-	var Alignment = __webpack_require__(12);
+	var events = __webpack_require__(12);
+	var Alignment = __webpack_require__(13);
 
 	var Alignments = function(options) {
 	  this.alignments = [];
@@ -974,6 +703,64 @@
 /* 12 */
 /***/ function(module, exports) {
 
+	var Events = function(options) {
+	  options = options || {};
+	  this.debug = options.debug || false;
+	};
+	Events.prototype.on = function(event, fn) {
+	  var _this = this;
+	  _this._events = _this._events || {};
+	  _this._events[event] = this._events[event] || [];
+	  _this._events[event].push(fn);
+	};
+	Events.prototype.off = function(event, fn) {
+	  var _this = this;
+	  _this._events = _this._events || {};
+	  if (event in _this._events === false) {
+	    return;
+	  }
+	  _this._events[event].splice(_this._events[event].indexOf(fn), 1);
+	};
+	Events.prototype.trigger = function(event) {
+	  var _this = this;
+	  _this._events = _this._events || {};
+	  if (event in _this._events === false) {
+	    return;
+	  }
+	  if (_this.debug) {
+	    console.log("trigger: ", event);
+	  }
+	  for(var i = 0; i < _this._events[event].length; i++) {
+	    _this._events[event][i].apply(_this, Array.prototype.slice.call(arguments, 1));
+	  }
+	};
+	Events.mixin = function(dest) {
+	  ['on','off','trigger'].forEach(function(method) {
+	    if (typeof dest === 'function') {
+	      dest.prototype[method] = Events.prototype[method]; 
+	    } else {
+	      dest[method] = Events.prototype[method];
+	    }
+	  });
+	};
+
+	module.exports = {
+	  Events: Events,
+	  EVT: {
+	    ALIGN: 'align',
+	    CLEAR_HIGHLIGHTS: 'clear_highlights',
+	    CLEAR_ALIGNMENTS: 'clear_alignments',
+	    BUILD_INDEX: 'build_index',
+	    EXPORT: 'export'
+	  },
+	  hub: new Events({debug: true})
+	};
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
 	var Alignment = function(options) {
 	  this.id = options.id;
 	  this.words = Array.prototype.slice.call(options.words);
@@ -1068,7 +855,7 @@
 	module.exports = Alignment;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	var Word = function(options) {
@@ -1107,11 +894,11 @@
 	module.exports = Word;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var sha1 = __webpack_require__(15);
-	var Word = __webpack_require__(13);
+	var sha1 = __webpack_require__(16);
+	var Word = __webpack_require__(14);
 
 	var Source = function(options) {
 	  this.el = options.el;
@@ -1212,13 +999,13 @@
 	module.exports = Source;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(20),
-	      utf8 = __webpack_require__(21).utf8,
-	      bin = __webpack_require__(21).bin,
+	  var crypt = __webpack_require__(21),
+	      utf8 = __webpack_require__(22).utf8,
+	      bin = __webpack_require__(22).bin,
 
 	  // The core
 	  sha1 = function (message) {
@@ -1298,10 +1085,10 @@
 	  module.exports = api;
 	})();
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17).Buffer))
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
@@ -1314,9 +1101,9 @@
 
 	'use strict'
 
-	var base64 = __webpack_require__(17)
-	var ieee754 = __webpack_require__(18)
-	var isArray = __webpack_require__(19)
+	var base64 = __webpack_require__(18)
+	var ieee754 = __webpack_require__(19)
+	var isArray = __webpack_require__(20)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -2853,10 +2640,10 @@
 	  return i
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -2986,7 +2773,7 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -3076,7 +2863,7 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -3087,7 +2874,7 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	(function() {
@@ -3189,7 +2976,7 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	var charenc = {
@@ -3228,7 +3015,7 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	var SiteContext = function(options) {
@@ -3248,20 +3035,59 @@
 	module.exports = SiteContext;
 
 /***/ },
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  panel: __webpack_require__(24),
-	  index: __webpack_require__(27),
-	  export: __webpack_require__(28)
-	};
-
-/***/ },
 /* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(25);
+	var events = __webpack_require__(12);
+	var templates = __webpack_require__(25);
+
+	var Panel = function() {
+	  this.el = null;
+	  this.onClickButton = this.onClickButton.bind(this);
+	  this.init();
+	};
+	Panel.prototype.init = function() {
+	  this.el = $('<div>');
+	  this.addListeners();
+	};
+	Panel.prototype.addListeners = function() {
+	  this.el.on('click', this.onClickButton);
+	};
+	Panel.prototype.onClickButton = function(evt) {
+	  var btnMap = {
+	    align: events.EVT.ALIGN,
+	    clear_highlights: events.EVT.CLEAR_HIGHLIGHTS,
+	    clear_alignments: events.EVT.CLEAR_ALIGNMENTS,
+	    build_index: events.EVT.BUILD_INDEX,
+	    export: events.EVT.EXPORT
+	  };
+	  var t = evt.target;
+	  if (t.nodeName == 'BUTTON' && t.name in btnMap) {
+	    events.hub.trigger(btnMap[t.name]);
+	  }  
+	};
+	Panel.prototype.render = function() {
+	  this.el.html(templates.panel());
+	  return this;
+	};
+
+	module.exports = Panel;
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  panel: __webpack_require__(26),
+	  index: __webpack_require__(29),
+	  export: __webpack_require__(30)
+	};
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(27);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
 	obj || (obj = {});
 	var __t, __p = '';
@@ -3274,7 +3100,7 @@
 
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -19682,10 +19508,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)(module), (function() { return this; }())))
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -19701,10 +19527,10 @@
 
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(25);
+	var _ = __webpack_require__(27);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
 	obj || (obj = {});
 	var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
@@ -19734,10 +19560,10 @@
 
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(25);
+	var _ = __webpack_require__(27);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
 	obj || (obj = {});
 	var __t, __p = '';
@@ -19752,6 +19578,206 @@
 	return __p
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
+
+/***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var events = __webpack_require__(12);
+	var templates = __webpack_require__(25);
+
+	var Overlay = function(options) {
+	  this.alignments = options.alignments;
+	  this.siteContext = options.siteContext;
+	  this.lastRenderer = null;
+	  this.hiddenCls = 'wordmapper-overlay-hidden';
+	  this.init();
+	};
+	Overlay.prototype.init = function() {
+	  this.el = $("<div>").append('<div class="'+this.hiddenCls+'"></div>');
+	  this.addListeners();
+	};
+	Overlay.prototype.addListeners = function() {
+	  events.hub.on(events.EVT.BUILD_INDEX, this.makeRenderer("index"));
+	  events.hub.on(events.EVT.EXPORT, this.makeRenderer("export"));
+	};
+	Overlay.prototype.visible = function() {
+	  return this.el.andSelf().find('.' + this.hiddenCls).length === 0;
+	};
+	Overlay.prototype.render = function() {
+	  return this;
+	};
+	Overlay.prototype.makeRenderer = function(name) {
+	  return function() {
+	    var template = templates[name];
+	    this.el.html(template({
+	      cls: this.getCls(name),
+	      alignments: this.alignments,
+	      siteContext: this.siteContext
+	    }));
+	    this.lastRenderer = name;
+	    return this;
+	  }.bind(this);
+	};
+	Overlay.prototype.getCls = function(renderer) {
+	  var cls = '';
+	  if (this.visible()) {
+	    if (renderer === this.lastRenderer) {
+	      cls = this.hiddenCls;
+	    }
+	  }
+	  return cls;
+	};
+
+	module.exports = Overlay;
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var events = __webpack_require__(12);
+	var models = __webpack_require__(10);
+
+	var TextBoxes = function(options) {
+	  this.selector = options.selector;
+	  this.alignments = options.alignments;
+	  this.sources = null;
+	  this.textBoxes = null;
+	  this.bindMethods.forEach(function(method) {
+	    this[method] = this[method].bind(this);
+	  }, this);
+	  this.init();
+	};
+	TextBoxes.prototype.bindMethods = [
+	  'onClickWord',
+	  'onMouseoverWord',
+	  'onMouseoutWord',
+	  'updateAlignments',
+	  'resetAlignments',
+	  'clearHighlighted',
+	  'align'
+	];
+	TextBoxes.prototype.init = function() {
+	  this.loadSources();
+	  this.transform();
+	  this.textBoxes = this.select();
+	  this.addListeners();
+	};
+	TextBoxes.prototype.addListeners = function() {
+	  this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
+	  this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
+	  this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
+	  this.alignments.on('change', this.updateAlignments);
+	  events.hub.on(events.EVT.CLEAR_HIGHLIGHTS, this.clearHighlighted);
+	  events.hub.on(events.EVT.CLEAR_ALIGNMENTS, this.resetAlignments);
+	  events.hub.on(events.EVT.ALIGN, this.align);
+	};
+	TextBoxes.prototype.onClickWord = function(evt) {
+	  //console.log("click", evt.target);
+	  this.addHighlight(evt.target);
+	};
+	TextBoxes.prototype.onMouseoverWord = function(evt) {
+	  //console.log("mouseover", evt.target);
+	  var spans = this.selectAlignedWith(evt.target);
+	  if (spans.length > 0) {
+	    this.addHighlight2(spans);
+	  }
+	};
+	TextBoxes.prototype.onMouseoutWord = function(evt) {
+	  //console.log("mouseout", evt.target);
+	  this.clearHighlight2();
+	};
+	TextBoxes.prototype.align = function() {
+	  var spans = this.selectHighlighted();
+	  if (spans.length > 0) {
+	    var words = models.Source.createWords(spans.toArray(), this.sources);
+	    var alignment = this.alignments.createAlignment(words);
+	    this.alignments.add(alignment);
+	  }
+	  this.clearHighlighted();
+	};
+	TextBoxes.prototype.updateAlignments = function() {
+	  var _this = this;
+	  var alignments = this.alignments.alignments;
+
+	  this.selectAlignments().each(function(index, el) {
+	    delete el.dataset.alignment;
+	    _this.removeAligned(el);
+	  });
+
+	  alignments.forEach(function(alignment, index) {
+	    var spans = _this.selectWords(alignment.words);
+	    $(spans).each(function(index, el) {
+	      el.dataset.alignment = alignment.id;
+	    });
+	    _this.addAligned(spans);
+	  });
+	};
+	TextBoxes.prototype.resetAlignments = function() {
+	  this.alignments.reset();
+	};
+	TextBoxes.prototype.addAligned = function(spans) {
+	  return $(spans).addClass("aligned");
+	};
+	TextBoxes.prototype.addHighlight = function(spans) {
+	  return $(spans).addClass("highlight");
+	};
+	TextBoxes.prototype.addHighlight2 = function(spans) {
+	  return $(spans).addClass('highlight2');
+	};
+	TextBoxes.prototype.clearHighlight2 = function() {
+	  return this.textBoxes.find('.highlight2').removeClass('highlight2');
+	};
+	TextBoxes.prototype.clearHighlighted = function() {
+	  return this.selectHighlighted().removeClass('highlight');
+	};
+	TextBoxes.prototype.clearAligned = function() {
+	  return this.textBoxes.find('.aligned').removeClass('aligned');
+	};
+	TextBoxes.prototype.removeAligned = function(spans) {
+	  return $(spans).removeClass("aligned");
+	};
+	TextBoxes.prototype.selectHighlighted = function() {
+	  return this.textBoxes.find('.highlight');
+	};
+	TextBoxes.prototype.selectAlignedWith = function(el) {
+	  return this.selectAlignment(el.dataset.alignment);
+	};
+	TextBoxes.prototype.selectAlignment = function(alignment_id) {
+	  return this.textBoxes.find('[data-alignment="'+alignment_id+'"]');
+	};
+	TextBoxes.prototype.selectAlignments = function() {
+	  return this.textBoxes.find('[data-alignment]');
+	};
+	TextBoxes.prototype.selectWord = function(word) {
+	  return this.textBoxes.find('[data-word="'+word.index+'"][data-source="'+word.source.index+'"]');
+	};
+	TextBoxes.prototype.selectWords = function(words) {
+	  var selector = words.map(function(word) {
+	    return '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
+	  }).join(", ");
+	  return this.textBoxes.find(selector);
+	};
+	TextBoxes.prototype.loadSources = function() {
+	  this.sources = this.select().toArray().map(this.createSource);
+	};
+	TextBoxes.prototype.createSource = function(el, index) {
+	  return new models.Source.fromDOM(el, index);
+	};
+	TextBoxes.prototype.select = function() {
+	  return $(this.selector);
+	};
+	TextBoxes.prototype.transform = function() {
+	  var textBoxes = this.select();
+	  this.sources.forEach(function(source, index) {
+	    this.replace(textBoxes[index], source.transform().copyElement());
+	  }, this);
+	};
+	TextBoxes.prototype.replace = function(textBox, el) {
+	  textBox.parentNode.replaceChild(el, textBox);
+	};
+
+	module.exports = TextBoxes;
 
 /***/ }
 /******/ ]);
