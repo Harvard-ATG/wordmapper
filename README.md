@@ -49,3 +49,14 @@ Install bookmarklet by creating a new bookmark and copying this code into the UR
 ```javascript
 javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:8000/static/js/bookmarklet.js';})();
 ```
+
+### Testing
+
+1. Ars Medica:
+    - [Ars Medica 10 arabic/greek](http://www.graeco-arabic-studies.org/compare-texts/work/ars-medica-2/left/1/right/2/section/10/active/2%2C1.html). 
+    - [Ars Medica 10 greek/arabic](http://www.graeco-arabic-studies.org/compare-texts/work/ars-medica-2/left/2/right/1/section/10/active/1%2C2.html).
+    - Test that swapping the greek and arabic translations from right to left and vice versa maintain word alignments.
+2. Ars Poetica
+    - [Ars Poetica 1](http://www.graeco-arabic-studies.org/compare-texts/work/ars-poetica-3/left/11/right/12%2C51%2C52%2C53%2C54/active/11%2C12.html). 
+    - Test that word alignments can be created across 3 or more source texts (not just 2!).
+ 
