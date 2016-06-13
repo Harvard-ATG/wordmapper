@@ -19,6 +19,9 @@ Application.prototype.init = function() {
   this.el = $('<div>').appendTo('body');
   this.panel = new Panel();
   this.alignments = new models.Alignments();
+  this.siteContext = new models.SiteContext({
+    url: window.location.toString()
+  });
   this.boxes = new TextBoxes({
     alignments: this.alignments,
     selector: '.textboxcontent'
@@ -121,8 +124,8 @@ TextBoxes.prototype.bindMethods = [
   'onClickWord',
   'onMouseoverWord',
   'onMouseoutWord',
-  'onAlignmentsAdd',
-  'clearHighlights',
+  'updateAligned',
+  'clearHighlighted',
   'align'
 ];
 TextBoxes.prototype.init = function() {
@@ -135,29 +138,24 @@ TextBoxes.prototype.addListeners = function() {
   this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
   this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
   this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
-  this.alignments.on('add', this.onAlignmentsAdd);
-  events.hub.on(EVT.CLEAR_HIGHLIGHTS, this.clearHighlights);
+  this.alignments.on('change', this.updateAligned);
+  events.hub.on(EVT.CLEAR_HIGHLIGHTS, this.clearHighlighted);
   events.hub.on(EVT.ALIGN, this.align);
 };
 TextBoxes.prototype.onClickWord = function(evt) {
   //console.log("click", evt.target);
-  this.showHighlight(evt.target);
+  this.addHighlight(evt.target);
 };
 TextBoxes.prototype.onMouseoverWord = function(evt) {
   //console.log("mouseover", evt.target);
   var spans = this.selectAlignedWith(evt.target);
   if (spans.length > 0) {
-    this.showAlignmentHighlight(spans);
+    this.addHighlight2(spans);
   }
 };
 TextBoxes.prototype.onMouseoutWord = function(evt) {
   //console.log("mouseout", evt.target);
-  this.clearAlignmentHighlight();
-};
-TextBoxes.prototype.onAlignmentsAdd = function(alignment) {
-  var spans = this.selectWords(alignment.words);
-  this.setAlignedTo(spans, alignment);
-  this.showAligned(spans);
+  this.clearHighlight2();
 };
 TextBoxes.prototype.align = function() {
   var spans = this.selectHighlighted();
@@ -166,57 +164,72 @@ TextBoxes.prototype.align = function() {
     var alignment = this.alignments.createAlignment(words);
     this.alignments.add(alignment);
   }
-  this.clearHighlights();
+  this.clearHighlighted();
 };
-TextBoxes.prototype.showAligned = function(spans) {
+TextBoxes.prototype.updateAligned = function() {
+  var _this = this;
+  var alignments = this.alignments.alignments;
+
+  this.selectAlignments().each(function(index, el) {
+    delete el.dataset.alignment;
+    _this.removeAligned(el);
+  });
+
+  alignments.forEach(function(alignment, index) {
+    var spans = _this.selectWords(alignment.words);
+    $(spans).each(function(index, el) {
+      el.dataset.alignment = alignment.id;
+    });
+    _this.addAligned(spans);
+  });
+};
+TextBoxes.prototype.addAligned = function(spans) {
   return $(spans).addClass("aligned");
 };
+TextBoxes.prototype.addHighlight = function(spans) {
+  return $(spans).addClass("highlight");
+};
+TextBoxes.prototype.addHighlight2 = function(spans) {
+  return $(spans).addClass('highlight2');
+};
+TextBoxes.prototype.clearHighlight2 = function() {
+  return this.textBoxes.find('.highlight2').removeClass('highlight2');
+};
+TextBoxes.prototype.clearHighlighted = function() {
+  return this.selectHighlighted().removeClass('highlight');
+};
 TextBoxes.prototype.clearAligned = function() {
-  this.textBoxes.find('.aligned').removeClass('aligned');
+  return this.textBoxes.find('.aligned').removeClass('aligned');
 };
-TextBoxes.prototype.setAlignedTo = function(spans, alignment) {
-  $(spans).each(function(index, el) {
-    el.dataset.alignment = alignment.id;
-  });
-};
-TextBoxes.prototype.showAlignmentHighlight = function(spans) {
-  $(spans).addClass('highlight2');
-};
-TextBoxes.prototype.clearAlignmentHighlight = function() {
-  this.textBoxes.find('.highlight2').removeClass('highlight2');
-};
-TextBoxes.prototype.selectAlignedWith = function(el) {
-  var alignment_id = el.dataset.alignment;
-  return this.selectAlignment(alignment_id);
-};
-TextBoxes.prototype.selectAlignment = function(alignment_id) {
-  var selector = '[data-alignment="'+alignment_id+'"]';
-  return this.textBoxes.find(selector);
-};
-TextBoxes.prototype.selectWord = function(word) {
-  var selector = '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
-  return this.textBoxes.find(selector);
-};
-TextBoxes.prototype.selectWords = function(words) {
-  var selectors = words.map(function(word) {
-    return '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
-  });
-  return this.textBoxes.find(selectors.join(", "));
-};
-TextBoxes.prototype.showHighlight = function(el) {
-  $(el).addClass("highlight");
+TextBoxes.prototype.removeAligned = function(spans) {
+  return $(spans).removeClass("aligned");
 };
 TextBoxes.prototype.selectHighlighted = function() {
   return this.textBoxes.find('.highlight');
 };
-TextBoxes.prototype.clearHighlights = function() {
-  this.selectHighlighted().removeClass('highlight');
+TextBoxes.prototype.selectAlignedWith = function(el) {
+  return this.selectAlignment(el.dataset.alignment);
+};
+TextBoxes.prototype.selectAlignment = function(alignment_id) {
+  return this.textBoxes.find('[data-alignment="'+alignment_id+'"]');
+};
+TextBoxes.prototype.selectAlignments = function() {
+  return this.textBoxes.find('[data-alignment]');
+};
+TextBoxes.prototype.selectWord = function(word) {
+  return this.textBoxes.find('[data-word="'+word.index+'"][data-source="'+word.source.index+'"]');
+};
+TextBoxes.prototype.selectWords = function(words) {
+  var selector = words.map(function(word) {
+    return '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
+  }).join(", ");
+  return this.textBoxes.find(selector);
 };
 TextBoxes.prototype.loadSources = function() {
   this.sources = this.select().toArray().map(this.createSource);
 };
-TextBoxes.prototype.createSource = function(el) {
-  return new models.Source.fromDOM(el);
+TextBoxes.prototype.createSource = function(el, index) {
+  return new models.Source.fromDOM(el, index);
 };
 TextBoxes.prototype.select = function() {
   return $(this.selector);

@@ -449,6 +449,9 @@
 	  this.el = $('<div>').appendTo('body');
 	  this.panel = new Panel();
 	  this.alignments = new models.Alignments();
+	  this.siteContext = new models.SiteContext({
+	    url: window.location.toString()
+	  });
 	  this.boxes = new TextBoxes({
 	    alignments: this.alignments,
 	    selector: '.textboxcontent'
@@ -551,8 +554,8 @@
 	  'onClickWord',
 	  'onMouseoverWord',
 	  'onMouseoutWord',
-	  'onAlignmentsAdd',
-	  'clearHighlights',
+	  'updateAligned',
+	  'clearHighlighted',
 	  'align'
 	];
 	TextBoxes.prototype.init = function() {
@@ -565,29 +568,24 @@
 	  this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
 	  this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
 	  this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
-	  this.alignments.on('add', this.onAlignmentsAdd);
-	  events.hub.on(EVT.CLEAR_HIGHLIGHTS, this.clearHighlights);
+	  this.alignments.on('change', this.updateAligned);
+	  events.hub.on(EVT.CLEAR_HIGHLIGHTS, this.clearHighlighted);
 	  events.hub.on(EVT.ALIGN, this.align);
 	};
 	TextBoxes.prototype.onClickWord = function(evt) {
 	  //console.log("click", evt.target);
-	  this.showHighlight(evt.target);
+	  this.addHighlight(evt.target);
 	};
 	TextBoxes.prototype.onMouseoverWord = function(evt) {
 	  //console.log("mouseover", evt.target);
 	  var spans = this.selectAlignedWith(evt.target);
 	  if (spans.length > 0) {
-	    this.showAlignmentHighlight(spans);
+	    this.addHighlight2(spans);
 	  }
 	};
 	TextBoxes.prototype.onMouseoutWord = function(evt) {
 	  //console.log("mouseout", evt.target);
-	  this.clearAlignmentHighlight();
-	};
-	TextBoxes.prototype.onAlignmentsAdd = function(alignment) {
-	  var spans = this.selectWords(alignment.words);
-	  this.setAlignedTo(spans, alignment);
-	  this.showAligned(spans);
+	  this.clearHighlight2();
 	};
 	TextBoxes.prototype.align = function() {
 	  var spans = this.selectHighlighted();
@@ -596,57 +594,72 @@
 	    var alignment = this.alignments.createAlignment(words);
 	    this.alignments.add(alignment);
 	  }
-	  this.clearHighlights();
+	  this.clearHighlighted();
 	};
-	TextBoxes.prototype.showAligned = function(spans) {
+	TextBoxes.prototype.updateAligned = function() {
+	  var _this = this;
+	  var alignments = this.alignments.alignments;
+
+	  this.selectAlignments().each(function(index, el) {
+	    delete el.dataset.alignment;
+	    _this.removeAligned(el);
+	  });
+
+	  alignments.forEach(function(alignment, index) {
+	    var spans = _this.selectWords(alignment.words);
+	    $(spans).each(function(index, el) {
+	      el.dataset.alignment = alignment.id;
+	    });
+	    _this.addAligned(spans);
+	  });
+	};
+	TextBoxes.prototype.addAligned = function(spans) {
 	  return $(spans).addClass("aligned");
 	};
+	TextBoxes.prototype.addHighlight = function(spans) {
+	  return $(spans).addClass("highlight");
+	};
+	TextBoxes.prototype.addHighlight2 = function(spans) {
+	  return $(spans).addClass('highlight2');
+	};
+	TextBoxes.prototype.clearHighlight2 = function() {
+	  return this.textBoxes.find('.highlight2').removeClass('highlight2');
+	};
+	TextBoxes.prototype.clearHighlighted = function() {
+	  return this.selectHighlighted().removeClass('highlight');
+	};
 	TextBoxes.prototype.clearAligned = function() {
-	  this.textBoxes.find('.aligned').removeClass('aligned');
+	  return this.textBoxes.find('.aligned').removeClass('aligned');
 	};
-	TextBoxes.prototype.setAlignedTo = function(spans, alignment) {
-	  $(spans).each(function(index, el) {
-	    el.dataset.alignment = alignment.id;
-	  });
-	};
-	TextBoxes.prototype.showAlignmentHighlight = function(spans) {
-	  $(spans).addClass('highlight2');
-	};
-	TextBoxes.prototype.clearAlignmentHighlight = function() {
-	  this.textBoxes.find('.highlight2').removeClass('highlight2');
-	};
-	TextBoxes.prototype.selectAlignedWith = function(el) {
-	  var alignment_id = el.dataset.alignment;
-	  return this.selectAlignment(alignment_id);
-	};
-	TextBoxes.prototype.selectAlignment = function(alignment_id) {
-	  var selector = '[data-alignment="'+alignment_id+'"]';
-	  return this.textBoxes.find(selector);
-	};
-	TextBoxes.prototype.selectWord = function(word) {
-	  var selector = '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
-	  return this.textBoxes.find(selector);
-	};
-	TextBoxes.prototype.selectWords = function(words) {
-	  var selectors = words.map(function(word) {
-	    return '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
-	  });
-	  return this.textBoxes.find(selectors.join(", "));
-	};
-	TextBoxes.prototype.showHighlight = function(el) {
-	  $(el).addClass("highlight");
+	TextBoxes.prototype.removeAligned = function(spans) {
+	  return $(spans).removeClass("aligned");
 	};
 	TextBoxes.prototype.selectHighlighted = function() {
 	  return this.textBoxes.find('.highlight');
 	};
-	TextBoxes.prototype.clearHighlights = function() {
-	  this.selectHighlighted().removeClass('highlight');
+	TextBoxes.prototype.selectAlignedWith = function(el) {
+	  return this.selectAlignment(el.dataset.alignment);
+	};
+	TextBoxes.prototype.selectAlignment = function(alignment_id) {
+	  return this.textBoxes.find('[data-alignment="'+alignment_id+'"]');
+	};
+	TextBoxes.prototype.selectAlignments = function() {
+	  return this.textBoxes.find('[data-alignment]');
+	};
+	TextBoxes.prototype.selectWord = function(word) {
+	  return this.textBoxes.find('[data-word="'+word.index+'"][data-source="'+word.source.index+'"]');
+	};
+	TextBoxes.prototype.selectWords = function(words) {
+	  var selector = words.map(function(word) {
+	    return '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
+	  }).join(", ");
+	  return this.textBoxes.find(selector);
 	};
 	TextBoxes.prototype.loadSources = function() {
 	  this.sources = this.select().toArray().map(this.createSource);
 	};
-	TextBoxes.prototype.createSource = function(el) {
-	  return new models.Source.fromDOM(el);
+	TextBoxes.prototype.createSource = function(el, index) {
+	  return new models.Source.fromDOM(el, index);
 	};
 	TextBoxes.prototype.select = function() {
 	  return $(this.selector);
@@ -746,9 +759,10 @@
 	};
 	Alignments.prototype.add = function(alignment) {
 	  this.removeDuplicates(alignment);
+	  this.removeEmpty();
 	  this.alignments.push(alignment);
 	  this.sort();
-	  this.trigger('add', alignment);
+	  this.trigger('change');
 	};
 	// If the given alignment contains a word that has already been used in an alignment,
 	// that should take precedence over any previous usage of that word. So this function
@@ -762,33 +776,30 @@
 	      }
 	    }
 	  });
+	};
+	Alignments.prototype.removeEmpty = function() {
 	  this.alignments = this.alignments.filter(function(alignment) {
-	    return alignment.size() > 0;
+	    return !alignment.isEmpty();
 	  });
-	  return this;
 	};
 	Alignments.prototype.remove = function(alignment) {
 	  var idx = this.alignments.indexOf(alignment);
 	  if (idx >= 0) {
 	    this.alignments.splice(idx, 1);
-	    this.trigger('remove', alignment);
+	    this.trigger('change');
 	  }
 	};
 	Alignments.prototype.reset = function() {
 	  this.alignments = [];
-	  this.trigger('reset');
+	  this.trigger('change');
 	};
 	Alignments.prototype.sort = function() {
 	  this.alignments.sort(function(a, b) {
-	    var a_index = a.minWordIndex();
-	    var b_index = b.minWordIndex();
-	    console.log("alignments.sort():", a_index, b_index);
-	    if (a_index == b_index) {
-	      console.log("equal:", a.minSourceIndex() - b.minSourceIndex());
+	    var word_diff = a.minWordIndex() - b.minWordIndex();
+	    if (word_diff === 0) {
 	      return a.minSourceIndex() - b.minSourceIndex();
 	    } else {
-	      console.log("notequal:", a_index - b_index);
-	      return a_index - b_index;
+	      return word_diff;
 	    }
 	  });
 	};
@@ -818,9 +829,7 @@
 	  var id = 0;
 	  return function() {
 	    id++;
-	    // NOTE: Appending underscore to signify it's a temproary, generated ID (not from remote server).
-	    // Should be able to use parseInt() on the generated ID to get the numeric value if needed.
-	    return id+"_"; 
+	    return "local-"+id;
 	  };
 	})();
 	events.Events.mixin(Alignments.prototype);
@@ -832,13 +841,13 @@
 	  if (this.words.length === 0) {
 	    throw "Invalid alignment: must provide at least one Word object to construct an alignment";
 	  }
-	  this.words.sort(function(a, b) {
-	    if (a.source.index == b.source.index) {
-	      return a.index - b.index;
-	    } else {
-	      return a.source.index - b.source.index;
-	    }
-	  });
+	  if (!this.hasValidId()) {
+	    throw "Invalid alignment: must have an 'id' that is a non-empty string or number";
+	  }
+	  this.sort();
+	};
+	Alignment.prototype.hasValidId = function() {
+	  return (typeof this.id === "number" || typeof this.id === "string") && this.id !== "";
 	};
 	Alignment.prototype.containsWord = function(word) {
 	  return this.findWord(word) !== false;
@@ -857,6 +866,15 @@
 	    this.words.splice(found.index, 1);
 	  }
 	};
+	Alignment.prototype.sort = function() {
+	  this.words.sort(function(a, b) {
+	    if (a.source.index == b.source.index) {
+	      return a.index - b.index;
+	    } else {
+	      return a.source.index - b.source.index;
+	    }
+	  });
+	};
 	Alignment.prototype.minWordIndex = function() {
 	  return Math.min.apply(Math, this.words.map(function(word) {
 	    return word.index;
@@ -870,9 +888,13 @@
 	Alignment.prototype.size = function() {
 	  return this.words.length;
 	};
+	Alignment.prototype.isEmpty = function() {
+	  return this.words.length === 0;
+	};
 	Alignment.prototype.wordGroups = function() {
-	  var word_groups = {}, sources = [], groups = [], i, word;
-	  for(i = 0; i < this.words.length; i++) {
+	  var word_groups = {};
+	  var sources = [], groups = [];
+	  for(var i = 0, word; i < this.words.length; i++) {
 	    word = this.words[i];
 	    if (!word_groups[word.source.index]) {
 	      sources.push(word.source.index);
@@ -886,8 +908,7 @@
 	  return groups;
 	};
 	Alignment.prototype.toString = function() {
-	  var groups = this.wordGroups();
-	  return groups.map(function(group) {
+	  return this.wordGroups().map(function(group) {
 	    return group.join(' ');
 	  }).join(' - ');
 	};
@@ -914,7 +935,7 @@
 	  });
 	};
 	Word.prototype.isEqual = function(word) {
-	  return this.index == word.index && this.source.id == word.source.id;
+	  return this.index == word.index && this.source.hash == word.source.hash;
 	};
 	Word.create = function(options) {
 	  return new Word(options);
@@ -936,21 +957,25 @@
 	//---------------------------------------------------------------------
 	var Source = function(options) {
 	  this.el = options.el;
+	  this.index = options.index;
+	  if (!this.el) {
+	    throw "Invalid Source: required 'el' attribute";
+	  }
+	  if (this.index === "" || isNaN(Number(this.index))) {
+	    throw "Invalid Source: required 'index' attribute must be a valid number";
+	  }
 	  this.normalizedText = this.el.textContent.replace(/\s+/g, ' ').trim();
 	  this.hash = sha1(this.normalizedText);
-	  this.index = Source.instances++;
-	  this.id = this.index;
 	  this.nextWordIndex = this.createWordIndexer();
 	};
-	Source.instances = 0;
-	Source.fromDOM = function(el) {
-	  return new Source({ el: el.cloneNode(true) });
+	Source.fromDOM = function(el, index) {
+	  return new Source({ el: el.cloneNode(true), index: index });
 	};
-	Source.fromHTML = function(html) {
+	Source.fromHTML = function(html, index) {
 	  var temp = document.createElement('template');
 	  temp.innerHTML = html;
 	  var fragment = temp.content;
-	  return new Source({ el: fragment });
+	  return new Source({ el: fragment, index: index });
 	};
 	Source.createWords = function(spans, sources) {
 	  var source_dict = sources.reduce(function(dict, source) {
@@ -1029,12 +1054,12 @@
 	//---------------------------------------------------------------------
 	var SiteContext = function(options) {
 	  this.url = options.url;
-	  this.pageContent = options.content;
 	};
 
 	module.exports = {
 	  Alignments: Alignments,
-	  Source: Source
+	  Source: Source,
+	  SiteContext: SiteContext
 	};
 
 /***/ },
