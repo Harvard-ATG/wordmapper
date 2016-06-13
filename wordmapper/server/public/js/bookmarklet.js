@@ -449,9 +449,7 @@
 	  this.el = $('<div>').appendTo('body');
 	  this.panel = new Panel();
 	  this.alignments = new models.Alignments();
-	  this.siteContext = new models.SiteContext({
-	    url: window.location.toString()
-	  });
+	  this.siteContext = new models.SiteContext({ id: window.location.hostname });
 	  this.boxes = new TextBoxes({
 	    alignments: this.alignments,
 	    selector: '.textboxcontent'
@@ -460,11 +458,35 @@
 	    siteContext: this.siteContext,
 	    alignments: this.alignments
 	  });
+	  this.storage = new services.LocalStorageService({
+	    siteContext: this.siteContext,
+	    sources: this.boxes.sources
+	  });
+	  this.loadData();
+	  this.addListeners();
+	};
+	Application.prototype.addListeners = function() {
+	  this.alignments.on('change', this.saveData.bind(this));
 	};
 	Application.prototype.render = function() {
 	  this.el.append(this.panel.render().el);
 	  this.el.append(this.overlay.render().el);
 	  return this;
+	};
+	Application.prototype.saveData = function() {
+	  console.log("saving to storage");
+	  var deferred = this.storage.save(this.alignments);
+	  deferred.done(function() {
+	    console.log("save completed");
+	  });
+	};
+	Application.prototype.loadData = function() {
+	  console.log("loading from storage");
+	  var deferred = this.storage.load();
+	  deferred.done(function(batch) {
+	    this.alignments.load(batch);
+	    console.log("load completed", batch);
+	  }.bind(this));
 	};
 
 	//---------------------------------------------------------------------
@@ -742,13 +764,97 @@
 
 /***/ },
 /* 9 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var Store = function() {
+	var models = __webpack_require__(10);
+
+	//---------------------------------------------------------------------
+	var StorageService = function(options) {
+	  options = options || {};
+	  this.siteContext = options.siteContext || '';
+	  this.sources = options.sources || [];
+	};
+	StorageService.prototype.load = function() {
+	  var deferred = $.Deferred();
+	  this._load(deferred);
+	  return deferred;
+	};
+	StorageService.prototype.save = function(obj) {
+	  var deferred = $.Deferred();
+	  var serialized = this._serialize(obj);
+	  this._save(deferred, serialized);
+	  return deferred;
+	};
+	StorageService.prototype.getDataKey = function() {
+	  var sourceHashes = this.sources.map(function(source) {
+	    return source.hash;
+	  });
+	  sourceHashes.sort(function(a, b) {
+	    return (a == b ? 0 : (a < b ? -1 : 1));
+	  });
+	  return this.siteContext.id + "::" + sourceHashes.join(",");
+	};
+	StorageService.prototype.getSourceMap = function() {
+	  var dict = {};
+	  this.sources.forEach(function(source) {
+	    dict[source.hash] = source;
+	  });
+	  return dict;
+	};
+	StorageService.prototype._load = function() {
+	  throw "Subclass responsibility";
+	};
+	StorageService.prototype._save = function() {
+	  throw "Subclass responsibility";
+	};
+	StorageService.prototype._serialize = function() {
+	  throw "Subclass responsibility";
+	};
+
+	//---------------------------------------------------------------------
+	var LocalStorageService = function() {
+	  if (window.Storage === undefined) {
+	    throw "LocalStorage not supported in this browser.";
+	  }
+	  StorageService.apply(this, arguments);
+	};
+	LocalStorageService.prototype = new StorageService();
+	LocalStorageService.prototype._serialize = function(obj) {
+	  return obj.serialize();
+	};
+	LocalStorageService.prototype._load = function(deferred) {
+	  var jsonData = localStorage.getItem(this.getDataKey());
+	  var sourceMap = this.getSourceMap();
+	  var result = null;
+	  var alignments = [];
+	  
+	  if (jsonData === null) {
+	    deferred.resolve([]);
+	    return;
+	  }
+
+	  result = JSON.parse(jsonData);
+	  alignments = result.data.map(function(alignment) {
+	    var words = alignment.data.map(function(word) {
+	      return models.Word.create({
+	        index: word.data.index,
+	        value: word.data.value,
+	        source: sourceMap[word.data.source]
+	      });
+	    });
+	    return models.Alignments.createAlignment(words);
+	  });
+
+	  deferred.resolve(alignments);
+	  return;
+	};
+	LocalStorageService.prototype._save = function(deferred, serialized) {
+	  localStorage.setItem(this.getDataKey(), serialized);
+	  deferred.resolve();
 	};
 
 	module.exports = {
-	  Store: new Store()
+	  LocalStorageService: LocalStorageService
 	};
 
 /***/ },
@@ -757,7 +863,9 @@
 
 	module.exports = {
 	  Alignments: __webpack_require__(11),
-	  Source: __webpack_require__(13),
+	  Alignment: __webpack_require__(12),
+	  Word: __webpack_require__(13),
+	  Source: __webpack_require__(14),
 	  SiteContext: __webpack_require__(22)
 	};
 
@@ -771,8 +879,18 @@
 	var Alignments = function(options) {
 	  this.alignments = [];
 	};
-	Alignments.prototype.createAlignment = function(words) {
-	  return new Alignment({id: this.generateId(), words: words});
+	Alignments.generateId = (function() {
+	  var id = 0;
+	  return function() {
+	    id++;
+	    return "local-"+id;
+	  };
+	})();
+	Alignments.createAlignment = Alignments.prototype.createAlignment = function(words) {
+	  return new Alignment({
+	    id: Alignments.generateId(),
+	    words: words
+	  });
 	};
 	Alignments.prototype.add = function(alignment) {
 	  this._removeDuplicates(alignment);
@@ -810,6 +928,11 @@
 	  this.alignments = [];
 	  this.trigger('change');
 	};
+	Alignments.prototype.load = function(alignments) {
+	  this.alignments = Array.prototype.slice.call(alignments);
+	  this.sort();
+	  this.trigger('change');
+	};
 	Alignments.prototype.sort = function() {
 	  this.alignments.sort(function(a, b) {
 	    var word_diff = a.minWordIndex() - b.minWordIndex();
@@ -829,26 +952,17 @@
 	    return str;
 	  }, '');
 	};
-	Alignments.prototype.toJSON = function(serialize) {
-	  var alignments = this.alignments.map(function(alignment) {
-	    return alignment.toJSON();
-	  });
-	  var data = {
+	Alignments.prototype.toJSON = function() {
+	  return {
 	    'type': 'alignments',
-	    'data': alignments
+	    'data': this.alignments.map(function(alignment) {
+	      return alignment.toJSON();
+	    })
 	  };
-	  if (serialize) {
-	    return JSON.stringify(data, null, '\t');
-	  }
-	  return data;
 	};
-	Alignments.prototype.generateId = (function() {
-	  var id = 0;
-	  return function() {
-	    id++;
-	    return "local-"+id;
-	  };
-	})();
+	Alignments.prototype.serialize = function() {
+	  return JSON.stringify(this.toJSON(), null, '\t');
+	};
 	events.Events.mixin(Alignments.prototype);
 
 	module.exports = Alignments;
@@ -886,7 +1000,9 @@
 	  var found = this.findWord(word);
 	  if (found !== false) {
 	    this.words.splice(found.index, 1);
+	    return true;
 	  }
+	  return false;
 	};
 	Alignment.prototype.sort = function() {
 	  this.words.sort(function(a, b) {
@@ -935,24 +1051,64 @@
 	  }).join(' - ');
 	};
 	Alignment.prototype.toJSON = function() {
-	  var words = this.words.map(function(word) {
-	    return word.toJSON();
-	  });
-	  var data = {
+	  return {
 	    "type": "alignment",
-	    "data": words
+	    "data": this.words.map(function(word) {
+	      return word.toJSON();
+	    })
 	  };
-	  return data;
+	};
+	Alignment.prototype.serialize = function() {
+	  return JSON.stringify(this.toJSON(), null, '\t');
 	};
 
 	module.exports = Alignment;
 
 /***/ },
 /* 13 */
+/***/ function(module, exports) {
+
+	var Word = function(options) {
+	  var self = this;
+	  ['index', 'source', 'value'].forEach(function(attr) {
+	    if (options.hasOwnProperty(attr) && options[attr]) {
+	      self[attr] = options[attr];
+	    } else {
+	      throw "Missing required attribute to construct Word: " + attr;
+	    }
+	  });
+	};
+	Word.prototype.isEqual = function(word) {
+	  return this.index == word.index && this.source.hash == word.source.hash;
+	};
+	Word.create = function(options) {
+	  return new Word(options);
+	};
+	Word.prototype.toString = function() {
+	  return this.value.toString();
+	};
+	Word.prototype.toJSON = function() {
+	  return {
+	    'type': 'word',
+	    'data': {
+	      'index': this.index,
+	      'source': (this.source.hash ? this.source.hash : ''),
+	      'value': this.value
+	    }
+	  };
+	};
+	Word.prototype.serialize = function() {
+	  JSON.stringify(this.toJSON(), null, '\t');
+	};
+
+	module.exports = Word;
+
+/***/ },
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var sha1 = __webpack_require__(14);
-	var Word = __webpack_require__(21);
+	var sha1 = __webpack_require__(15);
+	var Word = __webpack_require__(13);
 
 	var Source = function(options) {
 	  this.el = options.el;
@@ -1053,13 +1209,13 @@
 	module.exports = Source;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(19),
-	      utf8 = __webpack_require__(20).utf8,
-	      bin = __webpack_require__(20).bin,
+	  var crypt = __webpack_require__(20),
+	      utf8 = __webpack_require__(21).utf8,
+	      bin = __webpack_require__(21).bin,
 
 	  // The core
 	  sha1 = function (message) {
@@ -1139,10 +1295,10 @@
 	  module.exports = api;
 	})();
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16).Buffer))
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
@@ -1155,9 +1311,9 @@
 
 	'use strict'
 
-	var base64 = __webpack_require__(16)
-	var ieee754 = __webpack_require__(17)
-	var isArray = __webpack_require__(18)
+	var base64 = __webpack_require__(17)
+	var ieee754 = __webpack_require__(18)
+	var isArray = __webpack_require__(19)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -2694,10 +2850,10 @@
 	  return i
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -2827,7 +2983,7 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2917,7 +3073,7 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -2928,7 +3084,7 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	(function() {
@@ -3030,7 +3186,7 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	var charenc = {
@@ -3069,58 +3225,19 @@
 
 
 /***/ },
-/* 21 */
-/***/ function(module, exports) {
-
-	var Word = function(options) {
-	  var self = this;
-	  ['index', 'source', 'value'].forEach(function(attr) {
-	    if (options.hasOwnProperty(attr) && options[attr]) {
-	      self[attr] = options[attr];
-	    } else {
-	      throw "Missing required attribute to construct Word: " + attr;
-	    }
-	  });
-	};
-	Word.prototype.isEqual = function(word) {
-	  return this.index == word.index && this.source.hash == word.source.hash;
-	};
-	Word.create = function(options) {
-	  return new Word(options);
-	};
-	Word.prototype.toString = function() {
-	  return this.value.toString();
-	};
-	Word.prototype.toJSON = function() {
-	  var data = {
-	    'type': 'word',
-	    'data': {
-	      'index': this.index,
-	      'source': (this.source.hash ? this.source.hash : ''),
-	      'value': this.value
-	    }
-	  };
-	  return data;
-	};
-
-	module.exports = Word;
-
-/***/ },
 /* 22 */
 /***/ function(module, exports) {
 
 	var SiteContext = function(options) {
-	  this.url = options.url || '';
+	  this.id = options.id || '';
 	};
 	SiteContext.prototype.serializeAlignments = function(alignments, serialize) {
-	  var result = {};
-	  result.type = "site";
-	  result.url = this.url;
-	  result.data = alignments.toJSON();
-	  if (serialize) {
-	    return JSON.stringify(result, null, '\t');
-	  }
-	  return result;
+	  var result = {
+	    'type': 'site',
+	    'id': this.id,
+	    'data': alignments.toJSON()
+	  };
+	  return (serialize ? JSON.stringify(result, null, '\t') : result);
 	};
 
 	module.exports = SiteContext;

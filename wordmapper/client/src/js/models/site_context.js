@@ -1,15 +1,13 @@
 var SiteContext = function(options) {
-  this.url = options.url || '';
+  this.id = options.id || '';
 };
 SiteContext.prototype.serializeAlignments = function(alignments, serialize) {
-  var result = {};
-  result.type = "site";
-  result.url = this.url;
-  result.data = alignments.toJSON();
-  if (serialize) {
-    return JSON.stringify(result, null, '\t');
-  }
-  return result;
+  var result = {
+    'type': 'site',
+    'id': this.id,
+    'data': alignments.toJSON()
+  };
+  return (serialize ? JSON.stringify(result, null, '\t') : result);
 };
 
 module.exports = SiteContext;

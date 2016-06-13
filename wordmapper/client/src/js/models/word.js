@@ -18,7 +18,7 @@ Word.prototype.toString = function() {
   return this.value.toString();
 };
 Word.prototype.toJSON = function() {
-  var data = {
+  return {
     'type': 'word',
     'data': {
       'index': this.index,
@@ -26,7 +26,9 @@ Word.prototype.toJSON = function() {
       'value': this.value
     }
   };
-  return data;
+};
+Word.prototype.serialize = function() {
+  JSON.stringify(this.toJSON(), null, '\t');
 };
 
 module.exports = Word;

@@ -27,7 +27,9 @@ Alignment.prototype.removeWord = function(word) {
   var found = this.findWord(word);
   if (found !== false) {
     this.words.splice(found.index, 1);
+    return true;
   }
+  return false;
 };
 Alignment.prototype.sort = function() {
   this.words.sort(function(a, b) {
@@ -76,14 +78,15 @@ Alignment.prototype.toString = function() {
   }).join(' - ');
 };
 Alignment.prototype.toJSON = function() {
-  var words = this.words.map(function(word) {
-    return word.toJSON();
-  });
-  var data = {
+  return {
     "type": "alignment",
-    "data": words
+    "data": this.words.map(function(word) {
+      return word.toJSON();
+    })
   };
-  return data;
+};
+Alignment.prototype.serialize = function() {
+  return JSON.stringify(this.toJSON(), null, '\t');
 };
 
 module.exports = Alignment;

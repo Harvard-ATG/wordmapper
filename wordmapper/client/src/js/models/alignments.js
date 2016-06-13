@@ -4,8 +4,18 @@ var Alignment = require('./alignment.js');
 var Alignments = function(options) {
   this.alignments = [];
 };
-Alignments.prototype.createAlignment = function(words) {
-  return new Alignment({id: this.generateId(), words: words});
+Alignments.generateId = (function() {
+  var id = 0;
+  return function() {
+    id++;
+    return "local-"+id;
+  };
+})();
+Alignments.createAlignment = Alignments.prototype.createAlignment = function(words) {
+  return new Alignment({
+    id: Alignments.generateId(),
+    words: words
+  });
 };
 Alignments.prototype.add = function(alignment) {
   this._removeDuplicates(alignment);
@@ -43,6 +53,11 @@ Alignments.prototype.reset = function() {
   this.alignments = [];
   this.trigger('change');
 };
+Alignments.prototype.load = function(alignments) {
+  this.alignments = Array.prototype.slice.call(alignments);
+  this.sort();
+  this.trigger('change');
+};
 Alignments.prototype.sort = function() {
   this.alignments.sort(function(a, b) {
     var word_diff = a.minWordIndex() - b.minWordIndex();
@@ -62,26 +77,17 @@ Alignments.prototype.toString = function() {
     return str;
   }, '');
 };
-Alignments.prototype.toJSON = function(serialize) {
-  var alignments = this.alignments.map(function(alignment) {
-    return alignment.toJSON();
-  });
-  var data = {
+Alignments.prototype.toJSON = function() {
+  return {
     'type': 'alignments',
-    'data': alignments
+    'data': this.alignments.map(function(alignment) {
+      return alignment.toJSON();
+    })
   };
-  if (serialize) {
-    return JSON.stringify(data, null, '\t');
-  }
-  return data;
 };
-Alignments.prototype.generateId = (function() {
-  var id = 0;
-  return function() {
-    id++;
-    return "local-"+id;
-  };
-})();
+Alignments.prototype.serialize = function() {
+  return JSON.stringify(this.toJSON(), null, '\t');
+};
 events.Events.mixin(Alignments.prototype);
 
 module.exports = Alignments;
