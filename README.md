@@ -20,11 +20,6 @@ The project has two parts: a client-side bookmarklet that can run as an overlay 
 
 **  For more on installing and using bookmarklets, see [Mozilla's documentation](https://support.mozilla.org/en-US/kb/bookmarklets-perform-common-web-page-tasks).
 
-### Reference Implementation
-
-See the project github page [http://harvard-atg.github.io/wordmapper/](http://harvard-atg.github.io/wordmapper/) for a link to the reference implementation by Mark Schiefsky.
-
-
 ### Development Quickstart
 
 Setup your environment:
@@ -59,4 +54,9 @@ javascript:(function(){document.body.appendChild(document.createElement('script'
 2. Ars Poetica
     - [Ars Poetica 1](http://www.graeco-arabic-studies.org/compare-texts/work/ars-poetica-3/left/11/right/12%2C51%2C52%2C53%2C54/active/11%2C12.html). 
     - Test that word alignments can be created across 3 or more source texts (not just 2!).
- 
+
+### Reference Implementation
+
+See the project github page [http://harvard-atg.github.io/wordmapper/](http://harvard-atg.github.io/wordmapper/) for a link to the reference implementation by Mark Schiefsky.
+
+
