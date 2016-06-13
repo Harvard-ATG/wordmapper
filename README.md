@@ -14,9 +14,9 @@ The project has two parts: a client-side bookmarklet that can run as an overlay 
 
 ### Usage
 
-1. Install the bookmarklet link from [http://harvard-atg.github.io/wordmapper/](http://harvard-atg.github.io/wordmapper/). **
+1. Install the bookmarklet from [the project page](http://harvard-atg.github.io/wordmapper/). **
 2. Navigate to [Ars Medica ch. 10](http://www.graeco-arabic-studies.org/compare-texts/work/ars-medica-2/left/1/right/2/section/10/active/2%2C1.html) to compare the greek and arabic side by side. This is just an example, feel free to navigate to other works.
-3. Click on the bookmark to activate it (you should see a toolbar appear at the top of your screen that says **WordMapper** if it worked).
+3. Click on the bookmark to activate it.
 
 **  For more on installing and using bookmarklets, see [Mozilla's documentation](https://support.mozilla.org/en-US/kb/bookmarklets-perform-common-web-page-tasks).
 
@@ -43,6 +43,12 @@ Install bookmarklet by creating a new bookmark and copying this code into the UR
 
 ```javascript
 javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:8000/static/js/bookmarklet.js';})();
+```
+
+You are now ready to develop locally. You'll want to "watch" your JS files as you develop so they are automatically rebuilt:
+
+```sh
+$ gulp watch
 ```
 
 ### Testing
