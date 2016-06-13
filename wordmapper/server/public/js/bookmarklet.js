@@ -3144,7 +3144,7 @@
 	obj || (obj = {});
 	var __t, __p = '';
 	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" title="Align the highlighted words">Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" title="Clear the highlighted words">Clear Highlights</button>\n    <button name="clear_alignments">Clear Alignments</button>\n    <button name="build_index" class="wordmapper-tooltip" title="Build index of aligned words">Build Index</button>\n    <button name="export" class="wordmapper-tooltip" title="Export the aligned words">Export</button>\n  </div>\n</div>';
+	__p += '\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" title="Align highlighted words">Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" title="Clear highlighted words">Clear Highlights</button>\n    <button name="clear_alignments" title="Clear all alignments">Clear Alignments</button>\n    <button name="build_index" class="wordmapper-tooltip" title="Build index of aligned words">Build Index</button>\n    <button name="export" class="wordmapper-tooltip" title="Export the aligned words">Export</button>\n  </div>\n</div>';
 
 	}
 	return __p
