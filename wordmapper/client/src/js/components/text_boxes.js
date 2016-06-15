@@ -37,7 +37,7 @@ TextBoxes.prototype.addListeners = function() {
 };
 TextBoxes.prototype.onClickWord = function(evt) {
   //console.log("click", evt.target);
-  this.addHighlight(evt.target);
+  this.toggleHighlight(evt.target);
 };
 TextBoxes.prototype.onMouseoverWord = function(evt) {
   //console.log("mouseover", evt.target);
@@ -82,8 +82,16 @@ TextBoxes.prototype.resetAlignments = function() {
 TextBoxes.prototype.addAligned = function(spans) {
   return $(spans).addClass("aligned");
 };
+TextBoxes.prototype.toggleHighlight = function(spans) {
+  var has_highlight = $(spans).hasClass('highlight');
+  var action = (has_highlight ? 'removeHighlight' : 'addHighlight');
+  this[action](spans);
+};
 TextBoxes.prototype.addHighlight = function(spans) {
   return $(spans).addClass("highlight");
+};
+TextBoxes.prototype.removeHighlight = function(spans) {
+  return $(spans).removeClass("highlight");
 };
 TextBoxes.prototype.addHighlight2 = function(spans) {
   return $(spans).addClass('highlight2');
