@@ -7,6 +7,7 @@ var Overlay = function(options) {
   this.lastRenderer = null;
   this.hiddenCls = 'wordmapper-overlay-hidden';
   this.popout = this.popout.bind(this);
+  this.dismiss = this.dismiss.bind(this);
   this.init();
 };
 Overlay.prototype.init = function() {
@@ -16,7 +17,8 @@ Overlay.prototype.init = function() {
 Overlay.prototype.addListeners = function() {
   events.hub.on(events.EVT.BUILD_INDEX, this.makeRenderer("index"));
   events.hub.on(events.EVT.EXPORT, this.makeRenderer("export"));
-  this.el.on('click', '.openWindow', null, this.popout);
+  this.el.on('click', '.wordmapper-open-window', null, this.popout);
+  this.el.on('click', '.wordmapper-overlay-close', null, this.dismiss);
 };
 Overlay.prototype.visible = function() {
   return this.el.andSelf().find('.' + this.hiddenCls).length === 0;
@@ -25,25 +27,31 @@ Overlay.prototype.render = function() {
   return this;
 };
 Overlay.prototype.makeRenderer = function(name) {
-  return function() {
+  var renderer = function() {
     var template = templates[name];
     this.el.html(template({
       cls: this.getCls(name),
       alignments: this.alignments,
       siteContext: this.siteContext
     }));
-    this.lastRenderer = name;
+    this.lastRenderer = {fn:renderer, name:name};
     return this;
   }.bind(this);
+  return renderer;
 };
 Overlay.prototype.getCls = function(renderer) {
   var cls = '';
   if (this.visible()) {
-    if (renderer === this.lastRenderer) {
+    if (this.lastRenderer && renderer === this.lastRenderer.name) {
       cls = this.hiddenCls;
     }
   }
   return cls;
+};
+Overlay.prototype.dismiss = function() {
+  if (this.lastRenderer) {
+    this.lastRenderer.fn();
+  }
 };
 Overlay.prototype.popout = function() {
   var opts = [
@@ -63,7 +71,7 @@ Overlay.prototype.popout = function() {
   var cloned = $(this.el)[0].cloneNode(true);
   
   // remove the popout button
-  $(cloned).find('.openWindow').remove();
+  $(cloned).find('[popout-exclude]').remove();
   
   // set the content of the new window
   win.document.body.innerHTML = $(cloned).html();

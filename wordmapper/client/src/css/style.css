@@ -39,6 +39,27 @@
     z-index: -1;
     display: none;
 }
+.wordmapper-overlay-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    border: 1px solid #333;
+    line-height: 20px;
+    font-weight: bold;
+    text-align: center;
+    background-color: #fff;
+    color: #000;
+}
+.wordmapper-overlay-close:before {
+    content: "X";
+}
+.wordmapper-overlay-close:hover {
+    cursor: pointer;
+    background-color: #ccc;
+}
 .wordmapper-panel button {
     font-family: inherit;
     font-size: 100%;
@@ -126,6 +147,9 @@
 .wordmapper-table {display:table;}
 .wordmapper-table .row {display:table-row; }
 .wordmapper-table .cell{display:table-cell;}
+.wordmapper-alignments {
+    width: calc(100% - 50px);
+}
 .wordmapper-alignments .wordmapper-table {
     font-size: 16px;
     border-collapse: collapse;
@@ -139,7 +163,7 @@
     display: block;
     min-height: 25%;
     height: 50%;
-    width: 100%;
+    width: 85%;
     outline: none;
     background-color: lightyellow;
     color: #000;

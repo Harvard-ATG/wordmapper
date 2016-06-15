@@ -111,7 +111,7 @@
 
 
 	// module
-	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    z-index: 1000;\n}\n.wordmapper-panel {\n    position: fixed;\n    opacity: 0.75;\n    background-color: #000;\n}\n.wordmapper-panel:hover {\n    opacity: 0.9;\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.95;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-panel button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper-panel button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper-panel button:hover,\n.wordmapper-panel button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper-panel button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n    z-index: 1002;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 11px;\n    background: #333;\n    background: rgba(0,0,0,.8);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(title);\n    left: 20%;\n    padding: 5px 15px;\n    position: absolute;\n    width: 220px;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n.wordmapper-table {display:table;}\n.wordmapper-table .row {display:table-row; }\n.wordmapper-table .cell{display:table-cell;}\n.wordmapper-alignments .wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-alignments .cell {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #000;\n}\n.wordmapper-alignments textarea.json {\n    display: block;\n    min-height: 25%;\n    height: 50%;\n    width: 100%;\n    outline: none;\n    background-color: lightyellow;\n    color: #000;\n    border: 2px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n", ""]);
+	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    z-index: 1000;\n}\n.wordmapper-panel {\n    position: fixed;\n    opacity: 0.75;\n    background-color: #000;\n}\n.wordmapper-panel:hover {\n    opacity: 0.9;\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.95;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-overlay-close {\n    position: absolute;\n    top: 20px;\n    right: 20px;\n    width: 20px;\n    height: 20px;\n    padding: 5px;\n    border: 1px solid #333;\n    line-height: 20px;\n    font-weight: bold;\n    text-align: center;\n    background-color: #fff;\n    color: #000;\n}\n.wordmapper-overlay-close:before {\n    content: \"X\";\n}\n.wordmapper-overlay-close:hover {\n    cursor: pointer;\n    background-color: #ccc;\n}\n.wordmapper-panel button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper-panel button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper-panel button:hover,\n.wordmapper-panel button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper-panel button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n    z-index: 1002;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 11px;\n    background: #333;\n    background: rgba(0,0,0,.8);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(title);\n    left: 20%;\n    padding: 5px 15px;\n    position: absolute;\n    width: 220px;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n.wordmapper-table {display:table;}\n.wordmapper-table .row {display:table-row; }\n.wordmapper-table .cell{display:table-cell;}\n.wordmapper-alignments {\n    width: calc(100% - 50px);\n}\n.wordmapper-alignments .wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-alignments .cell {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #000;\n}\n.wordmapper-alignments textarea.json {\n    display: block;\n    min-height: 25%;\n    height: 50%;\n    width: 85%;\n    outline: none;\n    background-color: lightyellow;\n    color: #000;\n    border: 2px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n", ""]);
 
 	// exports
 
@@ -19552,7 +19552,7 @@
 	with (obj) {
 	__p += '\n<!-- wordmapper/client/src/html/index.html -->\n<div class="wordmapper wordmapper-overlay ' +
 	((__t = ( cls )) == null ? '' : __t) +
-	'">\n  <div class="wordmapper-alignments">\n    <b>Index:</b>\n    <div class="wordmapper-table">\n      ';
+	'">\n  <div class="wordmapper-overlay-close" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-alignments">\n    <b>Index:</b>\n    <div class="wordmapper-table">\n      ';
 	 if (alignments.isEmpty()) { ;
 	__p += '\n        <div class="row">No words have been aligned yet</div>\n      ';
 	 } ;
@@ -19566,7 +19566,7 @@
 	 }); ;
 	__p += '\n        </div>\n      ';
 	 }); ;
-	__p += '\n  </div>\n  <p class="openWindow"><button>Pop out in a new window</button></p>\n</div>';
+	__p += '\n  </div>\n  <p class="wordmapper-open-window" popout-exclude><button>Pop out in a new window</button></p>\n</div>\n';
 
 	}
 	return __p
@@ -19584,9 +19584,9 @@
 	with (obj) {
 	__p += '\n<!-- wordmapper/client/src/html/export.html -->\n<div class="wordmapper wordmapper-overlay ' +
 	((__t = ( cls )) == null ? '' : __t) +
-	'">\n  <div class="wordmapper-alignments" style="height: 100%">\n    <b>JSON:</b>\n    <textarea class="json">' +
+	'">\n  <div class="wordmapper-overlay-close" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-alignments" style="height: 100%">\n    <b>JSON:</b>\n    <textarea class="json">' +
 	((__t = ( siteContext.serializeAlignments(alignments, true) )) == null ? '' : __t) +
-	'</textarea>\n    <p class="openWindow"><button>Pop out in a new window</button></p>\n  </div>\n</div>';
+	'</textarea>\n  </div>\n</div>';
 
 	}
 	return __p
@@ -19606,6 +19606,7 @@
 	  this.lastRenderer = null;
 	  this.hiddenCls = 'wordmapper-overlay-hidden';
 	  this.popout = this.popout.bind(this);
+	  this.dismiss = this.dismiss.bind(this);
 	  this.init();
 	};
 	Overlay.prototype.init = function() {
@@ -19615,7 +19616,8 @@
 	Overlay.prototype.addListeners = function() {
 	  events.hub.on(events.EVT.BUILD_INDEX, this.makeRenderer("index"));
 	  events.hub.on(events.EVT.EXPORT, this.makeRenderer("export"));
-	  this.el.on('click', '.openWindow', null, this.popout);
+	  this.el.on('click', '.wordmapper-open-window', null, this.popout);
+	  this.el.on('click', '.wordmapper-overlay-close', null, this.dismiss);
 	};
 	Overlay.prototype.visible = function() {
 	  return this.el.andSelf().find('.' + this.hiddenCls).length === 0;
@@ -19624,25 +19626,31 @@
 	  return this;
 	};
 	Overlay.prototype.makeRenderer = function(name) {
-	  return function() {
+	  var renderer = function() {
 	    var template = templates[name];
 	    this.el.html(template({
 	      cls: this.getCls(name),
 	      alignments: this.alignments,
 	      siteContext: this.siteContext
 	    }));
-	    this.lastRenderer = name;
+	    this.lastRenderer = {fn:renderer, name:name};
 	    return this;
 	  }.bind(this);
+	  return renderer;
 	};
 	Overlay.prototype.getCls = function(renderer) {
 	  var cls = '';
 	  if (this.visible()) {
-	    if (renderer === this.lastRenderer) {
+	    if (this.lastRenderer && renderer === this.lastRenderer.name) {
 	      cls = this.hiddenCls;
 	    }
 	  }
 	  return cls;
+	};
+	Overlay.prototype.dismiss = function() {
+	  if (this.lastRenderer) {
+	    this.lastRenderer.fn();
+	  }
 	};
 	Overlay.prototype.popout = function() {
 	  var opts = [
@@ -19662,7 +19670,7 @@
 	  var cloned = $(this.el)[0].cloneNode(true);
 	  
 	  // remove the popout button
-	  $(cloned).find('.openWindow').remove();
+	  $(cloned).find('[popout-exclude]').remove();
 	  
 	  // set the content of the new window
 	  win.document.body.innerHTML = $(cloned).html();
