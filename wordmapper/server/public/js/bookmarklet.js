@@ -3060,6 +3060,13 @@
 	  this.onClickButton = this.onClickButton.bind(this);
 	  this.init();
 	};
+	Panel.prototype.buttonEvent = {
+	  'align': events.EVT.ALIGN,
+	  'clear_highlights': events.EVT.CLEAR_HIGHLIGHTS,
+	  'clear_alignments': events.EVT.CLEAR_ALIGNMENTS,
+	  'build_index': events.EVT.BUILD_INDEX,
+	  'export': events.EVT.EXPORT
+	};
 	Panel.prototype.init = function() {
 	  this.el = $('<div>');
 	  this.addListeners();
@@ -3068,16 +3075,15 @@
 	  this.el.on('click', this.onClickButton);
 	};
 	Panel.prototype.onClickButton = function(evt) {
-	  var btnMap = {
-	    align: events.EVT.ALIGN,
-	    clear_highlights: events.EVT.CLEAR_HIGHLIGHTS,
-	    clear_alignments: events.EVT.CLEAR_ALIGNMENTS,
-	    build_index: events.EVT.BUILD_INDEX,
-	    export: events.EVT.EXPORT
-	  };
 	  var t = evt.target;
-	  if (t.nodeName == 'BUTTON' && t.name in btnMap) {
-	    events.hub.trigger(btnMap[t.name]);
+	  var can_trigger_event = true;
+	  if (t.nodeName == 'BUTTON' && t.name in this.buttonEvent) {
+	    if (t.dataset.confirm) {
+	      can_trigger_event = window.confirm(t.dataset.confirm);
+	    }
+	    if (can_trigger_event) {
+	      events.hub.trigger(this.buttonEvent[t.name]);
+	    }
 	  }  
 	};
 	Panel.prototype.render = function() {
@@ -3106,7 +3112,7 @@
 	obj || (obj = {});
 	var __t, __p = '';
 	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" title="Align highlighted words">Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" title="Clear highlighted words">Clear Highlights</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" title="Clear all alignments">Clear Alignments</button>\n    <button name="build_index" class="wordmapper-tooltip" title="Build index of aligned words">Build Index</button>\n    <button name="export" class="wordmapper-tooltip" title="Export the aligned words">Export</button>\n  </div>\n</div>';
+	__p += '\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" title="Align highlighted words">Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" title="Clear highlighted words">Clear Highlights</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" title="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?">Delete Alignments</button>\n    <button name="build_index" class="wordmapper-tooltip" title="Build index of aligned words">Build Index</button>\n    <button name="export" class="wordmapper-tooltip" title="Export the aligned words">Export</button>\n  </div>\n</div>';
 
 	}
 	return __p
