@@ -2,6 +2,13 @@
   <h2>Export</h2>
   <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>
   <div class="wordmapper-overlay-content" style="height: 100%">
-    <textarea class="json"><%= siteContext.serializeAlignments(alignments, true) %></textarea>
+    Export data (JSON):
+    <textarea name="export" class="json" readonly><%= siteContext.serializeAlignments(alignments, true) %></textarea>
+    <!--
+    Import data (JSON):
+    <textarea name="import" class="json"></textarea>
+    <button class="primary wordmapper-import">Import</button>
+    <span class="wordmapper-import-messages"></span>
+    -->
   </div>
 </div>

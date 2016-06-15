@@ -1,5 +1,7 @@
+var $ = require('jquery');
 var events = require('../events.js');
 var templates = require('../templates.js');
+var services = require('../services.js');
 
 var Overlay = function(options) {
   this.alignments = options.alignments;
@@ -17,6 +19,7 @@ Overlay.prototype.init = function() {
 Overlay.prototype.addListeners = function() {
   events.hub.on(events.EVT.BUILD_INDEX, this.makeRenderer("index"));
   events.hub.on(events.EVT.EXPORT, this.makeRenderer("export"));
+  this.el.on('click', '.wordmapper-import', null, this.import);
   this.el.on('click', '.wordmapper-popout', null, this.popout);
   this.el.on('click', '.wordmapper-dismiss', null, this.dismiss);
 };
@@ -82,6 +85,9 @@ Overlay.prototype.popout = function() {
       win.document.head.appendChild(children[i].cloneNode(true)); 
     }
   }
+};
+Overlay.prototype.import = function() {
+  console.log("import");
 };
 
 module.exports = Overlay;

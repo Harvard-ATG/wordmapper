@@ -1,3 +1,4 @@
+var $ = require('jquery');
 var events = require('../events.js');
 var templates = require('../templates.js');
 

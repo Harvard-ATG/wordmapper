@@ -1,3 +1,4 @@
+var $ = require('jquery');
 var events = require('../events.js');
 var models = require('../models.js');
 

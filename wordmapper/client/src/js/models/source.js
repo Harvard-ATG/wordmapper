@@ -1,3 +1,4 @@
+var $ = require('jquery');
 var sha1 = require('sha1');
 var Word = require('./word.js');
 

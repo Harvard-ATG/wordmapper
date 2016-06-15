@@ -1,3 +1,4 @@
+var $ = require('jquery');
 var models = require('./models.js');
 
 //---------------------------------------------------------------------
@@ -81,18 +82,27 @@ LocalStorageService.prototype._save = function(deferred, serialized) {
 
 //---------------------------------------------------------------------
 var SettingsService = {
+  // Settings are keyed by domain name
+  // If a domain name has no associated settings, use some default/fallback settings.
   _settings: {
+    '*': {
+      'sourceSelector': 'body'
+    },
     'www.graeco-arabic-studies.org': {
       'sourceSelector': '.textboxcontent'
     }
   },
   get: function(siteContext) {
     var settings = false;
+    console.log("Loading settings for site ID: ", siteContext.id);
     if (siteContext.id in this._settings) {
       settings = this._settings[siteContext.id];
+      console.log("Site ID exists. Settings: ", settings);
     } else {
-      throw "Settings not found for site ID: " + siteContext.id;
+      settings = this._settings['*'];
+      console.log("No such site ID exists. Using default settings: ", settings);
     }
+    
     return settings;
   }
 };

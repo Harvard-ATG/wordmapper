@@ -1,3 +1,4 @@
+var $ = require('jquery');
 var services = require('../services.js');
 var models = require('../models.js');
 var Panel = require('./panel.js');
@@ -8,7 +9,7 @@ var Application = function() {
   this.init();
 };
 Application.prototype.init = function() {
-  this.el = $('<div>').appendTo('body');
+  this.el = $('<div>');
   this.panel = new Panel();
   this.alignments = new models.Alignments();
   this.siteContext = new models.SiteContext({
@@ -30,11 +31,13 @@ Application.prototype.init = function() {
   });
   this.loadData();
   this.addListeners();
+  console.log('application', this);
 };
 Application.prototype.addListeners = function() {
   this.alignments.on('change', this.saveData.bind(this));
 };
 Application.prototype.render = function() {
+  console.log("render app");
   this.el.append(this.panel.render().el);
   this.el.append(this.overlay.render().el);
   return this;
