@@ -1,7 +1,7 @@
 module.exports = function(config) {
   config.set({
-    basePath: './wordmapper/client/test',
+    basePath: './wordmapper/client',
     frameworks: ['jasmine'],
-    files: ['*.js' ]
+    files: ['test/**/*.js']
   });
 }
