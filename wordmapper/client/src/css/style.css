@@ -2,6 +2,29 @@
     font-size: 14px;
     z-index: 1000;
 }
+.wordmapper button {
+    font-family: inherit;
+    font-size: 100%;
+    padding: 0.5em 1em;
+    color: rgba(0, 0, 0, 0.80); 
+    border: none rgba(0, 0, 0, 0);
+    background-color: #E6E6E6;
+    text-decoration: none;
+    border-radius: 2px;
+    height: 32px;
+}
+.wordmapper button.primary {
+    background-color: rgb(0, 120, 231);
+    color: #fff;
+}
+.wordmapper button:hover,
+.wordmapper button:focus {
+    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));
+}
+.wordmapper button:active {
+    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;
+    border-color: #000;
+}
 .wordmapper-panel {
     position: fixed;
     opacity: 0.75;
@@ -39,49 +62,24 @@
     z-index: -1;
     display: none;
 }
-.wordmapper-overlay-close {
+.wordmapper-dismiss {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 20px;
-    height: 20px;
-    padding: 5px;
-    border: 1px solid #333;
-    line-height: 20px;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    padding: 10px;
+    line-height: 30px;
     font-weight: bold;
     text-align: center;
-    background-color: #fff;
-    color: #000;
+    color: rgb(160,160,160);
 }
-.wordmapper-overlay-close:before {
+.wordmapper-dismiss:before {
     content: "X";
 }
-.wordmapper-overlay-close:hover {
+.wordmapper-dismiss:hover {
     cursor: pointer;
-    background-color: #ccc;
-}
-.wordmapper-panel button {
-    font-family: inherit;
-    font-size: 100%;
-    padding: 0.5em 1em;
-    color: rgba(0, 0, 0, 0.80); 
-    border: none rgba(0, 0, 0, 0);
-    background-color: #E6E6E6;
-    text-decoration: none;
-    border-radius: 2px;
-    height: 32px;
-}
-.wordmapper-panel button.primary {
-    background-color: rgb(0, 120, 231);
-    color: #fff;
-}
-.wordmapper-panel button:hover,
-.wordmapper-panel button:focus {
-    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));
-}
-.wordmapper-panel button:active {
-    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;
-    border-color: #000;
+    color: rgb(0, 120, 231);
 }
 .wordmapper-logo {
     display: block;
