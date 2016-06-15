@@ -2,6 +2,9 @@
     font-size: 14px;
     z-index: 1000;
 }
+.wordmapper h2 {
+    margin: 0 0 10px 0;
+}
 .wordmapper button {
     font-family: inherit;
     font-size: 100%;
