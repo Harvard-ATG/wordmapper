@@ -145,19 +145,19 @@
 .wordmapper-table {display:table;}
 .wordmapper-table .row {display:table-row; }
 .wordmapper-table .cell{display:table-cell;}
-.wordmapper-alignments {
+.wordmapper-overlay-content {
     width: calc(100% - 50px);
 }
-.wordmapper-alignments .wordmapper-table {
+.wordmapper-overlay-content .wordmapper-table {
     font-size: 16px;
     border-collapse: collapse;
 }
-.wordmapper-alignments .cell {
+.wordmapper-overlay-content .wordmapper-table .cell {
     min-width: 150px;
     padding: .5em 1em;
     border: 1px solid #000;
 }
-.wordmapper-alignments textarea.json {
+.wordmapper-overlay-content textarea.json {
     display: block;
     min-height: 25%;
     height: 50%;
