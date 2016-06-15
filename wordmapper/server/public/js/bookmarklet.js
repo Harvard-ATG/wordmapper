@@ -19572,7 +19572,7 @@
 	 }); ;
 	__p += '\n        </div>\n      ';
 	 }); ;
-	__p += '\n  </div>\n  <p class="wordmapper-open-window" popout-exclude><button>Pop out in a new window</button></p>\n</div>\n';
+	__p += '\n  </div>\n  <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>\n</div>\n';
 
 	}
 	return __p
@@ -19622,7 +19622,7 @@
 	Overlay.prototype.addListeners = function() {
 	  events.hub.on(events.EVT.BUILD_INDEX, this.makeRenderer("index"));
 	  events.hub.on(events.EVT.EXPORT, this.makeRenderer("export"));
-	  this.el.on('click', '.wordmapper-open-window', null, this.popout);
+	  this.el.on('click', '.wordmapper-popout', null, this.popout);
 	  this.el.on('click', '.wordmapper-dismiss', null, this.dismiss);
 	};
 	Overlay.prototype.visible = function() {

@@ -17,7 +17,7 @@ Overlay.prototype.init = function() {
 Overlay.prototype.addListeners = function() {
   events.hub.on(events.EVT.BUILD_INDEX, this.makeRenderer("index"));
   events.hub.on(events.EVT.EXPORT, this.makeRenderer("export"));
-  this.el.on('click', '.wordmapper-open-window', null, this.popout);
+  this.el.on('click', '.wordmapper-popout', null, this.popout);
   this.el.on('click', '.wordmapper-dismiss', null, this.dismiss);
 };
 Overlay.prototype.visible = function() {
