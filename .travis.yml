@@ -3,13 +3,7 @@ language: node_js
 node_js:
     - "6"
 before_script:
-    - "npm install"
-    - "echo $PATH"
-    - "echo `pwd`"
-    - "echo $(pwd)"
-    - "ls -al node_modules"
-    - "export PATH=./node_modules/.bin:$PATH"
-    - "echo $PATH"
-    - "which gulp"
+    - npm install
+    - "export PATH=$(pwd)/node_modules/.bin:$PATH"
 script: 
-    - gulp test
+    - karma start --single-run
