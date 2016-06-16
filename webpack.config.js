@@ -1,7 +1,8 @@
 var path = require('path');
 module.exports = {
+	entry: path.resolve('wordmapper/client/src/app.js'),
 	output: {
-		filename: 'bookmarklet.js'
+		filename: 'app.js'
 	},
 	resolve: {
 		alias: {

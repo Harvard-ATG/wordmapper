@@ -14,17 +14,20 @@
 
 var path = require('path');
 var gulp = require('gulp');
+var rename = require('gulp-rename');
 var webpack = require('webpack-stream');
 var KarmaServer = require('karma').Server;
+var WebpackConfig = require(path.resolve('webpack.config.js'));
 
 gulp.task('webpack', function() {
   return gulp.src('wordmapper/client/src/app.js')
-    .pipe(webpack(require(path.resolve('webpack.config.js'))))
+    .pipe(webpack(WebpackConfig))
     .pipe(gulp.dest('wordmapper/client/dist/'));
 });
 
 gulp.task('copy', ['webpack'], function() {
-  return gulp.src('wordmapper/client/dist/bookmarklet.js')
+  return gulp.src('wordmapper/client/dist/app.js')
+    .pipe(rename('bookmarklet.js'))
     .pipe(gulp.dest('wordmapper/server/public/js/'));
 });
 
