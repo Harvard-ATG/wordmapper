@@ -65,5 +65,3 @@ $ gulp watch
 ### Reference Implementation
 
 See the project github page [http://harvard-atg.github.io/wordmapper/](http://harvard-atg.github.io/wordmapper/) for a link to the reference implementation by Mark Schiefsky.
-
-
