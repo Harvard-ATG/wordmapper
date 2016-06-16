@@ -8,8 +8,12 @@
       <% } %>
       <% _.forEach(alignments.alignments, function(alignment) { %>
         <div class="row">
-          <% _.forEach(alignment.wordGroups(), function(word) { %>
-            <div class="cell"><%- word.toString() %></div>
+          <% _.forEach(alignment.wordGroups(), function(words) { %>
+            <div class="cell">
+            <% _.forEach(words, function(word) { %>
+              <span class="word" title="Word: <%- word.index %> Source: <%- word.source.index %>"><%- word.value %></span>
+            <% }); %>
+            </div>
           <% }); %>
         </div>
       <% }); %>

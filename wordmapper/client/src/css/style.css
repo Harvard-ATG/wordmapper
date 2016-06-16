@@ -161,6 +161,9 @@
     padding: .5em 1em;
     border: 1px solid #000;
 }
+.wordmapper-overlay-content .wordmapper-table .cell .word {
+    margin-right: 0.25em;
+}
 .wordmapper-overlay-content textarea.json {
     display: block;
     min-height: 25%;

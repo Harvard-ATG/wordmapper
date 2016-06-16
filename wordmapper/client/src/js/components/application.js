@@ -31,13 +31,11 @@ Application.prototype.init = function() {
   });
   this.loadData();
   this.addListeners();
-  console.log('application', this);
 };
 Application.prototype.addListeners = function() {
   this.alignments.on('change', this.saveData.bind(this));
 };
 Application.prototype.render = function() {
-  console.log("render app");
   this.el.append(this.panel.render().el);
   this.el.append(this.overlay.render().el);
   return this;
