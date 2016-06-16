@@ -6,8 +6,10 @@ before_script:
     - "npm install"
     - "echo $PATH"
     - "echo `pwd`"
+    - "echo $(pwd)"
     - "ls -al node_modules"
-    - "export PATH=$HOME/Harvard-ATG/wordmapper/node_modules/.bin"
+    - "export PATH=./node_modules/.bin:$PATH"
     - "echo $PATH"
+    - "which gulp"
 script: 
     - gulp test
