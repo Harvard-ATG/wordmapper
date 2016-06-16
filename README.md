@@ -34,22 +34,29 @@ $ export PATH=/vagrant/node_modules/.bin:$PATH
 $ gulp build
 ```
 
-Run the dev server:
+Start the nodejs web server:
 
 ```sh
 $ node wordmapper/server/app.js 
 ```
 
-Install bookmarklet by creating a new bookmark and copying this code into the URL field:
+Install bookmarklet in your browser by creating a new bookmark and copying this code into the URL field:
 
 ```javascript
 javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:8000/static/js/bookmarklet.js';})();
 ```
 
-You are now ready to develop locally. You'll want to "watch" your JS files as you develop so they are automatically rebuilt:
+You are now ready to develop locally. You'll want to `gulp watch` your JS files as you develop so they're automatically rebuilt:
 
 ```sh
 $ gulp watch
+```
+
+And you'll want to run the unit tests, either via karma direclty, or gulp which runs karma:
+
+```sh
+$ karma start karma.conf.js --single-run
+$ gulp test
 ```
 
 ### Testing
