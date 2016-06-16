@@ -2,7 +2,7 @@ var webpackConfig = require('./webpack.config.js');
 
 // Override the default entry point for the webpack bundle
 // because each test file will act as an entry point instead.
-// Note: must set to an empty object, null won't work.
+// Note: must set to an empty object, null won't work.c
 webpackConfig.entry = {}; 
 
 module.exports = function(config) {
@@ -18,10 +18,8 @@ module.exports = function(config) {
 
     preprocessors: {
       // add webpack as preprocessor for each test file
-      'wordmapper/client/test/**/*.spec.js': ['webpack'],
-      
-      // add coverage preprocessor for src files
-      'wordmapper/client/src/**/*.js': ['coverage']
+      // also add coverage so we can get test coverage of each webpack bundle
+      'wordmapper/client/test/**/*.spec.js': ['webpack', 'coverage']
     },
 
     plugins: [
