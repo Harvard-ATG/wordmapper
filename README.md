@@ -23,12 +23,11 @@ The project has two parts: a client-side bookmarklet that can run as an overlay 
 
 ### Limitations
 
-Note that this project currently delivers the functionality as a **bookmarklet**, which does have limitations. The bookmarklet may not work on all sites due to browser restrictions on cross-site scripting, although it should work on [graeco-arabic-studies.org](http://www.graeco-arabic-studies.org/). If the bookmarklet fails to load, it may be because the Content Security Policy (CSP) of the website forbids cross-site scripts. In that case, you may see an error message like this in your developer console:
-
+Bookmarklets have some limitations. Websites can instruct browsers to forbid cross-site scripts through a [Content Security Policy](https://en.wikipedia.org/wiki/Content_Security_Policy), which would not allow the bookmarklet to run on the website. Fortunately, [graeco-arabic-studies.org](http://www.graeco-arabic-studies.org/) does not prevent that (yet). If that happens, you may see an error message like this in your browser's developer console:
 
 _Refused to load the script '...' because it violates the following Content Security Policy directive: "script-src 'unsafe-eval' 'unsafe-inline' about: https: 'self'"._
 
-In those cases, the solution would be to either create a browser extension or create a web proxy service that can inject the bookmarklet functionality into the proxied content.
+The alternative solution would be to create a browser extension or create a web proxy service that can inject the script functionality into the proxied content.
 
 ### Development Quickstart
 
