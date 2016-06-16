@@ -1,6 +1,22 @@
+/**
+ * Gulp Tasks
+ * --------------------------------------------------------------------
+ *
+ * USAGE:
+ * 
+ *    $ gulp build -- Build the JS using webpack
+ *    $ gulp watch -- Watch the JS files and automatically rebuild (via webpack).
+ *    $ gulp test -- Run the JS unit tests
+ *
+ * NOTES:
+ * -The default task when you execute "gulp" without any arguments is to build the JS.
+ */
+
 var path = require('path');
 var gulp = require('gulp');
 var webpack = require('webpack-stream');
+var KarmaServer = require('karma').Server;
+
 
 gulp.task('webpack', function() {
   return gulp.src('wordmapper/client/src/app.js')
@@ -46,6 +62,14 @@ gulp.task('copy', ['webpack'], function() {
 });
 
 gulp.task('build', ['webpack', 'copy']);
+
+gulp.task('test', function (done) {
+  // This is equivalent to: karma start karma.conf.js --single-run
+  new KarmaServer({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
+});
 
 gulp.task('watch', function() {
   var watcher = gulp.watch('wordmapper/client/src/**/*', ['build']);
