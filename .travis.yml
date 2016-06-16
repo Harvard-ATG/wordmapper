@@ -7,4 +7,4 @@ before_script:
     - "export PATH=$(pwd)/node_modules/.bin:$PATH"
 script: 
     - karma start --single-run
-    #- istanbul cover jasmine-node --captureExceptions wordmapper/client/test && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
+    - if [ -f ./coverage/report-lcov/lcov.info ]; then cat ./coverage/report-lcov/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage; fi

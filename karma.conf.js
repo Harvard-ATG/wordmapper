@@ -2,26 +2,30 @@ var webpackConfig = require('./webpack.config.js');
 
 // Override the default entry point for the webpack bundle
 // because each test file will act as an entry point instead.
-// Can't set this to null, have to set it to an empty object.
+// Note: must set to an empty object, null won't work.
 webpackConfig.entry = {}; 
 
 module.exports = function(config) {
   config.set({
     // Relative to the __dirname of this config file
     // Used for specifying the "files" 
-    basePath: 'wordmapper',
+    basePath: '',
 
     files: [
       // each file acts as entry point for the webpack configuration
-      'client/test/**/*.spec.js'
+      'wordmapper/client/test/**/*.spec.js'
     ],
 
     preprocessors: {
       // add webpack as preprocessor for each test file
-      'client/test/**/*.spec.js': ['webpack']
+      'wordmapper/client/test/**/*.spec.js': ['webpack'],
+      
+      // add coverage preprocessor for src files
+      'wordmapper/client/src/**/*.js': ['coverage']
     },
 
     plugins: [
+      'karma-coverage',
       'karma-jasmine',
       'karma-jasmine-html-reporter', // see localhost:9876/debug.html
       'karma-mocha-reporter',
@@ -33,7 +37,15 @@ module.exports = function(config) {
 
     frameworks: ['jasmine'],
 
-    reporters: ['mocha', 'kjhtml'],
+    reporters: ['mocha', 'kjhtml', 'coverage'],
+
+    coverageReporter: {
+      dir: 'coverage',
+      reporters: [
+        { type: 'html', subdir: 'report-html' },
+        { type: 'lcov', subdir: 'report-lcov' }
+      ]
+    },
 
     mochaReporter: {
       showDiff: true

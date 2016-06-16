@@ -24,6 +24,7 @@
     "jshint": "^2.9.2",
     "jshint-loader": "^0.8.3",
     "karma": "^0.13.22",
+    "karma-coverage": "^1.0.0",
     "karma-jasmine": "^1.0.2",
     "karma-jasmine-html-reporter": "^0.2.0",
     "karma-mocha": "^1.0.1",
