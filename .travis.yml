@@ -4,6 +4,10 @@ node_js:
     - "6"
 before_script:
     - "npm install"
-    - "export PATH=`pwd`/node_modules/.bin"
+    - "echo $PATH"
+    - "echo `pwd`"
+    - "ls -al node_modules"
+    - "export PATH=$HOME/Harvard-ATG/wordmapper/node_modules/.bin"
+    - "echo $PATH"
 script: 
     - gulp test
