@@ -28,6 +28,7 @@
     "karma-mocha": "^1.0.1",
     "karma-mocha-reporter": "^2.0.4",
     "karma-phantomjs-launcher": "^1.0.0",
+    "karma-webpack": "^1.7.0",
     "lodash": "^4.13.1",
     "mocha": "^2.5.3",
     "phantomjs-prebuilt": "^2.1.7",
