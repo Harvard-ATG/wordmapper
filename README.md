@@ -52,7 +52,7 @@ You are now ready to develop locally. You'll want to `gulp watch` your JS files 
 $ gulp watch
 ```
 
-And you'll want to run the unit tests, either via karma direclty, or gulp which runs karma:
+And you'll want to run the unit tests, either via `karma` directly, or `gulp` which runs karma:
 
 ```sh
 $ karma start karma.conf.js --single-run
