@@ -1,5 +1,7 @@
 # Word Mapper
 
+[![Build Status](https://travis-ci.org/Harvard-ATG/wordmapper.svg?branch=master)](https://travis-ci.org/Harvard-ATG/wordmapper)
+
 ### Overview 
 The goal of this project is to create a web accessible tool that enables students, faculty and other collaborators to build discontinuous word alignments between two or more texts on [graeco-arabic-studies.org](http://graeco-arabic-studies.org/), so that they can build and share glossaries to aid learning and research.
 
@@ -63,4 +65,5 @@ $ gulp watch
 ### Reference Implementation
 
 See the project github page [http://harvard-atg.github.io/wordmapper/](http://harvard-atg.github.io/wordmapper/) for a link to the reference implementation by Mark Schiefsky.
+
 
