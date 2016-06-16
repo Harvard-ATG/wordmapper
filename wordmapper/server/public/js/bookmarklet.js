@@ -46,17 +46,19 @@
 
 	__webpack_require__(1);
 	var $ = __webpack_require__(5);
+	var components = __webpack_require__(7);
+	var global = window || {}; 
+	var app = null;
 
-	if (window.WordMapper) {
+	if (global.WordMapper) {
 	  console.log("WordMapper already loaded! To reload the bookmarklet,please refresh the page.");
 	} else {
-	  $(document).ready(function() {
-	    var components = __webpack_require__(7);
-	    var app = new components.Application();
-	    $("body").append(app.render().el);
-	    window.WordMapper = app;
-	  });
+	    app = new components.Application();
+	    app.renderTo("body");
+	    global.WordMapper = app;
 	}
+
+	module.exports = global.WordMapper;
 
 
 /***/ },
@@ -480,6 +482,12 @@
 	  this.el.append(this.overlay.render().el);
 	  return this;
 	};
+	Application.prototype.renderTo = function(selector) {
+	  $(function() {
+	    $(selector).append(this.render().el);
+	  }.bind(this));
+	  return this;
+	};
 	Application.prototype.saveData = function() {
 	  console.log("saving to storage");
 	  var deferred = this.storage.save(this.alignments);
@@ -497,6 +505,7 @@
 	};
 
 	module.exports = Application;
+
 
 /***/ },
 /* 9 */

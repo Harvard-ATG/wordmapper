@@ -40,6 +40,12 @@ Application.prototype.render = function() {
   this.el.append(this.overlay.render().el);
   return this;
 };
+Application.prototype.renderTo = function(selector) {
+  $(function() {
+    $(selector).append(this.render().el);
+  }.bind(this));
+  return this;
+};
 Application.prototype.saveData = function() {
   console.log("saving to storage");
   var deferred = this.storage.save(this.alignments);

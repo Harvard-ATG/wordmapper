@@ -1,13 +1,15 @@
 require('./css/style.css');
 var $ = require('jquery');
+var components = require('./js/components.js');
+var global = window || {}; 
+var app = null;
 
-if (window.WordMapper) {
+if (global.WordMapper) {
   console.log("WordMapper already loaded! To reload the bookmarklet,please refresh the page.");
 } else {
-  $(document).ready(function() {
-    var components = require('./js/components.js');
-    var app = new components.Application();
-    $("body").append(app.render().el);
-    window.WordMapper = app;
-  });
+    app = new components.Application();
+    app.renderTo("body");
+    global.WordMapper = app;
 }
+
+module.exports = global.WordMapper;

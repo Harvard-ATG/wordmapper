@@ -5,7 +5,7 @@ module.exports = function(config) {
     basePath: 'wordmapper',
 
     files: [
-      'client/test/**/*.test.js'
+      'client/test/**/*.spec.js'
     ],
 
     plugins: [
