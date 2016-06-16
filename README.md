@@ -21,6 +21,15 @@ The project has two parts: a client-side bookmarklet that can run as an overlay 
 
 **  For more on installing and using bookmarklets, see [Mozilla's documentation](https://support.mozilla.org/en-US/kb/bookmarklets-perform-common-web-page-tasks).
 
+### Limitations
+
+Note that this project currently delivers the functionality as a **bookmarklet**, which does have limitations. The bookmarklet may not work on all sites due to browser restrictions on cross-site scripting, although it should work on [graeco-arabic-studies.org](http://www.graeco-arabic-studies.org/). If the bookmarklet fails to load, it may be because the Content Security Policy (CSP) of the website forbids cross-site scripts. In that case, you may see an error message like this in your developer console:
+
+
+_Refused to load the script '...' because it violates the following Content Security Policy directive: "script-src 'unsafe-eval' 'unsafe-inline' about: https: 'self'"._
+
+In those cases, the solution would be to either create a browser extension or create a web proxy service that can inject the bookmarklet functionality into the proxied content.
+
 ### Development Quickstart
 
 Setup your environment:
