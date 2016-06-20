@@ -7,7 +7,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
   # Web server port
-  config.vm.network "forwarded_port", guest: 8000, host: 8000, auto_correct: true
+  config.vm.network "forwarded_port", guest: 80, host: 8000, auto_correct: true
   # Karma port
   config.vm.network "forwarded_port", guest: 9876, host: 9876, auto_correct: true
   config.vm.provision :shell do |shell|

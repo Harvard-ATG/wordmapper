@@ -7,6 +7,6 @@ app.get('/', function (req, res) {
   res.send('Word Mapper says: Hello World!');
 });
 
-app.listen(8000, function () {
-  console.log('Word Mapper listening on port 8000!');
+app.listen(80, function () {
+  console.log('Word Mapper listening on port 80!');
 });
