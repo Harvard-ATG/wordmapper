@@ -11,7 +11,7 @@ WebpackConfig.module.preLoaders = WebpackConfig.module.preLoaders.filter(functio
 	if(preLoader.loader === 'jshint-loader') {
 		return false;
 	}
-	return true
+	return true;
 }); 
 
 // Use Istanbul to instrument the source files we want to test against
