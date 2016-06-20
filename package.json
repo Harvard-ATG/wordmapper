@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/Harvard-ATG/wordmapper.git"
   },
-  "author": "",
+  "author": "Arthur Barrett <abarrett@fas.harvard.edu>",
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/Harvard-ATG/wordmapper/issues"
@@ -43,5 +43,8 @@
   },
   "dependencies": {
     "express": "~4.13.4"
+  },
+  "engines": {
+    "node": "6.2.1"
   }
 }
