@@ -96,7 +96,7 @@
 
 
 	// module
-	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    opacity: 0.75;\n    background-color: #000;\n}\n.wordmapper-panel:hover {\n    opacity: 0.9;\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.95;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n    z-index: 1002;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 11px;\n    background: #333;\n    background: rgba(0,0,0,.8);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(title);\n    left: 20%;\n    padding: 5px 15px;\n    position: absolute;\n    width: 220px;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n.wordmapper-table {display:table;}\n.wordmapper-table .row {display:table-row; }\n.wordmapper-table .cell{display:table-cell;}\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-overlay-content .wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-overlay-content .wordmapper-table .cell {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #000;\n}\n.wordmapper-overlay-content .wordmapper-table .cell .word {\n    margin-right: 0.25em;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n.wordmapper-overlay-content textarea.json:read-only {\n    background-color: lightyellow;\n}\n", ""]);
+	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    opacity: 0.75;\n    background-color: #000;\n}\n.wordmapper-panel:hover {\n    opacity: 0.9;\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.95;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n    z-index: 1002;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 11px;\n    background: #333;\n    background: rgba(0,0,0,.8);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(title);\n    left: 20%;\n    padding: 5px 15px;\n    position: absolute;\n    width: 220px;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n.wordmapper-table {display:table;}\n.wordmapper-table .row {display:table-row; }\n.wordmapper-table .cell{display:table-cell;}\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-overlay-content .wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-overlay-content .wordmapper-table .cell {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #000;\n}\n.wordmapper-overlay-content .wordmapper-table .cell .word {\n    margin-right: 0.25em;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n    background-color: lightyellow;\n}\n.wordmapper-import-messages {\n    color: red;\n}", ""]);
 
 	// exports
 
@@ -463,9 +463,14 @@
 	    alignments: this.alignments,
 	    selector: this.settings.sourceSelector
 	  });
-	  this.overlay = new Overlay({
+	  this.importExport = new services.ImportExportService({
 	    siteContext: this.siteContext,
-	    alignments: this.alignments
+	    alignments: this.alignments,
+	    sources: this.boxes.sources
+	  });
+	  this.overlay = new Overlay({
+	    alignments: this.alignments,
+	    importExport: this.importExport
 	  });
 	  this.storage = new services.LocalStorageService({
 	    siteContext: this.siteContext,
@@ -620,7 +625,77 @@
 	  }
 	};
 
+	var ImportExportService = function(options) {
+	  this.sources = options.sources || [];
+	  this.alignments = options.alignments;
+	  this.siteContext = options.siteContext;
+	  this.import = this.import.bind(this);
+	  this.export = this.export.bind(this);
+	};
+	ImportExportService.prototype.getSourceMap = function() {
+	  return this.sources.reduce(function(dict, source) {
+	    dict[source.hash] = source;
+	    return dict;
+	  }, {});
+	};
+	ImportExportService.prototype.import = function(jsonData) {
+	  var sourceMap = this.getSourceMap();
+	  var retvalue = {"success": true, "message": ""};
+
+	  try {
+	    var result = JSON.parse(jsonData);
+	    
+	    // Preliminary error checking
+	    if (result.type != "site" || !result.hasOwnProperty("data")) { 
+	      throw "Invalid import data. Top-level object must be of type 'site' with a 'data' attribute.";
+	    } else if(result.data.type != "alignments" || !result.data.hasOwnProperty("data")) {
+	      throw "Invalid import data. Object contained by 'site' must be of type 'alignments' with a 'data' attribute.";
+	    }
+
+	    // Attempt to create an array of alignment objects, each of which contains an array of word objects
+	    var batch = result.data.data.map(function(alignment, alignmentIdx) {
+	      if (!alignment.hasOwnProperty("data") || !Array.isArray(alignment.data)) {
+	        throw "Alignment item missing/invalid 'data'  attribute at: " + alignmentIdx;
+	      }
+	      var words = alignment.data.map(function(word, wordIdx) {
+	        var errpos = ["A", alignmentIdx, "W", wordIdx].join("");
+	        if (!word.hasOwnProperty("data")) {
+	          throw "Word item missing/invalid 'data' attribute at: " + errpos;
+	        }
+	        if (!sourceMap[word.data.source]) {
+	          throw "Word item (" + word.data.value + ") does not map to a valid source (" + word.data.source + ") at: " + errpos;
+	        }
+	        return models.Word.create({
+	          index: word.data.index,
+	          value: word.data.value,
+	          source: sourceMap[word.data.source]
+	        });
+	      });
+	      return models.Alignments.createAlignment(words);
+	    });
+
+	    // Load the batch of alignment objects
+	    this.alignments.load(batch);
+
+	  } catch(e) {
+	    retvalue.success = false;
+	    retvalue.message = "An error occurred with the import. Error: " + e;
+	  }
+
+	  return retvalue;
+	};
+	ImportExportService.prototype.export = function(serialize) {
+	  var result = {
+	    'type': 'site',
+	    'id': this.siteContext.id,
+	    'url': this.siteContext.url,
+	    'data': this.alignments.toJSON()
+	  };
+	  return (serialize ? JSON.stringify(result, null, '\t') : result);
+	};
+
 	module.exports = {
+	  ImportExportService: ImportExportService,
 	  LocalStorageService: LocalStorageService,
 	  SettingsService: SettingsService
 	};
@@ -19616,9 +19691,9 @@
 	with(obj||{}){
 	__p+='\n<!-- wordmapper/client/src/html/export.html -->\n<div class="wordmapper wordmapper-overlay '+
 	((__t=( cls ))==null?'':__t)+
-	'">\n  <h2>Export</h2>\n  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-overlay-content" style="height: 100%">\n    Export data (JSON):\n    <textarea name="export" class="json" readonly>'+
-	((__t=( siteContext.serializeAlignments(alignments, true) ))==null?'':__t)+
-	'</textarea>\n    <!--\n    Import data (JSON):\n    <textarea name="import" class="json"></textarea>\n    <button class="primary wordmapper-import">Import</button>\n    <span class="wordmapper-import-messages"></span>\n    -->\n  </div>\n</div>';
+	'">\n  <h2>Export</h2>\n  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-overlay-content" style="height: 100%">\n    Export data:\n    <textarea name="export" class="json">'+
+	((__t=( importExport.export(true) ))==null?'':__t)+
+	'</textarea>\n\n    Import data:\n    <textarea name="import" class="json"></textarea>\n    <button class="primary wordmapper-import">Import</button>\n    <span class="wordmapper-import-messages"></span>\n  </div>\n</div>';
 	}
 	return __p;
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
@@ -19631,15 +19706,15 @@
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(12);
 	var templates = __webpack_require__(25);
-	var services = __webpack_require__(9);
 
 	var Overlay = function(options) {
 	  this.alignments = options.alignments;
-	  this.siteContext = options.siteContext;
+	  this.importExport = options.importExport;
 	  this.lastRenderer = null;
 	  this.hiddenCls = 'wordmapper-overlay-hidden';
 	  this.popout = this.popout.bind(this);
 	  this.dismiss = this.dismiss.bind(this);
+	  this.import = this.import.bind(this);
 	  this.init();
 	};
 	Overlay.prototype.init = function() {
@@ -19665,7 +19740,7 @@
 	    this.el.html(template({
 	      cls: this.getCls(name),
 	      alignments: this.alignments,
-	      siteContext: this.siteContext
+	      importExport: this.importExport
 	    }));
 	    this.lastRenderer = {fn:renderer, name:name};
 	    return this;
@@ -19716,8 +19791,17 @@
 	    }
 	  }
 	};
-	Overlay.prototype.import = function() {
-	  console.log("import");
+	Overlay.prototype.import = function(evt) {
+	  var textarea = this.el.find('textarea[name="import"]');
+	  var jsonData = textarea.val();
+	  console.log("import", jsonData);
+	  var result = this.importExport.import(jsonData);
+	  console.log("import result", result);
+	  if (result.success) {
+	    this.dismiss();
+	  } else {
+	    this.el.find(".wordmapper-import-messages").html(result.message);
+	  }
 	};
 
 	module.exports = Overlay;

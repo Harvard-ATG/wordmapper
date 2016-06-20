@@ -21,9 +21,14 @@ Application.prototype.init = function() {
     alignments: this.alignments,
     selector: this.settings.sourceSelector
   });
-  this.overlay = new Overlay({
+  this.importExport = new services.ImportExportService({
     siteContext: this.siteContext,
-    alignments: this.alignments
+    alignments: this.alignments,
+    sources: this.boxes.sources
+  });
+  this.overlay = new Overlay({
+    alignments: this.alignments,
+    importExport: this.importExport
   });
   this.storage = new services.LocalStorageService({
     siteContext: this.siteContext,

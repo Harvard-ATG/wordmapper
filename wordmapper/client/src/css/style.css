@@ -174,7 +174,8 @@
     border: 1px solid #000;
     font-size: 12px;
     font-family: monospace;
-}
-.wordmapper-overlay-content textarea.json:read-only {
     background-color: lightyellow;
+}
+.wordmapper-import-messages {
+    color: red;
 }

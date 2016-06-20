@@ -107,7 +107,77 @@ var SettingsService = {
   }
 };
 
+var ImportExportService = function(options) {
+  this.sources = options.sources || [];
+  this.alignments = options.alignments;
+  this.siteContext = options.siteContext;
+  this.import = this.import.bind(this);
+  this.export = this.export.bind(this);
+};
+ImportExportService.prototype.getSourceMap = function() {
+  return this.sources.reduce(function(dict, source) {
+    dict[source.hash] = source;
+    return dict;
+  }, {});
+};
+ImportExportService.prototype.import = function(jsonData) {
+  var sourceMap = this.getSourceMap();
+  var retvalue = {"success": true, "message": ""};
+
+  try {
+    var result = JSON.parse(jsonData);
+    
+    // Preliminary error checking
+    if (result.type != "site" || !result.hasOwnProperty("data")) { 
+      throw "Invalid import data. Top-level object must be of type 'site' with a 'data' attribute.";
+    } else if(result.data.type != "alignments" || !result.data.hasOwnProperty("data")) {
+      throw "Invalid import data. Object contained by 'site' must be of type 'alignments' with a 'data' attribute.";
+    }
+
+    // Attempt to create an array of alignment objects, each of which contains an array of word objects
+    var batch = result.data.data.map(function(alignment, alignmentIdx) {
+      if (!alignment.hasOwnProperty("data") || !Array.isArray(alignment.data)) {
+        throw "Alignment item missing/invalid 'data'  attribute at: " + alignmentIdx;
+      }
+      var words = alignment.data.map(function(word, wordIdx) {
+        var errpos = ["A", alignmentIdx, "W", wordIdx].join("");
+        if (!word.hasOwnProperty("data")) {
+          throw "Word item missing/invalid 'data' attribute at: " + errpos;
+        }
+        if (!sourceMap[word.data.source]) {
+          throw "Word item (" + word.data.value + ") does not map to a valid source (" + word.data.source + ") at: " + errpos;
+        }
+        return models.Word.create({
+          index: word.data.index,
+          value: word.data.value,
+          source: sourceMap[word.data.source]
+        });
+      });
+      return models.Alignments.createAlignment(words);
+    });
+
+    // Load the batch of alignment objects
+    this.alignments.load(batch);
+
+  } catch(e) {
+    retvalue.success = false;
+    retvalue.message = "An error occurred with the import. Error: " + e;
+  }
+
+  return retvalue;
+};
+ImportExportService.prototype.export = function(serialize) {
+  var result = {
+    'type': 'site',
+    'id': this.siteContext.id,
+    'url': this.siteContext.url,
+    'data': this.alignments.toJSON()
+  };
+  return (serialize ? JSON.stringify(result, null, '\t') : result);
+};
+
 module.exports = {
+  ImportExportService: ImportExportService,
   LocalStorageService: LocalStorageService,
   SettingsService: SettingsService
 };

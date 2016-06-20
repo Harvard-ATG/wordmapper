@@ -1,15 +1,15 @@
 var $ = require('jquery');
 var events = require('../events.js');
 var templates = require('../templates.js');
-var services = require('../services.js');
 
 var Overlay = function(options) {
   this.alignments = options.alignments;
-  this.siteContext = options.siteContext;
+  this.importExport = options.importExport;
   this.lastRenderer = null;
   this.hiddenCls = 'wordmapper-overlay-hidden';
   this.popout = this.popout.bind(this);
   this.dismiss = this.dismiss.bind(this);
+  this.import = this.import.bind(this);
   this.init();
 };
 Overlay.prototype.init = function() {
@@ -35,7 +35,7 @@ Overlay.prototype.makeRenderer = function(name) {
     this.el.html(template({
       cls: this.getCls(name),
       alignments: this.alignments,
-      siteContext: this.siteContext
+      importExport: this.importExport
     }));
     this.lastRenderer = {fn:renderer, name:name};
     return this;
@@ -86,8 +86,17 @@ Overlay.prototype.popout = function() {
     }
   }
 };
-Overlay.prototype.import = function() {
-  console.log("import");
+Overlay.prototype.import = function(evt) {
+  var textarea = this.el.find('textarea[name="import"]');
+  var jsonData = textarea.val();
+  console.log("import", jsonData);
+  var result = this.importExport.import(jsonData);
+  console.log("import result", result);
+  if (result.success) {
+    this.dismiss();
+  } else {
+    this.el.find(".wordmapper-import-messages").html(result.message);
+  }
 };
 
 module.exports = Overlay;
