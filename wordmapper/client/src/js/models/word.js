@@ -1,7 +1,7 @@
 var Word = function(options) {
   var self = this;
   ['index', 'source', 'value'].forEach(function(attr) {
-    if (options.hasOwnProperty(attr) && options[attr]) {
+    if (options.hasOwnProperty(attr)) {
       self[attr] = options[attr];
     } else {
       throw "Missing required attribute to construct Word: " + attr;
@@ -28,7 +28,7 @@ Word.prototype.toJSON = function() {
   };
 };
 Word.prototype.serialize = function() {
-  JSON.stringify(this.toJSON(), null, '\t');
+  return JSON.stringify(this.toJSON(), null, '\t');
 };
 
 module.exports = Word;
