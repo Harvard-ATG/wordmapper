@@ -1,4 +1,4 @@
-var templates = require('../src/js/templates.js');
+var templates = require('../../src/js/templates.js');
 
 describe("Templates", function() {
   ['panel', 'index', 'export'].forEach(function(template) {

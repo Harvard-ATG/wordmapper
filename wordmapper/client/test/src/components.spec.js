@@ -1,4 +1,4 @@
-var components = require('../src/js/components.js');
+var components = require('../../src/js/components.js');
 
 describe("Components", function() {
   it("should have an Application component", function() {
