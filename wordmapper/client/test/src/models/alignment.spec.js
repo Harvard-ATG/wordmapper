@@ -56,6 +56,21 @@ describe("Alignment Model", function() {
     expect(alignment.size()).toBe(size - 1);
     expect(alignment.containsWord(word2)).toBe(false);
   });
+  it("should know how to group words by source", function() {
+    var word1 = new Word({index:0,value:"foo",source:source_fixture2});
+    var word2 = new Word({index:1,value:"foo",source:source_fixture});
+    var word3 = new Word({index:2,value:"foo",source:source_fixture});
+    var words = [word1, word2, word3];
+    var alignment = new Alignment({id: 1, words: words });
+    var word_groups = alignment.wordGroups();
+    
+    // there should be two word groups because there are two sources
+    expect(word_groups.length).toBe(2); 
+    
+    // word groups should be ordered by source index
+    expect(word_groups[0]).toEqual([word2,word3]);
+    expect(word_groups[1]).toEqual([word1]);
+  });
   it("should know its size", function() {
     var word = new Word({index:0,value:"foo",source:source_fixture});
     var words = [word];
@@ -69,6 +84,24 @@ describe("Alignment Model", function() {
     expect(alignment.isEmpty()).toBe(false);
     alignment.words = [];
     expect(alignment.isEmpty()).toBe(true);
+  });
+  it("should know its minimum word index", function() {
+    var word1 = new Word({index:14,value:"foo",source:source_fixture});
+    var word2 = new Word({index:13,value:"foo",source:source_fixture2});
+    var word3 = new Word({index:15,value:"foo",source:source_fixture});
+    var words = [word1, word2, word3];
+    var alignment = new Alignment({id: 1, words: words });
+    
+    expect(alignment.minWordIndex()).toBe(word2.index);
+  });
+  it("should know its minimum source index", function() {
+    var word1 = new Word({index:14,value:"foo",source:source_fixture});
+    var word2 = new Word({index:13,value:"foo",source:source_fixture2});
+    var word3 = new Word({index:15,value:"foo",source:source_fixture});
+    var words = [word1, word2, word3];
+    var alignment = new Alignment({id: 1, words: words });
+
+    expect(alignment.minSourceIndex()).toBe(source_fixture.index);
   });
   it("toString()", function() {
     var word1 = new Word({index:0,value:"foo",source:source_fixture});
