@@ -16,7 +16,7 @@ module.exports = function(config) {
       // add webpack as preprocessor for each test file
       // also add coverage so we can get test coverage of each webpack bundle
       //'wordmapper/client/test/**/*.spec.js': ['webpack', 'coverage']
-      'wordmapper/client/test/index.js': ['webpack', 'coverage']
+      'wordmapper/client/test/index.js': ['webpack']
     },
 
     plugins: [

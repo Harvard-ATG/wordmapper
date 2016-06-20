@@ -16,10 +16,10 @@ WebpackConfig.module.preLoaders = WebpackConfig.module.preLoaders.filter(functio
 
 // Use Istanbul to instrument the source files we want to test against
 // so that we get coverage data for just those files.
-WebpackConfig.module.postLoaders = [{
+WebpackConfig.module.preLoaders.push({
 	test: /\.js$/,
 	include: path.resolve('wordmapper/client/src/js/'),
 	loader: 'istanbul-instrumenter'
-}];
+});
 
 module.exports = WebpackConfig;
