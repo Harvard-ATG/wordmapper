@@ -14,7 +14,7 @@
     <div class="jumbotron">
         <h1>Welcome to WordMapper!</h1>
         <p>
-			Get the <a href="/static/js/bookmarklet.js" class="btn btn-primary btn-lg">WordMapper</a> bookmarklet.
+			Get the <a href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='<%= baseUrl %>/static/js/bookmarklet.js';})();" class="btn btn-primary btn-lg">WordMapper</a> bookmarklet.
 		</p>
     </div>
 </div>
