@@ -1,6 +1,9 @@
+var Comment = require('./comment.js');
+
 var Alignment = function(options) {
   this.id = options.id;
   this.words = Array.prototype.slice.call(options.words);
+  this.comment = options.comment || null;
   if (this.words.length === 0) {
     throw "Invalid alignment: must provide at least one Word object to construct an alignment";
   }
@@ -11,6 +14,15 @@ var Alignment = function(options) {
 };
 Alignment.prototype.hasValidId = function() {
   return (typeof this.id === "number" || typeof this.id === "string") && this.id !== "";
+};
+Alignment.prototype.setComment = function(text) {
+  var trimmed_text = text.trim();
+  if (trimmed_text) {
+    this.comment = new Comment({ text: trimmed_text });
+  } else {
+    this.comment = null;
+  }
+  return this;
 };
 Alignment.prototype.containsWord = function(word) {
   return this.findWord(word) !== false;
@@ -78,12 +90,16 @@ Alignment.prototype.toString = function() {
   }).join(' - ');
 };
 Alignment.prototype.toJSON = function() {
-  return {
+  var result = {
     "type": "alignment",
     "data": this.words.map(function(word) {
       return word.toJSON();
     })
   };
+  if (this.comment !== null) {
+    result.data.push(this.comment.toJSON());
+  }
+  return result;
 };
 Alignment.prototype.serialize = function() {
   return JSON.stringify(this.toJSON(), null, '\t');

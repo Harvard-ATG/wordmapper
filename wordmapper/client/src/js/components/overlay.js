@@ -1,15 +1,21 @@
 var $ = require('jquery');
 var events = require('../events.js');
 var templates = require('../templates.js');
+var IndexView = require('./overlay/index_view.js');
+var ExportView = require('./overlay/export_view.js');
 
 var Overlay = function(options) {
   this.alignments = options.alignments;
   this.importExport = options.importExport;
-  this.lastRenderer = null;
   this.hiddenCls = 'wordmapper-overlay-hidden';
   this.popout = this.popout.bind(this);
   this.dismiss = this.dismiss.bind(this);
-  this.import = this.import.bind(this);
+  this.indexView = new IndexView({
+    alignments: this.alignments
+  });
+  this.exportView = new ExportView({
+    importExport: this.importExport
+  });
   this.init();
 };
 Overlay.prototype.init = function() {
@@ -17,9 +23,14 @@ Overlay.prototype.init = function() {
   this.addListeners();
 };
 Overlay.prototype.addListeners = function() {
-  events.hub.on(events.EVT.BUILD_INDEX, this.makeRenderer("index"));
-  events.hub.on(events.EVT.EXPORT, this.makeRenderer("export"));
-  this.el.on('click', '.wordmapper-import', null, this.import);
+  events.hub.on(events.EVT.BUILD_INDEX, function() {
+    this.setView(this.indexView).render();
+  }.bind(this));
+
+  events.hub.on(events.EVT.EXPORT, function() {
+    this.setView(this.exportView).render();
+  }.bind(this));
+
   this.el.on('click', '.wordmapper-popout', null, this.popout);
   this.el.on('click', '.wordmapper-dismiss', null, this.dismiss);
 };
@@ -27,34 +38,36 @@ Overlay.prototype.visible = function() {
   return this.el.andSelf().find('.' + this.hiddenCls).length === 0;
 };
 Overlay.prototype.render = function() {
+  var hide = true; 
+  if (this.visible()) {
+    hide = (this.renderer && this.renderer === this.lastRenderer);
+  } else {
+    hide = this.renderer ? false : true;
+  }
+  if (this.lastRenderer) {
+    this.lastRenderer.el.detach();
+  }
+  var cls = hide ? this.hiddenCls : '';
+  var title = this.renderer ? this.renderer.title : '';
+  var canPopout = this.renderer ? this.renderer.canPopout : false;
+  this.el.html(templates.overlay({
+    cls: cls,
+    title: title,
+    canPopout: canPopout
+  }));
+  if (this.renderer && !hide) {
+    this.renderer.render();
+    this.el.find('.wordmapper-overlay-content').append(this.renderer.el);
+  }
+  this.lastRenderer = this.renderer;
   return this;
 };
-Overlay.prototype.makeRenderer = function(name) {
-  var renderer = function() {
-    var template = templates[name];
-    this.el.html(template({
-      cls: this.getCls(name),
-      alignments: this.alignments,
-      importExport: this.importExport
-    }));
-    this.lastRenderer = {fn:renderer, name:name};
-    return this;
-  }.bind(this);
-  return renderer;
-};
-Overlay.prototype.getCls = function(renderer) {
-  var cls = '';
-  if (this.visible()) {
-    if (this.lastRenderer && renderer === this.lastRenderer.name) {
-      cls = this.hiddenCls;
-    }
-  }
-  return cls;
+Overlay.prototype.setView = function(view) {
+  this.renderer = view;
+  return this;
 };
 Overlay.prototype.dismiss = function() {
-  if (this.lastRenderer) {
-    this.lastRenderer.fn();
-  }
+  this.render();
 };
 Overlay.prototype.popout = function() {
   var opts = [
@@ -84,18 +97,6 @@ Overlay.prototype.popout = function() {
     if (children[i].tagName === "STYLE" && children[i].textContent.indexOf(".wordmapper") >= 0) {
       win.document.head.appendChild(children[i].cloneNode(true)); 
     }
-  }
-};
-Overlay.prototype.import = function(evt) {
-  var textarea = this.el.find('textarea[name="import"]');
-  var jsonData = textarea.val();
-  console.log("import", jsonData);
-  var result = this.importExport.import(jsonData);
-  console.log("import result", result);
-  if (result.success) {
-    this.dismiss();
-  } else {
-    this.el.find(".wordmapper-import-messages").html(result.message);
   }
 };
 

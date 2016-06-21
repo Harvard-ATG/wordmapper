@@ -1,22 +1,23 @@
-<div class="wordmapper wordmapper-overlay <%= cls %>">
-  <h2>Index</h2>
-  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>
-  <div class="wordmapper-overlay-content">
-    <div class="wordmapper-table">
-      <% if (alignments.isEmpty()) { %>
-        <div class="row">No words have been aligned yet</div>
-      <% } %>
-      <% _.forEach(alignments.alignments, function(alignment) { %>
-        <div class="row">
-          <% _.forEach(alignment.wordGroups(), function(words) { %>
-            <div class="cell">
-            <% _.forEach(words, function(word) { %>
-              <span class="word" title="Word: <%- word.index %> Source: <%- word.source.index %>"><%- word.value %></span>
-            <% }); %>
-            </div>
-          <% }); %>
+
+<div class="wordmapper-table">
+  <% if (alignments.isEmpty()) { %>
+    <div class="row">No words have been aligned yet</div>
+  <% } else { %>
+    <button name="action_comment" popout-exclude>Comment</button>
+  <% } %>
+  <% _.forEach(alignments.alignments, function(alignment, index) { %>
+    <div class="row">
+      <% _.forEach(alignment.wordGroups(), function(words) { %>
+        <div class="cell">
+        <% _.forEach(words, function(word) { %>
+          <span class="word" title="Word: <%- word.index %> Source: <%- word.source.index %>"><%- word.value %></span>
+        <% }); %>
         </div>
       <% }); %>
-  </div>
-  <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>
+      <div class="cell comment">
+        <span class="comment"><%- alignment.comment %></span>
+        <textarea class="comment" name="comment<%= index %>" data-alignment="<%= alignment.id %>" palceholder="Add comment..." style="display:none"><%- alignment.comment %></textarea>
+      </div>
+    </div>
+  <% }); %>
 </div>

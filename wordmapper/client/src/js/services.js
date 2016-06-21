@@ -47,14 +47,25 @@ StorageService.prototype._parse = function(jsonData) {
   var sourceMap = this.getSourceMap();
   var result = JSON.parse(jsonData);
   var alignments = result.data.map(function(alignment) {
-    var words = alignment.data.map(function(word) {
+    var words = alignment.data.filter(function(item) {
+      return item.type == 'word';
+    }).map(function(word) {
       return models.Word.create({
         index: word.data.index,
         value: word.data.value,
         source: sourceMap[word.data.source]
       });
     });
-    return models.Alignments.createAlignment(words);
+    var comment_texts = alignment.data.filter(function(item) {
+      return item.type == 'comment';
+    }).map(function(comment) {
+      return comment.data.text;
+    });
+    var alignment_obj = models.Alignments.createAlignment(words);
+    if (comment_texts.length > 0) {
+      alignment_obj.setComment(comment_texts[0]);
+    }
+    return alignment_obj;
   });
   return alignments;
 };
@@ -139,7 +150,9 @@ ImportExportService.prototype.import = function(jsonData) {
       if (!alignment.hasOwnProperty("data") || !Array.isArray(alignment.data)) {
         throw "Alignment item missing/invalid 'data'  attribute at: " + alignmentIdx;
       }
-      var words = alignment.data.map(function(word, wordIdx) {
+      var words = alignment.data.filter(function(item) {
+        return item.type == "word";
+      }).map(function(word, wordIdx) {
         var errpos = ["A", alignmentIdx, "W", wordIdx].join("");
         if (!word.hasOwnProperty("data")) {
           throw "Word item missing/invalid 'data' attribute at: " + errpos;
@@ -153,7 +166,16 @@ ImportExportService.prototype.import = function(jsonData) {
           source: sourceMap[word.data.source]
         });
       });
-      return models.Alignments.createAlignment(words);
+      var comment_texts = alignment.data.filter(function(item) {
+        return item.type == "comment";
+      }).map(function(comment) {
+        return comment.data.text;
+      });
+      var alignment_obj = models.Alignments.createAlignment(words);
+      if (comment_texts.length > 0) {
+        alignment_obj.setComment(comment_texts[0]);
+      }
+      return alignment_obj;
     });
 
     // Load the batch of alignment objects

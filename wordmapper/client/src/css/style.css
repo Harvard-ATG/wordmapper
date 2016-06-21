@@ -164,6 +164,9 @@
 .wordmapper-overlay-content .wordmapper-table .cell .word {
     margin-right: 0.25em;
 }
+.wordmapper-overlay-content .wordmapper-table .row .cell.comment:last-child {
+    border: none;
+}
 .wordmapper-overlay-content textarea.json {
     display: block;
     min-height: 25%;
@@ -176,6 +179,9 @@
     font-family: monospace;
     background-color: lightyellow;
 }
-.wordmapper-import-messages {
+.wordmapper-import-messages .error {
     color: red;
+}
+.wordmapper-import-messages .success {
+    color: green;
 }

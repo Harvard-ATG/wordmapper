@@ -1,0 +1,11 @@
+<div class="wordmapper wordmapper-overlay <%= cls %>">
+  <% if(title) { %>
+    <h2><%= title %></h2>
+  <% } %>
+  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>
+  <div class="wordmapper-overlay-content">
+  </div>
+  <% if (canPopout) { %>
+    <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>
+  <% } %>
+</div>

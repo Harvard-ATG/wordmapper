@@ -17,12 +17,15 @@ Alignments.createAlignment = Alignments.prototype.createAlignment = function(wor
     words: words
   });
 };
+Alignments.prototype.triggerChange = function() {
+  this.trigger("change");
+};
 Alignments.prototype.add = function(alignment) {
   this._removeDuplicates(alignment);
   this._removeEmpty();
   this.alignments.push(alignment);
   this.sort();
-  this.trigger('change');
+  this.triggerChange();
 };
 // If the given alignment contains a word that has already been used in an alignment,
 // that should take precedence over any previous usage of that word. So this function
@@ -46,17 +49,17 @@ Alignments.prototype.remove = function(alignment) {
   var idx = this.alignments.indexOf(alignment);
   if (idx >= 0) {
     this.alignments.splice(idx, 1);
-    this.trigger('change');
+    this.triggerChange();
   }
 };
 Alignments.prototype.reset = function() {
   this.alignments = [];
-  this.trigger('change');
+  this.triggerChange();
 };
 Alignments.prototype.load = function(alignments) {
   this.alignments = Array.prototype.slice.call(alignments);
   this.sort();
-  this.trigger('change');
+  this.triggerChange();
 };
 Alignments.prototype.sort = function() {
   this.alignments.sort(function(a, b) {
@@ -67,6 +70,23 @@ Alignments.prototype.sort = function() {
       return word_diff;
     }
   });
+};
+Alignments.prototype.findById = function(id) {
+  var items = this.alignments;
+  var found = false;
+  for(var i = 0, len = items.length; i < len; i++) {
+    if (items[i].id == id) {
+      found = items[i];
+      break;
+    }
+  }
+  return found;
+};
+Alignments.prototype.maxWords = function() {
+  return this.alignments.reduce(function(max, alignment) {
+    var size = alignment.size();
+    return max >= size ? max : size;
+  }, 0);
 };
 Alignments.prototype.isEmpty = function() {
   return this.alignments.length === 0;
