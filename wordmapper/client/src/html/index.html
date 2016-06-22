@@ -1,23 +1,26 @@
+<% if (!alignments.isEmpty()) { %>
+<div style="margin: 0 0 1em 0;" popout-exclude >
+  <button name="action_comment" data-toggle-text="Edit Comments,Save Comments">Edit Comments</button>
+</div>
+<% } %>
 
-<div class="wordmapper-table">
+<table class="wordmapper-table">
   <% if (alignments.isEmpty()) { %>
-    <div class="row">No words have been aligned yet</div>
-  <% } else { %>
-    <button name="action_comment" popout-exclude>Comment</button>
+    <tr><td>No words have been aligned yet</td></tr>
   <% } %>
-  <% _.forEach(alignments.alignments, function(alignment, index) { %>
-    <div class="row">
-      <% _.forEach(alignment.wordGroups(), function(words) { %>
-        <div class="cell">
+  <% _.forEach(indexData, function(data, index) { %>
+    <tr>
+      <% _.forEach(data.buckets, function(words) { %>
+        <td class="words">
         <% _.forEach(words, function(word) { %>
           <span class="word" title="Word: <%- word.index %> Source: <%- word.source.index %>"><%- word.value %></span>
         <% }); %>
-        </div>
+        </td>
       <% }); %>
-      <div class="cell comment">
-        <span class="comment"><%- alignment.comment %></span>
-        <textarea class="comment" name="comment<%= index %>" data-alignment="<%= alignment.id %>" palceholder="Add comment..." style="display:none"><%- alignment.comment %></textarea>
-      </div>
+      <td class="comment" >
+        <span class="comment"><%- data.alignment.comment %></span>
+        <textarea class="comment" name="comment<%= index %>" data-alignment="<%= data.alignment.id %>" palceholder="Add comment..." style="display:none"><%- data.alignment.comment %></textarea>
+      </td>
     </div>
   <% }); %>
-</div>
+</table>

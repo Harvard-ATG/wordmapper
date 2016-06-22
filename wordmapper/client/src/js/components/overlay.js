@@ -7,11 +7,13 @@ var ExportView = require('./overlay/export_view.js');
 var Overlay = function(options) {
   this.alignments = options.alignments;
   this.importExport = options.importExport;
+  this.sources = options.sources;
   this.hiddenCls = 'wordmapper-overlay-hidden';
   this.popout = this.popout.bind(this);
   this.dismiss = this.dismiss.bind(this);
   this.indexView = new IndexView({
-    alignments: this.alignments
+    alignments: this.alignments,
+    sources: this.sources
   });
   this.exportView = new ExportView({
     importExport: this.importExport

@@ -68,19 +68,23 @@ Alignment.prototype.size = function() {
 Alignment.prototype.isEmpty = function() {
   return this.words.length === 0;
 };
-Alignment.prototype.wordGroups = function() {
-  var word_groups = {};
-  var sources = [], groups = [];
+Alignment.prototype.wordsBySourceIndex = function() {
+  var by_source = {};
   for(var i = 0, word; i < this.words.length; i++) {
     word = this.words[i];
-    if (!word_groups[word.source.index]) {
-      sources.push(word.source.index);
-      word_groups[word.source.index] = [];
+    if (!by_source[word.source.index]) {
+      by_source[word.source.index] = [];
     }
-    word_groups[word.source.index].push(word);
+    by_source[word.source.index].push(word);
   }
+  return by_source;
+};
+Alignment.prototype.wordGroups = function() {
+  var by_source = this.wordsBySourceIndex() || {};
+  var sources = Object.keys(by_source);
+  var groups = [];
   for(i = 0; i < sources.length; i++) {
-    groups[i] = word_groups[sources[i]];
+    groups[i] = by_source[sources[i]];
   }
   return groups;
 };

@@ -55,7 +55,7 @@
     right: 0;
     left: 0;
     bottom: 0;
-    opacity: 0.95;
+    opacity: 0.98;
     background-color: #fff;
     color: #000;
     padding: 1em;
@@ -146,27 +146,39 @@
     left: 50%;
     position: absolute;
 }
-.wordmapper-table {display:table;}
-.wordmapper-table .row {display:table-row; }
-.wordmapper-table .cell{display:table-cell;}
+
 .wordmapper-overlay-content {
     width: calc(100% - 50px);
 }
-.wordmapper-overlay-content .wordmapper-table {
+.wordmapper-table {
     font-size: 16px;
     border-collapse: collapse;
 }
-.wordmapper-overlay-content .wordmapper-table .cell {
+.wordmapper-table td.words,
+.wordmapper-table td.comment {
     min-width: 150px;
     padding: .5em 1em;
-    border: 1px solid #000;
+    border: 1px solid #ddd;
 }
-.wordmapper-overlay-content .wordmapper-table .cell .word {
+.wordmapper-table span.word {
     margin-right: 0.25em;
 }
-.wordmapper-overlay-content .wordmapper-table .row .cell.comment:last-child {
+.wordmapper-table td.comment {
     border: none;
 }
+.wordmapper-table td.comment span.comment,
+.wordmapper-table td.comment textarea.comment
+{
+    font-size: 14px;
+    color: #666;
+}
+.wordmapper-table td.comment textarea.comment {
+    border: 1px solid #ddd;
+    background-color: lightyellow;
+    height: 75px;
+    width: 300px;
+}
+
 .wordmapper-overlay-content textarea.json {
     display: block;
     min-height: 25%;

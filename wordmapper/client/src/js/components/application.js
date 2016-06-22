@@ -28,7 +28,8 @@ Application.prototype.init = function() {
   });
   this.overlay = new Overlay({
     alignments: this.alignments,
-    importExport: this.importExport
+    importExport: this.importExport,
+    sources: this.boxes.sources
   });
   this.storage = new services.LocalStorageService({
     siteContext: this.siteContext,
