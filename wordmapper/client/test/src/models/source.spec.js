@@ -4,7 +4,8 @@ describe("Source Model", function() {
   var HTML = [
     "  <p>One Two      Three</p><p>Four Five <span>Six</span> Seven</p> Eight, <div><span>Nine</span> Ten.</div>",
     " <p>Foo Bar</p>",
-    " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce auctor ipsum nisi, eget porta mauris maximus at."
+    " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce auctor ipsum nisi, eget porta mauris maximus at.",
+    '<span class="wordmapper-word" data-word="0" data-source="0">Test</span> Foo Bar'
   ];
   var DIVS = HTML.map(function(html, index) {
     var divEl = document.createElement("div");
@@ -22,5 +23,11 @@ describe("Source Model", function() {
     expect(source.normalizedText).toBeTruthy();
     expect(source.hash).toBeTruthy();
   });
-
+  
+  it("should test if there are any words in the HTML already", function() {
+    var source1 = new Source({ el: DIVS[0].cloneNode(true), index: 0 });
+    var source2 = new Source({ el: DIVS[3].cloneNode(true), index: 3 })
+    expect(source1.containsSpans()).toBeFalsy();
+    expect(source2.containsSpans()).toBeTruthy();
+  });
 });
