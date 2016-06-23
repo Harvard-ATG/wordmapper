@@ -2,12 +2,70 @@
 <html>
 	<head>
 		<title>Word Mapper</title>
+		<link href="http://getbootstrap.com/dist/css/bootstrap.css" rel="stylesheet">
 	</head>
 	<body>
-		<h2>Word Mapper Project</h2>
-		<p>Install the bookmarklet by dragging the <a href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://harvard-atg.github.io/wordmapper/dist/bookmarklet.js';})();">WordMapper</a> link to your bookmarks.</p>
-		<p>Once you have the bookmark, you can then navigate to a work such as <a href="http://www.graeco-arabic-studies.org/compare-texts/work/ars-medica-2/left/1/right/2/section/10/active/2%2C1.html">Ars Medica 10</a> and then click the bookmark to activate it. If it worked, you should see a toolbar appear at the top of your page.</p>
-		<h2>Reference Implementation</h2>
-		<p>The bookmarklet above was based on Mark Schiefsky's <a href="proto/table_2016-02-06.html">original work</a> to develop a word alignment tool.
+		<div class="container-fluid">
+			<div class="col-md-1 navbar-brand">
+				<img src="https://avatars0.githubusercontent.com/u/2099831?v=3&s=200" width="100%">
+			</div>
+			<div class="col-md-11">
+				<h1>Harvard Academic Technology Group</h1>
+			</div>
+
+			<div class="col-md-12"><hr></div>
+			
+			<div class="col-md-12">
+				<a href="https://github.com/Harvard-ATG">Harvard-ATG</a>
+				 / 
+				 <a href="https://github.com/Harvard-ATG/wordmapper">wordmapper</a>
+				  / 
+				  <strong>Word Mapper Project</strong>
+			</div>
+			
+			<div class="col-md-12">
+				<h2>Word Mapper Project</h2>
+			</div>
+
+			<div class="col-md-12"><hr></div>
+			<div class="col-md-6">
+				Install the bookmarklet by dragging the <a href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://harvard-atg.github.io/wordmapper/dist/bookmarklet.js';})();">WordMapper</a> link to your bookmarks.
+			</div>
+			<div class="col-md-6">
+				<img src="https://github.com/Harvard-ATG/ATG-UX/blob/master/WordMapper_bookmarklet/WordMapper_bookmarklet_1a.png?raw=true" width="100%">
+			</div>
+			<div class="col-md-12"><hr></div>
+			<div class="col-md-6">
+				Once you have the bookmarklet, you can then navigate to a project such as <a href="http://www.graeco-arabic-studies.org/compare-texts/work/ars-medica-2/left/1/right/2/section/10/active/2%2C1.html">Ars Medica 10</a> and then click the bookmarklet to activate Word Mapper.
+			</div>
+			<div class="col-md-6">
+				<img src="https://github.com/Harvard-ATG/ATG-UX/blob/master/WordMapper_bookmarklet/WordMapper_bookmarklet_3a.png?raw=true" width="100%">
+			</div>
+			<div class="col-md-12"><hr></div>
+			<div class="col-md-6">
+				You should now see the Word Mapper toolbar appear at the top of your page.
+			</div>
+			<div class="col-md-6">
+				<img src="https://github.com/Harvard-ATG/ATG-UX/blob/master/WordMapper_bookmarklet/WordMapper_bookmarklet_4a.png?raw=true" width="100%">
+			</div>
+			<div class="col-md-12"><hr></div>
+
+			<div class="col-md-12">
+				<h2>Reference Implementation</h2>
+				<p>
+					The bookmarklet above was based on Mark Schiefsky's <a href="proto/table_2016-02-06.html">original work</a> to develop a word alignment tool.
+				</p>
+			</div>
+			<div id="window-resizer-tooltip" style="display: none;">
+				<a href="#" title="Edit settings"></a>
+				<span class="tooltipTitle">Window size: </span>
+				<span class="tooltipWidth" id="winWidth">1280</span> x 
+				<span class="tooltipHeight" id="winHeight">712</span>
+				<br>
+				<span class="tooltipTitle">Viewport size: </span>
+				<span class="tooltipWidth" id="vpWidth">1240</span> x 
+				<span class="tooltipHeight" id="vpHeight">236</span>
+			</div>
+		</div>
 	</body>
 </html>
