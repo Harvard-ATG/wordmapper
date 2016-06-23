@@ -10,17 +10,27 @@
   <% } %>
   <% _.forEach(indexData, function(data, index) { %>
     <tr>
-      <% _.forEach(data.buckets, function(words) { %>
-        <td class="words">
+      <% _.forEach(data.buckets, function(words, index, arr) { %>
+        <td class="words" <% if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') %>>
         <% _.forEach(words, function(word) { %>
           <span class="word" title="Word: <%- word.index %> Source: <%- word.source.index %>"><%- word.value %></span>
         <% }); %>
         </td>
       <% }); %>
-      <td class="comment" >
+      <% if(commentsPosition == "right") { %>
+      <td class="comment">
         <span class="comment"><%- data.alignment.comment %></span>
-        <textarea class="comment" name="comment<%= index %>" data-alignment="<%= data.alignment.id %>" palceholder="Add comment..." style="display:none"><%- data.alignment.comment %></textarea>
+        <textarea class="comment" name="comment<%= index %>" data-alignment="<%= data.alignment.id %>" placeholder="Add comment..." style="display:none"><%- data.alignment.comment || '' %></textarea>
       </td>
-    </div>
+      <% } %>
+    </tr>
+    <% if(commentsPosition == "bottom") { %>
+    <tr class="comment" <% print(data.alignment.comment?'':'style="display:none;"'); %>;>
+      <td class="comment" colspan="<%- data.buckets.length %>">
+        <span class="comment"><%- data.alignment.comment %></span>
+        <textarea class="comment" name="comment<%= index %>" data-alignment="<%= data.alignment.id %>" placeholder="Add comment..." style="display:none"><%- data.alignment.comment || '' %></textarea>
+      </td>
+    </tr>
+    <% } %>
   <% }); %>
 </table>

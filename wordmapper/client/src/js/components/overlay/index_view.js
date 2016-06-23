@@ -24,6 +24,7 @@ IndexView.prototype.onClickComment = function(evt) {
   this.toggleComments(btnEl);
 };
 IndexView.prototype.toggleComments = function(btnEl) {
+  var $rows = this.el.find('tr.comment');
   var $textareas = this.el.find('textarea.comment');
   var $spans = this.el.find('span.comment');
   var $btnEl = $(btnEl);
@@ -34,6 +35,7 @@ IndexView.prototype.toggleComments = function(btnEl) {
     $btnEl.text(texts[1]);
     $spans.hide();
     $textareas.show();
+    $rows.show();
   } else {
     $btnEl.text(texts[1]);
     $textareas.each(this.processComment);
@@ -74,10 +76,16 @@ IndexView.prototype.getAlignmentsByWords = function() {
 };
 IndexView.prototype.render = function() {
   var template = templates.index;
+  var indexData = this.getAlignmentsByWords();
+  var maxBuckets = indexData.reduce(function(size, alignmentData) {
+    return Math.max(size, alignmentData.buckets.length);
+  }, 0);
   var html = template({
     alignments: this.alignments,
     sources: this.sources,
-    indexData: this.getAlignmentsByWords()
+    indexData: indexData,
+    maxBuckets: maxBuckets,
+    commentsPosition: "right"
   });
   this.el.html(html);
   return this;

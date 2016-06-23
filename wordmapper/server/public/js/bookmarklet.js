@@ -96,7 +96,7 @@
 
 
 	// module
-	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    opacity: 0.75;\n    background-color: #000;\n}\n.wordmapper-panel:hover {\n    opacity: 0.9;\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.98;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n    z-index: 1002;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 11px;\n    background: #333;\n    background: rgba(0,0,0,.8);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(title);\n    left: 20%;\n    padding: 5px 15px;\n    position: absolute;\n    width: 220px;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-table td.words,\n.wordmapper-table td.comment {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #ddd;\n}\n.wordmapper-table span.word {\n    margin-right: 0.25em;\n}\n.wordmapper-table td.comment {\n    border: none;\n}\n.wordmapper-table td.comment span.comment,\n.wordmapper-table td.comment textarea.comment\n{\n    font-size: 14px;\n    color: #666;\n}\n.wordmapper-table td.comment textarea.comment {\n    border: 1px solid #ddd;\n    background-color: lightyellow;\n    height: 75px;\n    width: 300px;\n}\n\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n    background-color: lightyellow;\n}\n.wordmapper-import-messages .error {\n    color: red;\n}\n.wordmapper-import-messages .success {\n    color: green;\n}", ""]);
+	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper textarea {\n    padding: 0.5em;\n    background-color: rgb(255,255,224);\n    -webkit-transition: background-color 0.30s ease-in-out;\n    -moz-transition: background-color 0.30s ease-in-out;\n    -ms-transition: background-color 0.30s ease-in-out;\n    -o-transition: background-color 0.30s ease-in-out;\n    outline: none;\n}\n.wordmapper textarea:focus {\n    background-color: rgb(255,255,164);\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    opacity: 0.75;\n    background-color: #000;\n}\n.wordmapper-panel:hover {\n    opacity: 0.9;\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.98;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n    z-index: 1002;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 11px;\n    background: #333;\n    background: rgba(0,0,0,.8);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(title);\n    left: 20%;\n    padding: 5px 15px;\n    position: absolute;\n    width: 220px;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-table td.words,\n.wordmapper-table td.comment {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #ddd;\n}\n.wordmapper-table span.word {\n    margin-right: 0.25em;\n}\n.wordmapper-table td.comment {\n    background-color: #eee;\n}\n.wordmapper-table td.comment span.comment,\n.wordmapper-table td.comment textarea.comment\n{\n    font-size: 14px;\n    color: #666;\n}\n.wordmapper-table td.comment textarea.comment {\n    border: 1px solid #ddd;\n    height: 75px;\n    min-width: 300px;\n    width: 90%;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n.wordmapper-import-messages .error {\n    color: red;\n}\n.wordmapper-import-messages .success {\n    color: green;\n}", ""]);
 
 	// exports
 
@@ -19750,8 +19750,10 @@
 	__p+='\n  ';
 	 _.forEach(indexData, function(data, index) { 
 	__p+='\n    <tr>\n      ';
-	 _.forEach(data.buckets, function(words) { 
-	__p+='\n        <td class="words">\n        ';
+	 _.forEach(data.buckets, function(words, index, arr) { 
+	__p+='\n        <td class="words" ';
+	 if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') 
+	__p+='>\n        ';
 	 _.forEach(words, function(word) { 
 	__p+='\n          <span class="word" title="Word: '+
 	((__t=( word.index ))==null?'':_.escape(__t))+
@@ -19763,15 +19765,35 @@
 	 }); 
 	__p+='\n        </td>\n      ';
 	 }); 
-	__p+='\n      <td class="comment" >\n        <span class="comment">'+
+	__p+='\n      ';
+	 if(commentsPosition == "right") { 
+	__p+='\n      <td class="comment">\n        <span class="comment">'+
 	((__t=( data.alignment.comment ))==null?'':_.escape(__t))+
 	'</span>\n        <textarea class="comment" name="comment'+
 	((__t=( index ))==null?'':__t)+
 	'" data-alignment="'+
 	((__t=( data.alignment.id ))==null?'':__t)+
-	'" palceholder="Add comment..." style="display:none">'+
+	'" placeholder="Add comment..." style="display:none">'+
+	((__t=( data.alignment.comment || '' ))==null?'':_.escape(__t))+
+	'</textarea>\n      </td>\n      ';
+	 } 
+	__p+='\n    </tr>\n    ';
+	 if(commentsPosition == "bottom") { 
+	__p+='\n    <tr class="comment" ';
+	 print(data.alignment.comment?'':'style="display:none;"'); 
+	__p+=';>\n      <td class="comment" colspan="'+
+	((__t=( data.buckets.length ))==null?'':_.escape(__t))+
+	'">\n        <span class="comment">'+
 	((__t=( data.alignment.comment ))==null?'':_.escape(__t))+
-	'</textarea>\n      </td>\n    </div>\n  ';
+	'</span>\n        <textarea class="comment" name="comment'+
+	((__t=( index ))==null?'':__t)+
+	'" data-alignment="'+
+	((__t=( data.alignment.id ))==null?'':__t)+
+	'" placeholder="Add comment..." style="display:none">'+
+	((__t=( data.alignment.comment || '' ))==null?'':_.escape(__t))+
+	'</textarea>\n      </td>\n    </tr>\n    ';
+	 } 
+	__p+='\n  ';
 	 }); 
 	__p+='\n</table>';
 	}
@@ -19961,6 +19983,7 @@
 	  this.toggleComments(btnEl);
 	};
 	IndexView.prototype.toggleComments = function(btnEl) {
+	  var $rows = this.el.find('tr.comment');
 	  var $textareas = this.el.find('textarea.comment');
 	  var $spans = this.el.find('span.comment');
 	  var $btnEl = $(btnEl);
@@ -19971,6 +19994,7 @@
 	    $btnEl.text(texts[1]);
 	    $spans.hide();
 	    $textareas.show();
+	    $rows.show();
 	  } else {
 	    $btnEl.text(texts[1]);
 	    $textareas.each(this.processComment);
@@ -20011,10 +20035,16 @@
 	};
 	IndexView.prototype.render = function() {
 	  var template = templates.index;
+	  var indexData = this.getAlignmentsByWords();
+	  var maxBuckets = indexData.reduce(function(size, alignmentData) {
+	    return Math.max(size, alignmentData.buckets.length);
+	  }, 0);
 	  var html = template({
 	    alignments: this.alignments,
 	    sources: this.sources,
-	    indexData: this.getAlignmentsByWords()
+	    indexData: indexData,
+	    maxBuckets: maxBuckets,
+	    commentsPosition: "right"
 	  });
 	  this.el.html(html);
 	  return this;

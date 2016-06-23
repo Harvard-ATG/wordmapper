@@ -17,6 +17,18 @@
     border-radius: 2px;
     height: 32px;
 }
+.wordmapper textarea {
+    padding: 0.5em;
+    background-color: rgb(255,255,224);
+    -webkit-transition: background-color 0.30s ease-in-out;
+    -moz-transition: background-color 0.30s ease-in-out;
+    -ms-transition: background-color 0.30s ease-in-out;
+    -o-transition: background-color 0.30s ease-in-out;
+    outline: none;
+}
+.wordmapper textarea:focus {
+    background-color: rgb(255,255,164);
+}
 .wordmapper button.primary {
     background-color: rgb(0, 120, 231);
     color: #fff;
@@ -164,7 +176,7 @@
     margin-right: 0.25em;
 }
 .wordmapper-table td.comment {
-    border: none;
+    background-color: #eee;
 }
 .wordmapper-table td.comment span.comment,
 .wordmapper-table td.comment textarea.comment
@@ -174,11 +186,10 @@
 }
 .wordmapper-table td.comment textarea.comment {
     border: 1px solid #ddd;
-    background-color: lightyellow;
     height: 75px;
-    width: 300px;
+    min-width: 300px;
+    width: 90%;
 }
-
 .wordmapper-overlay-content textarea.json {
     display: block;
     min-height: 25%;
@@ -189,7 +200,6 @@
     border: 1px solid #000;
     font-size: 12px;
     font-family: monospace;
-    background-color: lightyellow;
 }
 .wordmapper-import-messages .error {
     color: red;
