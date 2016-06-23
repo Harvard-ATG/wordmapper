@@ -26,6 +26,31 @@ describe("Alignment Model", function() {
     expect(function() { new Alignment({ id: null, words: words }); }).toThrow();
     expect(function() { new Alignment({ id: '', words: words }); }).toThrow();
   });
+  it("should be able to set a comment", function() {
+    var comment_text = "this is a test comment";
+    var word1 = new Word({index:0,value:"foo",source:source_fixture});
+    var word2 = new Word({index:1,value:"foo",source:source_fixture});
+    var word3 = new Word({index:2,value:"foo",source:source_fixture});
+    var words = [word1, word2, word3];
+    var alignment = new Alignment({id: 1, words: words });
+    expect(alignment.comment).toBe(null);
+    expect(alignment.setComment(comment_text)).toBe(alignment);
+    expect(alignment.comment).toBeTruthy();
+    expect(alignment.comment.getText()).toBe(comment_text);
+  });
+  it("should not set an empty comment", function() {
+    var word1 = new Word({index:0,value:"foo",source:source_fixture});
+    var word2 = new Word({index:1,value:"foo",source:source_fixture});
+    var word3 = new Word({index:2,value:"foo",source:source_fixture});
+    var words = [word1, word2, word3];
+    var alignment = new Alignment({id: 1, words: words });
+    alignment.setComment("");
+    expect(alignment.comment).toBe(null);
+    alignment.setComment("    ");
+    expect(alignment.comment).toBe(null);
+    alignment.setComment("\t");
+    expect(alignment.comment).toBe(null);
+  });
   it("should know how to find a word", function() {
     var word1 = new Word({index:0,value:"foo",source:source_fixture});
     var word2 = new Word({index:1,value:"foo",source:source_fixture});
@@ -110,14 +135,34 @@ describe("Alignment Model", function() {
     var alignment = new Alignment({id: 1, words: words });
     expect(alignment.toString()).toEqual(word1.toString() + " - " + word2.toString());
   });
-  it("toJSON()", function() {
+  it("toJSON() without comment", function() {
     var word = new Word({index:0,value:"foo",source:source_fixture});
     var words = [word];
     var alignment = new Alignment({id: 1, words: words });
     var actual_json = alignment.toJSON();
-    expect(actual_json.type).toBe("alignment");
-    expect(actual_json.data).toEqual(words.map(function(word) {
-      return word.toJSON();
-    }));
+    var expected_json = {
+      "type": "alignment",
+      "data": words.map(function(word) {
+          return word.toJSON();
+        })
+    };
+    expect(actual_json.type).toBe(expected_json.type);
+    expect(actual_json.data).toEqual(expected_json.data);
+  });
+  it("toJSON() with comment", function() {
+    var word = new Word({index:0,value:"foo",source:source_fixture});
+    var words = [word];
+    var alignment = new Alignment({id: 1, words: words });
+    var text = "this is a test comment";
+    alignment.setComment(text);
+    var actual_json = alignment.toJSON();
+    var expected_json = {
+      "type": "alignment",
+      "data": words.map(function(word) {
+          return word.toJSON();
+        }).concat([alignment.comment.toJSON()])
+    };
+    expect(actual_json.type).toBe(expected_json.type);
+    expect(actual_json.data).toEqual(expected_json.data);
   });
 });

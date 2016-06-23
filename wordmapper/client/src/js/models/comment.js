@@ -1,6 +1,9 @@
 var Comment = function(options) {
   this.text = options.text || '';
 };
+Comment.prototype.getText = function() {
+  return this.text;
+};
 Comment.prototype.toString = function() {
   return this.text;
 };
