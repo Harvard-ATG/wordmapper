@@ -16,7 +16,8 @@ var Overlay = function(options) {
     sources: this.sources
   });
   this.exportView = new ExportView({
-    importExport: this.importExport
+    importExport: this.importExport,
+    dismiss: this.dismiss
   });
   this.init();
 };

@@ -19865,7 +19865,8 @@
 	    sources: this.sources
 	  });
 	  this.exportView = new ExportView({
-	    importExport: this.importExport
+	    importExport: this.importExport,
+	    dismiss: this.dismiss
 	  });
 	  this.init();
 	};
@@ -20062,6 +20063,7 @@
 	var templates = __webpack_require__(26);
 
 	var ExportView = function(options) {
+	  this.dismiss = options.dismiss;
 	  this.importExport = options.importExport;
 	  this.render = this.render.bind(this);
 	  this.import = this.import.bind(this);
@@ -20093,6 +20095,7 @@
 	  var $el = this.el.find('.wordmapper-import-messages');
 	  if (result.success) {
 	    $el.html('<span class="success">Import completed successfully</span>');
+	    window.setTimeout(this.dismiss, 500);
 	  } else {
 	    $el.html('<span class="error">' + result.message + '</span>');
 	  }
