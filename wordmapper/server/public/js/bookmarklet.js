@@ -1035,6 +1035,9 @@
 	var Comment = function(options) {
 	  this.text = options.text || '';
 	};
+	Comment.prototype.getText = function() {
+	  return this.text;
+	};
 	Comment.prototype.toString = function() {
 	  return this.text;
 	};
@@ -3221,14 +3224,20 @@
 	  this.id = options.id || '';
 	  this.url = options.url || '';
 	};
-	SiteContext.prototype.serializeAlignments = function(alignments, serialize) {
-	  var result = {
-	    'type': 'site',
-	    'id': this.id,
-	    'url': this.url,
-	    'data': alignments.toJSON()
+	SiteContext.prototype.toString = function() {
+	  return this.url;
+	};
+	SiteContext.prototype.toJSON = function() {
+	  return {
+	    "type": "siteContext",
+	    "data": {
+	      "id": this.id,
+	      "url": this.url
+	    }
 	  };
-	  return (serialize ? JSON.stringify(result, null, '\t') : result);
+	};
+	SiteContext.prototype.serialize = function() {
+	  return JSON.stringify(this.toJSON(), null, '\t');
 	};
 
 	module.exports = SiteContext;
@@ -3298,7 +3307,7 @@
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
 	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n</div>';
+	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n</div>\n';
 	}
 	return __p;
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
