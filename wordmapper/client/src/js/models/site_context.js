@@ -2,14 +2,20 @@ var SiteContext = function(options) {
   this.id = options.id || '';
   this.url = options.url || '';
 };
-SiteContext.prototype.serializeAlignments = function(alignments, serialize) {
-  var result = {
-    'type': 'site',
-    'id': this.id,
-    'url': this.url,
-    'data': alignments.toJSON()
+SiteContext.prototype.toString = function() {
+  return this.url;
+};
+SiteContext.prototype.toJSON = function() {
+  return {
+    "type": "siteContext",
+    "data": {
+      "id": this.id,
+      "url": this.url
+    }
   };
-  return (serialize ? JSON.stringify(result, null, '\t') : result);
+};
+SiteContext.prototype.serialize = function() {
+  return JSON.stringify(this.toJSON(), null, '\t');
 };
 
 module.exports = SiteContext;
