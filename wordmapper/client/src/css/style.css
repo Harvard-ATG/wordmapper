@@ -1,3 +1,5 @@
+@import url('http://fontawesome.io/assets/font-awesome/css/font-awesome.css');
+
 .wordmapper {
     font-size: 14px;
     font-family: Arial,Helvetica,sans-serif;
@@ -45,6 +47,7 @@
     position: fixed;
     opacity: 0.75;
     background-color: #000;
+    z-index: 1002;
 }
 .wordmapper-panel:hover {
     opacity: 0.9;
@@ -73,6 +76,7 @@
     padding: 1em;
     top: 45px;
     overflow: scroll;
+    z-index: 1001;
 }
 .wordmapper-overlay-hidden {
     z-index: -1;
@@ -134,7 +138,6 @@
 .wordmapper-tooltip {
     display: inline;
     position: relative;
-    z-index: 1002;
 }
 .wordmapper-tooltip:hover:after{
     font-size: 11px;
@@ -143,7 +146,7 @@
     border-radius: 5px;
     top: 38px;
     color: #fff;
-    content: attr(title);
+    content: attr(alt);
     left: 20%;
     padding: 5px 15px;
     position: absolute;
