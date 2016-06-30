@@ -32,6 +32,15 @@ package {'nodejs':
     require => [Exec['apt-get-update'],Exec['setup-nodejs-source']],
 }
 
+package {'postgresql':
+    ensure => latest,
+    require => Exec['apt-get-updated'],
+}
+package {'postgresql-contrib':
+    ensure => latest,
+    require => Exec['postgresql'],
+}
+
 # Install npm libraries
 exec {'install-node-modules':
 	cwd => '/vagrant',

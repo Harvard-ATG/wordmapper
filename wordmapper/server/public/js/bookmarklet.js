@@ -3304,12 +3304,14 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
-	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n</div>\n';
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
+	obj || (obj = {});
+	var __t, __p = '';
+	with (obj) {
+	__p += '\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n</div>\n';
+
 	}
-	return __p;
+	return __p
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
@@ -19745,68 +19747,71 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
-	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/index.html -->\n';
-	 if (!alignments.isEmpty()) { 
-	__p+='\n<div style="margin: 0 0 1em 0;" popout-exclude >\n  <button name="action_comment" data-toggle-text="Edit Comments,Save Comments">Edit Comments</button>\n</div>\n';
-	 } 
-	__p+='\n\n<table class="wordmapper-table">\n  ';
-	 if (alignments.isEmpty()) { 
-	__p+='\n    <tr><td>No words have been aligned yet</td></tr>\n  ';
-	 } 
-	__p+='\n  ';
-	 _.forEach(indexData, function(data, index) { 
-	__p+='\n    <tr>\n      ';
-	 _.forEach(data.buckets, function(words, index, arr) { 
-	__p+='\n        <td class="words" ';
-	 if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') 
-	__p+='>\n        ';
-	 _.forEach(words, function(word) { 
-	__p+='\n          <span class="word" title="Word: '+
-	((__t=( word.index ))==null?'':_.escape(__t))+
-	' Source: '+
-	((__t=( word.source.index ))==null?'':_.escape(__t))+
-	'">'+
-	((__t=( word.value ))==null?'':_.escape(__t))+
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
+	obj || (obj = {});
+	var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+	function print() { __p += __j.call(arguments, '') }
+	with (obj) {
+	__p += '\n<!-- wordmapper/client/src/html/index.html -->\n';
+	 if (!alignments.isEmpty()) { ;
+	__p += '\n<div style="margin: 0 0 1em 0;" popout-exclude >\n  <button name="action_comment" data-toggle-text="Edit Comments,Save Comments">Edit Comments</button>\n</div>\n';
+	 } ;
+	__p += '\n\n<table class="wordmapper-table">\n  ';
+	 if (alignments.isEmpty()) { ;
+	__p += '\n    <tr><td>No words have been aligned yet</td></tr>\n  ';
+	 } ;
+	__p += '\n  ';
+	 _.forEach(indexData, function(data, index) { ;
+	__p += '\n    <tr>\n      ';
+	 _.forEach(data.buckets, function(words, index, arr) { ;
+	__p += '\n        <td class="words" ';
+	 if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') ;
+	__p += '>\n        ';
+	 _.forEach(words, function(word) { ;
+	__p += '\n          <span class="word" title="Word: ' +
+	__e( word.index ) +
+	' Source: ' +
+	__e( word.source.index ) +
+	'">' +
+	__e( word.value ) +
 	'</span>\n        ';
-	 }); 
-	__p+='\n        </td>\n      ';
-	 }); 
-	__p+='\n      ';
-	 if(commentsPosition == "right") { 
-	__p+='\n      <td class="comment">\n        <span class="comment">'+
-	((__t=( data.alignment.comment ))==null?'':_.escape(__t))+
-	'</span>\n        <textarea class="comment" name="comment'+
-	((__t=( index ))==null?'':__t)+
-	'" data-alignment="'+
-	((__t=( data.alignment.id ))==null?'':__t)+
-	'" placeholder="Add comment..." style="display:none">'+
-	((__t=( data.alignment.comment || '' ))==null?'':_.escape(__t))+
+	 }); ;
+	__p += '\n        </td>\n      ';
+	 }); ;
+	__p += '\n      ';
+	 if(commentsPosition == "right") { ;
+	__p += '\n      <td class="comment">\n        <span class="comment">' +
+	__e( data.alignment.comment ) +
+	'</span>\n        <textarea class="comment" name="comment' +
+	((__t = ( index )) == null ? '' : __t) +
+	'" data-alignment="' +
+	((__t = ( data.alignment.id )) == null ? '' : __t) +
+	'" placeholder="Add comment..." style="display:none">' +
+	__e( data.alignment.comment || '' ) +
 	'</textarea>\n      </td>\n      ';
-	 } 
-	__p+='\n    </tr>\n    ';
-	 if(commentsPosition == "bottom") { 
-	__p+='\n    <tr class="comment" ';
-	 print(data.alignment.comment?'':'style="display:none;"'); 
-	__p+=';>\n      <td class="comment" colspan="'+
-	((__t=( data.buckets.length ))==null?'':_.escape(__t))+
-	'">\n        <span class="comment">'+
-	((__t=( data.alignment.comment ))==null?'':_.escape(__t))+
-	'</span>\n        <textarea class="comment" name="comment'+
-	((__t=( index ))==null?'':__t)+
-	'" data-alignment="'+
-	((__t=( data.alignment.id ))==null?'':__t)+
-	'" placeholder="Add comment..." style="display:none">'+
-	((__t=( data.alignment.comment || '' ))==null?'':_.escape(__t))+
+	 } ;
+	__p += '\n    </tr>\n    ';
+	 if(commentsPosition == "bottom") { ;
+	__p += '\n    <tr class="comment" ';
+	 print(data.alignment.comment?'':'style="display:none;"'); ;
+	__p += ';>\n      <td class="comment" colspan="' +
+	__e( data.buckets.length ) +
+	'">\n        <span class="comment">' +
+	__e( data.alignment.comment ) +
+	'</span>\n        <textarea class="comment" name="comment' +
+	((__t = ( index )) == null ? '' : __t) +
+	'" data-alignment="' +
+	((__t = ( data.alignment.id )) == null ? '' : __t) +
+	'" placeholder="Add comment..." style="display:none">' +
+	__e( data.alignment.comment || '' ) +
 	'</textarea>\n      </td>\n    </tr>\n    ';
-	 } 
-	__p+='\n  ';
-	 }); 
-	__p+='\n</table>';
+	 } ;
+	__p += '\n  ';
+	 }); ;
+	__p += '\n</table>';
+
 	}
-	return __p;
+	return __p
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
@@ -19815,14 +19820,16 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
-	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/export.html -->\nExport data:\n<textarea name="export" class="json">'+
-	((__t=( importExport.export(true) ))==null?'':__t)+
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
+	obj || (obj = {});
+	var __t, __p = '';
+	with (obj) {
+	__p += '\n<!-- wordmapper/client/src/html/export.html -->\nExport data:\n<textarea name="export" class="json">' +
+	((__t = ( importExport.export(true) )) == null ? '' : __t) +
 	'</textarea>\n\nImport data:\n<textarea name="import" class="json"></textarea>\n<button class="primary wordmapper-import">Import</button>\n<span class="wordmapper-import-messages"></span>';
+
 	}
-	return __p;
+	return __p
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
@@ -19831,24 +19838,27 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
-	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/overlay.html -->\n<div class="wordmapper wordmapper-overlay '+
-	((__t=( cls ))==null?'':__t)+
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
+	obj || (obj = {});
+	var __t, __p = '', __j = Array.prototype.join;
+	function print() { __p += __j.call(arguments, '') }
+	with (obj) {
+	__p += '\n<!-- wordmapper/client/src/html/overlay.html -->\n<div class="wordmapper wordmapper-overlay ' +
+	((__t = ( cls )) == null ? '' : __t) +
 	'">\n  ';
-	 if(title) { 
-	__p+='\n    <h2>'+
-	((__t=( title ))==null?'':__t)+
+	 if(title) { ;
+	__p += '\n    <h2>' +
+	((__t = ( title )) == null ? '' : __t) +
 	'</h2>\n  ';
-	 } 
-	__p+='\n  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-overlay-content">\n  </div>\n  ';
-	 if (canPopout) { 
-	__p+='\n    <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>\n  ';
-	 } 
-	__p+='\n</div>';
+	 } ;
+	__p += '\n  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-overlay-content">\n  </div>\n  ';
+	 if (canPopout) { ;
+	__p += '\n    <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>\n  ';
+	 } ;
+	__p += '\n</div>';
+
 	}
-	return __p;
+	return __p
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
