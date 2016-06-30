@@ -16,35 +16,39 @@ var sourcesRequired  = function(req, res, next) {
 	}
 };
 
+// Base Endpoint.
+router.get('/', function(req, res) {
+	res.json({  message: 'Welcome to the API' });
+});
+
+// Authentication Endponit.
 router.post('/auth', function(req, res) {
 	console.log("authenticate");
 	res.json({ code: 200, message: "Authenticated" });
 });
 
-// Get alignments.
-router.get('/alignments', sourcesRequired, function(req, res) {
-	console.log(req.query);
-	res.json({ code: 200, data: [] });
-});
-
-// Delete alignments 
-router.delete('/alignments', sourcesRequired, function(req, res) {
+// Alignments Endpoint.
+router.route('/alignments')
+.get(sourcesRequired, function(req, res) {
+	res.json({ code: 200, message: "Fetched alignments", data: [] });
+})
+.delete(sourcesRequired, function(req, res) {
 	res.json({ code: 204, message: "Deleted alignments"});
-});
-
-// Create alignments
-router.post('/alignments', function(req, res) {
+})
+.post(function(req, res) {
 	res.json({ code: 201, message: "Saved alignments", data: [] });
-});
-
-// Update alignments 
-router.put('/alignments', function(req, res) {
+})
+.put(function(req, res) {
 	res.json({ code: 200, message: "Updated alignments"});
 });
 
-// Base API url
-router.get('/', function(req, res) {
-	res.json({ message: 'hooray! welcome to our api!' })
+// Sites Endpoint.
+router.route('/sites')
+.get(function(req, res) {
+	res.json({ code: 200, message: "Fetched sites", data: [] });
+})
+.post(function(req, res) {
+	res.json({ code: 201, message: "Saved sites", data: [] });
 });
 
 module.exports = router;
