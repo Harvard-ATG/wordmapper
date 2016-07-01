@@ -8,6 +8,7 @@ var pgp = require('pg-promise')({
 var db = pgp(config.database);
 
 module.exports = {
+	db: db,
 	alignments: {
 		fetch: function() {
 			return db.any("select * from alignment");

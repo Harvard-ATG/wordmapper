@@ -1,3 +1,5 @@
+var db = require('../db');
+
 var HealthService = function(format) {
 	this.code = null;
 	this.message = '';
@@ -18,26 +20,35 @@ HealthService.prototype = {
 		}
 	},
 	'_checks': [
-		function(report) {
-			var ok = true;
-			report.router = {ok: ok, message: "OK"};
-			return ok;
+		function() {
+			this.report.router = {ok: true, message: "OK"};
+			return Promise.resolve();
+		},
+		function() {
+			var _this = this;
+			return db.db.one('select 1 as value')
+				.then(function(data) {
+					_this.report.database = {ok: true, message: "OK"};
+				}).catch(function(error) {
+					_this.failures++;
+					_this.report.database = {ok: false, message: "NOT OK", error: error};
+				});
 		}
 	],
 	'check': function() {
-		this._checks.forEach(function(check) {
-			if(!check(this.report)) {
-				this.failures++;
+		var _this = this;
+		var promises = _this._checks.map(function(check) {
+			return check.call(_this);
+		});
+		return Promise.all(promises).then(function() {
+			if(_this.failures == 0) {
+				_this.code = 200;
+				_this.message = 'All systems go!';
+			} else {
+				_this.code = 500;
+				_this.message = 'Internal server errors detected. Please check all services.';
 			}
-		}, this);
-		if(this.failures == 0) {
-			this.code = 200;
-			this.message = 'All systems go!';
-		} else {
-			this.code = 500;
-			this.message = 'Internal server errors detected. Please check all services.';
-		}
-		return this;
+		});
 	},
 	'send': function(res, format) {
 		var sender = this._formats.text;

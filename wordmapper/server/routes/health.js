@@ -5,9 +5,10 @@ var router = express.Router();
 
 router.get('/', function(req, res) {
 	var health = new HealthService();
-	health.check();
-	log.info(health.toString());
-	health.send(res, req.query.format);
+	health.check().then(function() {
+		log.info(health.toString());
+		health.send(res, req.query.format);
+	});
 });
 
 module.exports = router;
