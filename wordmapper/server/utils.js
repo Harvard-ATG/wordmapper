@@ -36,5 +36,17 @@ module.exports = {
 			silent: false,
 			timestamp: false
 		});
+	},
+	ensureAuthenticated: function(valid, invalid) {
+		valid = valid || function() {};
+		invalid = invalid || function() {};
+		return function(req, res, next) {
+			if(req.isAuthenticated()) {
+				valid(req, res);
+				next();
+			} else {
+				invalid(req, res);
+			}
+		};
 	}
 };

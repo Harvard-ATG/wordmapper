@@ -11,5 +11,6 @@ module.exports = {
 	port: process.env.PORT || 8000,
 	logLevel: process.env.LOG_LEVEL || 'debug',
 	database: process.env.DATABASE_URL || dbConfig,
-	authSecret: process.env.AUTH_SECRET || 'secret'
+	authSecret: process.env.AUTH_SECRET || 'auth.secret',
+	sessionSecret: process.env.SESSION_SECRET || 'session.secret'
 };
