@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS account CASCADE;
-CREATE TABLE account (
+DROP TABLE IF EXISTS user_account CASCADE;
+CREATE TABLE user_account (
 	id serial PRIMARY KEY,
 	email text not null,
 	password text,
@@ -31,7 +31,7 @@ CREATE TABLE page_source (
 DROP TABLE IF EXISTS alignment CASCADE;
 CREATE TABLE alignment (
 	id serial PRIMARY KEY,
-	account_id integer REFERENCES account(id),
+	user_id integer REFERENCES user_account(id),
 	comment text,
 	created timestamp default current_timestamp,
 	updated timestamp

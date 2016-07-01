@@ -1,14 +1,21 @@
 var express = require('express');
 var log = require('winston');
+var jwt = require('jsonwebtoken');
+var config = require('../config');
 var apiService = require('../services/api');
 var router = express.Router();
 
-var getQuerySources = function(query) {
-	return ('sources' in query ? query.sources : '').split(',').filter(Boolean);
+var getQuerySources = function(req) {
+	return ('sources' in req.query ? req.query.sources : '').split(',').filter(Boolean);
+};
+
+var getAuthToken = function(req) {
+	var header = req.get('Authorization') || '';
+	return header.split('Bearer ')[1];
 };
 
 var sourcesRequired  = function(req, res, next) {
-	var sources = getQuerySources(req.query);
+	var sources = getQuerySources(req);
 	log.debug("text sources:", {sources: sources});
 	if(sources.length > 0) {
 		next();
@@ -17,37 +24,55 @@ var sourcesRequired  = function(req, res, next) {
 	}
 };
 
+var authRequired = function(req, res, next) {
+	var token = getAuthToken(req), decoded;
+	if(!token) {
+		res.json({ code: 401, message: 'Authentication required' });
+	} else {
+		try {
+			decoded = jwt.verify(token, config.authSecret);
+		} catch (err) {
+			log.error("authentication failed", {token: token});
+			res.json({ code: 403, message: 'Authentication failed'});
+		}
+		req.auth = decoded;
+		next();
+	}
+};	
+
 // Base Endpoint.
 router.get('/', function(req, res) {
 	res.json({  message: 'Welcome to the API' });
 });
 
-// Authentication Endponit.
-router.post('/auth', function(req, res) {
+// Authentication Endpoint.
+router.post('/auth/login', function(req, res) {
+	var email = req.body.email || '';
+	var password = req.body.password || '';
 	res.json({ code: 200, message: "Authenticated" });
 });
 
 // Alignments Endpoint.
 router.route('/alignments')
-.get(sourcesRequired, function(req, res) {
+.get(authRequired, sourcesRequired, function(req, res) {
 	res.json({ code: 200, message: "Fetched alignments", data: [] });
 })
-.delete(sourcesRequired, function(req, res) {
+.delete(authRequired, sourcesRequired, function(req, res) {
 	res.json({ code: 204, message: "Deleted alignments"});
 })
-.post(function(req, res) {
+.post(authRequired, function(req, res) {
 	res.json({ code: 201, message: "Saved alignments", data: [] });
 })
-.put(function(req, res) {
+.put(authRequired, function(req, res) {
 	res.json({ code: 200, message: "Updated alignments"});
 });
 
 // Pages Endpoint.
 router.route('/pages')
-.get(function(req, res) {
+.get(authRequired, function(req, res) {
 	res.json({ code: 200, message: "Fetched pages", data: [] });
 })
-.post(function(req, res) {
+.post(authRequired, function(req, res) {
 	res.json({ code: 201, message: "Saved pages", data: [] });
 });
 
