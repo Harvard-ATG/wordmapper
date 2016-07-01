@@ -42,13 +42,13 @@ router.route('/alignments')
 	res.json({ code: 200, message: "Updated alignments"});
 });
 
-// Sites Endpoint.
-router.route('/sites')
+// Pages Endpoint.
+router.route('/pages')
 .get(function(req, res) {
-	res.json({ code: 200, message: "Fetched sites", data: [] });
+	res.json({ code: 200, message: "Fetched pages", data: [] });
 })
 .post(function(req, res) {
-	res.json({ code: 201, message: "Saved sites", data: [] });
+	res.json({ code: 201, message: "Saved pages", data: [] });
 });
 
 module.exports = router;

@@ -11,6 +11,6 @@ Endpoint | Methods | Description
 --- | --- | ---
 /api/auth | POST | Resource for authenticating (i.e. login). Returns a JWT that must be used for authenticated requests.
 /api/alignments | GET,POST,PUT,DELETE | Resource that describes alignments on a set of source texts.
-/api/sites | GET,POST | Resource that describes the websites containing source texts.
+/api/pages | GET,POST | Resource that describes the webpages containing source texts.
 
 
