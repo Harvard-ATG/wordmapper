@@ -46,6 +46,9 @@ HealthService.prototype = {
 		} 
 		sender.call(this, res);
 		return this;
+	},
+	'toString': function() {
+		return 'HealthService [' + this.code + '][' + this.message + ']';
 	}
 };
 

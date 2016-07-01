@@ -1,4 +1,5 @@
 var express = require('express');
+var log = require('winston');
 var apiService = require('../services/api');
 var router = express.Router();
 
@@ -8,7 +9,7 @@ var getQuerySources = function(query) {
 
 var sourcesRequired  = function(req, res, next) {
 	var sources = getQuerySources(req.query);
-	console.log("sourcesRequired", sources);
+	log.debug("text sources:", {sources: sources});
 	if(sources.length > 0) {
 		next();
 	} else {
@@ -23,7 +24,6 @@ router.get('/', function(req, res) {
 
 // Authentication Endponit.
 router.post('/auth', function(req, res) {
-	console.log("authenticate");
 	res.json({ code: 200, message: "Authenticated" });
 });
 
