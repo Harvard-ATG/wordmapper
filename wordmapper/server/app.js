@@ -46,6 +46,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(middleware.responseLocals);
 
 app.use('/static', express.static(__dirname + '/public'));
 app.use('/api', apiRouter);

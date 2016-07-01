@@ -1,6 +1,11 @@
 var winston = require('winston');
 
 module.exports = {
+	responseLocals: function(req, res, next) {
+		// set locals that are available in views
+		res.locals.authenticated = req.isAuthenticated();
+		next();
+	},
 	requestLogger: function(req, res, next) {
 		winston.debug('---');
 		winston.debug('Request Time:', Date.now());
