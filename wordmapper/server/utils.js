@@ -1,4 +1,5 @@
 var config = require('./config');
+var bcrypt = require('bcrypt');
 
 module.exports = {
 	configureLogging: function(winston) {
@@ -36,6 +37,7 @@ module.exports = {
 			silent: false,
 			timestamp: false
 		});
+		winston.level = config.logLevel;
 	},
 	ensureAuthenticated: function(valid, invalid) {
 		valid = valid || function() {};
@@ -48,5 +50,14 @@ module.exports = {
 				invalid(req, res);
 			}
 		};
+	},
+	hashPassword: function(password) {
+		var saltRounds = 10;
+		var salt = bcrypt.genSaltSync(saltRounds);
+		var pwhash = bcrypt.hashSync(password, salt);
+		return pwhash;
+	},
+	comparePassword: function(plaintext, pwhash) {
+		return bcrypt.compareSync(plaintext, pwhash);
 	}
 };

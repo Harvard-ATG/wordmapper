@@ -23,6 +23,14 @@ exec {'setup-nodejs-source':
 }
 
 # Make sure we have some basic tools and libraries available
+package {'build-essential':
+    ensure => latest,
+    require => Exec['apt-get-update'],
+}
+package {'python2.7':
+    ensure => latest,
+    require => Exec['apt-get-update'],
+}
 package {'git':
     ensure => latest,
     require => Exec['apt-get-update'],

@@ -10,7 +10,7 @@ var userRouter = require('./routes/user');
 var config = require('./config');
 var middleware = require('./middleware');
 var utils = require('./utils');
-var db = require('./db');
+var query = require('./query');
 var app = express();
 
 utils.configureLogging(winston);
@@ -21,7 +21,13 @@ passport.use(new LocalStrategy({
 	},
 	function(email, password, done) {
 		winston.debug("local strategy", {email:email});
-		return done(null, {id: 1, email:email});
+		query.users.validatePassword(email, password).then(function(data) {
+			winston.debug("validated password success =>", data);
+			return done(null, data);
+		}).catch(function(err) {
+			winston.debug("validate password failure => ", err);
+			return done(null, false, { message: 'Authentication failed'});
+		});
 		//return done(null, false, { message: 'Incorrect username.' });
 		//return done(err);
 	}
@@ -32,7 +38,11 @@ passport.serializeUser(function(user, done) {
 });
 passport.deserializeUser(function(id, done) {
 	winston.debug("deserializeUser", {id:id});
-	done(null, {id: 1, email: 'a@b.com'});
+	query.users.getUserById(id).then(function(user) {
+		done(null, user);
+	}).catch(function(err) {
+		done(err);
+	});
 });
 
 app.set('view engine', 'ejs'); // set the view engine to ejs

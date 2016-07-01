@@ -1,4 +1,4 @@
-var db = require('../db');
+var query = require('../query');
 
 var HealthService = function(format) {
 	this.code = null;
@@ -26,7 +26,7 @@ HealthService.prototype = {
 		},
 		function() {
 			var _this = this;
-			return db.db.one('select 1 as value')
+			return query.db.one('select 1 as value')
 				.then(function(data) {
 					_this.report.database = {ok: true, message: "OK"};
 				}).catch(function(error) {
