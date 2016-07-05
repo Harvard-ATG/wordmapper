@@ -9,7 +9,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 // Index
 router.get('/', function(req, res) {
-	res.send('hooray! welcome to our user interface!')
+	res.send('Welcome to the user interface!')
 });
 
 // Profile
@@ -23,7 +23,7 @@ router.route('/login')
 	res.render('login');
 })
 .post(urlencodedParser, passport.authenticate('local'), function(req, res) {
-	winston.log("Logged in successfully as " + req.body.email + "!");
+	winston.info("User logged via local authentication: " + req.body.email);
 	res.redirect('/');
 });
 
@@ -40,10 +40,15 @@ router.route('/register')
 	res.render('register');
 })
 .post(urlencodedParser, function(req, res) {
-	query.users.createUser(req.body.email, req.body.password).then(function() {
+	var email = req.body.email;
+	var password = req.body.password;
+	query.users.createUser(email, password).then(function() {
+		return query.users.promoteFirstUser(email);
+	}).then(function() {
+		winston.info("Account created successfully: ", email);
 		res.send("Account created successfully!");
 	}).catch(function(err) {
-		winston.error(err);
+		winston.error("Error creating account: ", err);
 		res.send("Error creating your account");
 	});
 });

@@ -1,11 +1,22 @@
+-----------------------------------------------------------------------
+-- PSQL SETTINGS
 SET client_min_messages TO WARNING;
 
+-----------------------------------------------------------------------
+-- CREATE TABLES
 DROP TABLE IF EXISTS user_account CASCADE;
 CREATE TABLE user_account (
 	id serial PRIMARY KEY,
-	email text not null,
+	email text not null UNIQUE,
 	password text,
+  active boolean not null default true,
 	created timestamp default current_timestamp
+);
+
+DROP TABLE IF EXISTS user_admin CASCADE;
+CREATE TABLE user_admin (
+  email text not null PRIMARY KEY,
+  created timestamp default current_timestamp
 );
 
 DROP TABLE IF EXISTS page CASCADE;
@@ -53,3 +64,4 @@ CREATE TABLE alignment_word (
 	alignment_id integer not null REFERENCES alignment(id),
 	word_id integer not null REFERENCES word(id)
 );
+

@@ -3,7 +3,7 @@ var log = require('winston');
 var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var config = require('../config');
-var utils = require('../utils');
+var auth = require('../auth');
 var apiService = require('../services/api');
 var router = express.Router();
 
@@ -20,7 +20,7 @@ var sourcesRequired  = function(req, res, next) {
 	}
 };
 
-var ensureAuthenticated = utils.ensureAuthenticated(null, function(req, res) {
+var ensureAuthenticated = auth.ensureAuthenticated(null, function(req, res) {
 	res.json({ code: 401, message: "Authenticated required" });
 });
 
