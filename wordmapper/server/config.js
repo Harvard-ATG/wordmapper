@@ -2,8 +2,8 @@ var dbConfig = {
 	host: 'localhost',
 	port: 5432,
 	database: 'wordmapper',
-	username: 'ubuntu',
-	password: 'ubuntu'
+	username: 'vagrant', // ubuntu
+	password: 'vagrant' // ubuntu
 };
 
 module.exports = {

@@ -1,3 +1,5 @@
+SET client_min_messages TO WARNING;
+
 DROP TABLE IF EXISTS user_account CASCADE;
 CREATE TABLE user_account (
 	id serial PRIMARY KEY,

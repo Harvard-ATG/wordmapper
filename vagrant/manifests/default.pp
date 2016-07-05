@@ -42,11 +42,11 @@ package {'nodejs':
 
 package {'postgresql':
     ensure => latest,
-    require => Exec['apt-get-updated'],
+    require => Exec['apt-get-update'],
 }
 package {'postgresql-contrib':
     ensure => latest,
-    require => Exec['postgresql'],
+    require => Exec['apt-get-update'],
 }
 
 # Install npm libraries
@@ -57,6 +57,16 @@ exec {'install-node-modules':
 	user => 'vagrant',
 	group => 'vagrant',
 	logoutput => true,
+}
+
+# Setup postgres database
+exec {'setupdb':
+		cwd => '/vagrant',
+		command => '/vagrant/vagrant/setupdb.sh',
+		require => [Package['postgresql'],Package['postgresql-contrib']],
+		user => 'vagrant',
+		group => 'vagrant',
+		logoutput => true
 }
 
 # Make sure PATH is set
