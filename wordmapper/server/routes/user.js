@@ -40,16 +40,19 @@ router.route('/register')
 	res.render('register');
 })
 .post(urlencodedParser, function(req, res) {
-	var email = req.body.email;
-	var password = req.body.password;
-	query.users.createUser(email, password).then(function() {
-		return query.users.promoteFirstUser(email);
-	}).then(function() {
-		winston.info("Account created successfully: ", email);
-		res.send("Account created successfully!");
-	}).catch(function(err) {
-		winston.error("Error creating account: ", err);
-		res.send("Error creating your account");
+	var email = req.body.email, password = req.body.password;
+	query.users.getUserByEmail(email).then(function() {
+		res.render('register', {error: "User '"+email+"' already exists"});
+	}).catch(function() {
+		query.users.createUser(email, password).then(function() {
+			return query.users.promoteFirstUser(email);
+		}).then(function() {
+			winston.info("Account created successfully: ", email);
+			res.redirect("/user/login");
+		}).catch(function(err) {
+			winston.error("Error creating account: ", err);
+			res.render('register', {error: "Error creating account"});
+		});
 	});
 });
 

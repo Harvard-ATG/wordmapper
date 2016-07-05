@@ -11,14 +11,12 @@ var configurePassport = function(passport) {
     function(email, password, done) {
       winston.debug("local strategy", {email:email});
       validatePassword(email, password).then(function(data) {
-        winston.debug("validated password success =>", data);
+        winston.debug("validatedPassword success:", data);
         return done(null, data);
       }).catch(function(err) {
-        winston.debug("validate password failure => ", err);
+        winston.debug("validatedPassword error:", err);
         return done(null, false, { message: 'Authentication failed'});
       });
-      //return done(null, false, { message: 'Incorrect username.' });
-      //return done(err);
     }
   ));
   passport.serializeUser(function(user, done) {
