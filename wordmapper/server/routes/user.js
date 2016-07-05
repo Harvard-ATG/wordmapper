@@ -40,20 +40,32 @@ router.route('/register')
 	res.render('register');
 })
 .post(urlencodedParser, function(req, res) {
-	var email = req.body.email, password = req.body.password;
-	query.users.getUserByEmail(email).then(function() {
-		res.render('register', {error: "User '"+email+"' already exists"});
-	}).catch(function() {
-		query.users.createUser(email, password).then(function() {
-			return query.users.promoteFirstUser(email);
-		}).then(function() {
-			winston.info("Account created successfully: ", email);
-			res.redirect("/user/login");
-		}).catch(function(err) {
-			winston.error("Error creating account: ", err);
-			res.render('register', {error: "Error creating account"});
+	var email = (req.body.email || '').trim(); // strip whitespace from email
+	var password = req.body.password || '';
+	var confirmpassword = req.body.confirmpassword || '';
+	if (!email) {
+		res.render('register', {error: 'Missing email.', form: req.body});
+	} else if(!password || !confirmpassword) {
+		res.render('register', {error: "Missing password.", form: req.body});
+	} else if (password.length < 3) {
+		res.render('register', {error: "Password too short (must contain at least 3 characters).", form: req.body});
+	} else if (password !== confirmpassword) {
+		res.render('register', {error: "Passwords do not match.", form: req.body});
+	} else {
+		query.users.getUserByEmail(email).then(function() {
+			res.render('register', {error: "User '"+email+"' already exists", form: req.body});
+		}).catch(function() {
+			query.users.createUser(email, password).then(function() {
+				return query.users.promoteFirstUser(email);
+			}).then(function() {
+				winston.info("Account created successfully: ", email);
+				res.redirect("/user/login");
+			}).catch(function(err) {
+				winston.error("Error creating account: ", err);
+				res.render('register', {error: "Error creating account", form: req.body});
+			});
 		});
-	});
+	}
 });
 
 module.exports = router;

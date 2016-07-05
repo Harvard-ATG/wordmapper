@@ -14,7 +14,7 @@
 				<h1>account setup</h1>
 				<div class="form-group">
 					<label style="width:100%">
-						<input name="email" type="email" placeholder="enter your email" class="form-control"/>
+						<input name="email" type="email" placeholder="enter your email" class="form-control" value="<%= locals.form ? form.email : '' %>"/>
 					</label>
 				</div>
 				<div class="form-group">
