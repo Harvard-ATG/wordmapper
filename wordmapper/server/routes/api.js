@@ -1,6 +1,6 @@
 var express = require('express');
-var log = require('winston');
-var jwt = require('jsonwebtoken');
+var winston = require('winston');
+var passport = require('passport');
 var bodyParser = require('body-parser');
 var config = require('../config');
 var auth = require('../auth');
@@ -12,7 +12,7 @@ var getQuerySources = function(req) {
 };
 var sourcesRequired  = function(req, res, next) {
 	var sources = getQuerySources(req);
-	log.debug("text sources:", {sources: sources});
+	winston.debug("text sources:", {sources: sources});
 	if(sources.length > 0) {
 		next();
 	} else {
@@ -20,9 +20,9 @@ var sourcesRequired  = function(req, res, next) {
 	}
 };
 
-var ensureAuthenticated = auth.ensureAuthenticated(null, function(req, res) {
-	res.json({ code: 401, message: "Authenticated required" });
-});
+var ensureAuthenticated = function() {
+	return passport.authenticate('jwt', { session: false});
+};
 
 router.use(bodyParser.json());
 
@@ -35,30 +35,42 @@ router.get('/', function(req, res) {
 router.post('/auth/login', function(req, res) {
 	var email = req.body.email || '';
 	var password = req.body.password || '';
-	res.json({ code: 200, message: "Authenticated" });
+	if (email && password) {
+		auth.validatePassword(email, password).then(function(user) {
+			var token = auth.obtainJsonWebToken(user.id);
+			res.json({ code: 200, message: "Authenticated successfully", token: token });
+		}).catch(function(err) {
+			res.json({ code: 401, message: "Authentication failed: " + err });
+		});
+	} else {
+		res.json({ code: 401, message: "Missing email and/or password" });
+	}
+});
+router.get('/auth/verify', ensureAuthenticated(), function(req, res) {
+	res.json({ code: 200, message: 'Verified' });
 });
 
 // Alignments Endpoint.
 router.route('/alignments')
-.get(ensureAuthenticated, sourcesRequired, function(req, res) {
+.get(ensureAuthenticated(), sourcesRequired, function(req, res) {
 	res.json({ code: 200, message: "Fetched alignments", data: [] });
 })
-.delete(ensureAuthenticated, sourcesRequired, function(req, res) {
+.delete(ensureAuthenticated(), sourcesRequired, function(req, res) {
 	res.json({ code: 204, message: "Deleted alignments"});
 })
-.post(ensureAuthenticated, function(req, res) {
+.post(ensureAuthenticated(), function(req, res) {
 	res.json({ code: 201, message: "Saved alignments", data: [] });
 })
-.put(ensureAuthenticated, function(req, res) {
+.put(ensureAuthenticated(), function(req, res) {
 	res.json({ code: 200, message: "Updated alignments"});
 });
 
 // Pages Endpoint.
 router.route('/pages')
-.get(function(req, res) {
+.get(ensureAuthenticated(), function(req, res) {
 	res.json({ code: 200, message: "Fetched pages", data: [] });
 })
-.post(ensureAuthenticated, function(req, res) {
+.post(ensureAuthenticated(), function(req, res) {
 	res.json({ code: 201, message: "Saved pages", data: [] });
 });
 

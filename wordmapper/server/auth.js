@@ -1,7 +1,11 @@
 var winston = require('winston');
 var bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
 var LocalStrategy = require('passport-local').Strategy;
+var JwtStrategy = require('passport-jwt').Strategy;
+var ExtractJwt = require('passport-jwt').ExtractJwt;
 var query = require('./query');
+var config = require('./config');
 
 var configurePassport = function(passport) {
   passport.use(new LocalStrategy({
@@ -9,9 +13,9 @@ var configurePassport = function(passport) {
       passwordField: 'password'
     },
     function(email, password, done) {
-      winston.debug("local strategy", {email:email});
+      winston.info("authenticate via local strategy", {email:email});
       validatePassword(email, password).then(function(data) {
-        winston.debug("validatedPassword success:", data);
+        winston.debug("validatedPassword success", data);
         return done(null, data);
       }).catch(function(err) {
         winston.debug("validatedPassword error:", err);
@@ -19,6 +23,22 @@ var configurePassport = function(passport) {
       });
     }
   ));
+  passport.use(new JwtStrategy({
+    jwtFromRequest: ExtractJwt.fromAuthHeader(),
+    secretOrKey: config.authSecret
+    //issuer: "accounts.examplesoft.com",
+    //audience: "yoursite.net"
+  },
+  function(jwt_payload, done) {
+    winston.debug("authenticate via jwt strategy with jwt payload", jwt_payload);
+    query.users.getUserById(jwt_payload.userId).then(function(data) {
+      winston.debug("found user", data);
+      return done(null, data);
+    }).catch(function(err) {
+      winston.debug("found user error", err);
+      return done(null, false, { message: 'Authentication failed', error: err });
+    });
+  }));
   passport.serializeUser(function(user, done) {
     winston.debug("serializeUser", user);
     done(null, user.id);
@@ -72,6 +92,26 @@ var ensureAuthenticated = function(valid, invalid) {
   };
 };
 
+var obtainJsonWebToken = function(userId) {
+  var token = jwt.sign({ userId: userId }, config.authSecret);
+  winston.debug("obtained json web token:", {token:token, decoded:jwt.decode(token)});
+  return token;
+};
+var verifyJsonWebToken = function(token) {
+  var decoded = false;
+  try {
+    winston.debug("verifying json web token: ", token);
+    decoded = jwt.verify(token, config.authSecret);
+    winston.debug("verified token: ", decoded);
+  } catch(err) {
+    winston.debug("json web token verification failed: ", err);
+    return false;
+  }
+  return decoded.userId;
+};
+
+module.exports.obtainJsonWebToken = obtainJsonWebToken;
+module.exports.verifyJsonWebToken = verifyJsonWebToken;
 module.exports.configurePassport = configurePassport;
 module.exports.hashPassword = hashPassword;
 module.exports.comparePassword = comparePassword;
