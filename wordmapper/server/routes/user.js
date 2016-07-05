@@ -23,7 +23,15 @@ router.route('/login')
 	res.render('login');
 })
 .post(urlencodedParser, passport.authenticate('local'), function(req, res) {
-	res.send("Logged in successfully as " + req.body.email + "!");
+	winston.log("Logged in successfully as " + req.body.email + "!");
+	res.redirect('/');
+});
+
+// Logout
+router.route('/logout')
+.get(function(req, res) {
+  req.logout();
+  res.redirect('/');
 });
 
 // Registration

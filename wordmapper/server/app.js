@@ -48,7 +48,7 @@ passport.deserializeUser(function(id, done) {
 app.set('view engine', 'ejs'); // set the view engine to ejs
 app.set('views', __dirname + '/views'); // set the views directory
 
-app.use(middleware.requestLogger);
+
 app.use(session({
 	secret: config.sessionSecret,
 	resave: false,
@@ -56,7 +56,8 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(middleware.responseLocals);
+app.use(middleware.requestLogger);
+app.use(middleware.commonViewVars);
 
 app.use('/static', express.static(__dirname + '/public'));
 app.use('/api', apiRouter);
