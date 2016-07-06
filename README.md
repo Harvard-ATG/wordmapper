@@ -46,7 +46,7 @@ $ gulp build
 Start the nodejs web server:
 
 ```sh
-$ node wordmapper/server/app.js 
+$ node server.js
 ```
 
 Install bookmarklet in your browser by creating a new bookmark and copying this code into the URL field:

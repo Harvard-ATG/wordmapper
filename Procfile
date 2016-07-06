@@ -1,1 +1,1 @@
-web: node wordmapper/server/app.js
+web: node server.js
