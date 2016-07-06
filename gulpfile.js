@@ -35,7 +35,8 @@ gulp.task('copy', ['webpack'], function() {
 gulp.task('build', ['webpack', 'copy']);
 
 gulp.task('testclient', function (done) {
-  // This is equivalent to: karma start karma.conf.js --single-run
+  // This is equivalent to shell command:
+  //     $ karma start karma.conf.js --single-run
   new KarmaServer({
     configFile: path.resolve('karma.conf.js'),
     singleRun: true
@@ -48,6 +49,9 @@ gulp.task('testserver', function(done) {
     envCopy[e] = process.env[e];
   }
   envCopy.JASMINE_CONFIG_PATH = path.resolve('jasmine.server.json')
+  
+  // This is equivalent to shell command:
+  //     $ jasmine JASMINE_CONFIG_PATH=jasmine.server.json
   exec('jasmine', {env: envCopy}, function(err, stdout, stderr) {
     if (err) {
       console.error(err);
