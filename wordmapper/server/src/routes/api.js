@@ -4,7 +4,6 @@ var passport = require('passport');
 var bodyParser = require('body-parser');
 var config = require('../config');
 var auth = require('../auth');
-var apiService = require('../services/api');
 var router = express.Router();
 
 var getQuerySources = function(req) {

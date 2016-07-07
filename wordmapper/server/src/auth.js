@@ -7,6 +7,7 @@ var ExtractJwt = require('passport-jwt').ExtractJwt;
 var query = require('./query');
 var config = require('./config');
 
+// Configures PassportJS authentication strategies.
 var configurePassport = function(passport) {
   passport.use(new LocalStrategy({
       usernameField: 'email',
@@ -53,6 +54,8 @@ var configurePassport = function(passport) {
   });
 };
 
+// Returns a bcrypt hash of a plaintext password, suitable for storing
+// in a database.
 var hashPassword = function (password) {
   var saltRounds = 10;
   var salt = bcrypt.genSaltSync(saltRounds);
@@ -60,10 +63,15 @@ var hashPassword = function (password) {
   return pwhash;
 };
 
+// Returns TRUE if a plaintext password is equivalent to a bcrypt password
+// hash stored in the database.
 var comparePassword = function(plaintext, pwhash) {
   return bcrypt.compareSync(plaintext, pwhash);
 };
 
+// Returns a promise that is resolved if the given email and password
+// can be successfully validated against a user account, otherwise
+// it is rejected.
 var validatePassword = function (email, password) {
   return new Promise(function(resolve, reject) {
     query.users.getUserByEmail(email).then(function(user) {
@@ -79,6 +87,40 @@ var validatePassword = function (email, password) {
   });
 };
 
+// Returns a promise that is resolved if the proposed registration email/password
+// meets the minimum standards.
+var validateRegistrationPassword = function(password, confirmpassword) {
+	return new Promise(function(resolve, reject) {
+    if(!password || !confirmpassword) {
+      reject('Missing password.');
+    } else if (password.length < 3) {
+      reject('Password too short (must contain at least 3 characters');
+    } else if (password !== confirmpassword) {
+      reject('Passwords do not match.');
+    } else {
+      resolve();
+    }
+  });
+};
+
+// Returns a promise that is resolved if the proposed email is available,
+// and rejected if it is not.
+var validateRegistrationEmail = function(email) {
+  return new Promise(function(resolve, reject) {
+    if (!email) {
+      reject('Missing email.');
+    } else {
+      query.users.getUserByEmail(email).then(function() {
+        reject("User '"+email+"' already exists");
+      }).catch(function() {
+        resolve();
+      });
+    }
+  });
+};
+
+// Returns a middleware function that will *only* call next()
+// if the user is authenticated.
 var ensureAuthenticated = function(valid, invalid) {
   valid = valid || function() {};
   invalid = invalid || function() {};
@@ -92,11 +134,15 @@ var ensureAuthenticated = function(valid, invalid) {
   };
 };
 
+// Returns a JSON Web Token (JWT) containing the given User ID.
 var obtainJsonWebToken = function(userId) {
   var token = jwt.sign({ userId: userId }, config.authSecret);
   winston.debug("obtained json web token:", {token:token, decoded:jwt.decode(token)});
   return token;
 };
+
+// Verifies the given JSON Web Token (JWT) is valid and returns the
+// User ID contained in it, otherwise returns FALSE.
 var verifyJsonWebToken = function(token) {
   var decoded = false;
   try {
@@ -116,4 +162,6 @@ module.exports.configurePassport = configurePassport;
 module.exports.hashPassword = hashPassword;
 module.exports.comparePassword = comparePassword;
 module.exports.validatePassword = validatePassword;
+module.exports.validateRegistrationPassword = validateRegistrationPassword;
+module.exports.validateRegistrationEmail = validateRegistrationEmail;
 module.exports.ensureAuthenticated = ensureAuthenticated;
