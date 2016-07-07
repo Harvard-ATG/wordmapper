@@ -61,12 +61,17 @@ You are now ready to develop locally. You'll want to `gulp watch` your JS files 
 $ gulp watch
 ```
 
-And you'll want to run the unit tests, either via `karma` directly, or `gulp` which runs karma:
+And you'll want to run the unit tests: 
 
-```sh
-$ karma start karma.conf.js --single-run
-$ gulp test
-```
+- **Client-side unit tests:** 
+    - `$ gulp testclient` or directly via karma:
+    - `$ karma start karma.conf.js --single-run`
+- **Server-side unit tests:**
+    - `$ gulp testserver` or directly via jasmine:
+    - `$ jasmine JASMINE_CONFIG_PATH=jasmine.server.json`
+- **All unit tests:** 
+    - `gulp test`
+
 
 ### Testing
 
