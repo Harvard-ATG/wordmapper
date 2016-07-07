@@ -17,7 +17,6 @@ var gulp = require('gulp');
 var rename = require('gulp-rename');
 var exec = require('child_process').exec;
 var webpack = require('webpack-stream');
-var KarmaServer = require('karma').Server;
 var WebpackConfig = require(path.resolve('webpack.config.js'));
 
 gulp.task('webpack', function() {
@@ -37,26 +36,32 @@ gulp.task('build', ['webpack', 'copy']);
 gulp.task('testclient', function (done) {
   // This is equivalent to shell command:
   //     $ karma start karma.conf.js --single-run
-  new KarmaServer({
-    configFile: path.resolve('karma.conf.js'),
-    singleRun: true
-  }, done).start();
+  var envCopy = {};
+  for (e in process.env) {
+    envCopy[e] = process.env[e];
+  }
+  exec('karma start karma.conf.js --single-run', {env:envCopy}, function(err, stdout, stderr) {
+    if (err) {
+      console.error(err);
+      return done(err);
+    }
+    console.log(stdout);
+    done();
+  });
 });
 
 gulp.task('testserver', function(done) {
+  // This is equivalent to shell command:
+  //     $ jasmine JASMINE_CONFIG_PATH=jasmine.server.json
   var envCopy = {};
   for (e in process.env) {
     envCopy[e] = process.env[e];
   }
   envCopy.JASMINE_CONFIG_PATH = path.resolve('jasmine.server.json')
-  
-  // This is equivalent to shell command:
-  //     $ jasmine JASMINE_CONFIG_PATH=jasmine.server.json
   exec('jasmine', {env: envCopy}, function(err, stdout, stderr) {
     if (err) {
       console.error(err);
-      done(err);
-      return;
+      return done(err);
     }
     console.log(stdout);
     done();
