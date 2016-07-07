@@ -1,0 +1,24 @@
+<nav class="navbar navbar-default navbar-static-top">
+	<div class="container">
+		<div class="navbar-header">
+			 <a class="navbar-brand" href="/">WordMapper</a>
+		</div>	
+		<div id="navbar" class="navbar-collapse collapse">
+			<!--ul class="nav navbar-nav">
+				<li><a href="#">Home</a></li>
+			</ul-->
+			<ul class="nav navbar-nav navbar-right">
+				<% if(authenticated) { %>
+					<% if (user) { %>
+						<li><a href="/user/<%= user.id %>"><%= user.email %></a></li>
+					<% } else { %>
+						<li>Logged in</li>
+					<% } %>
+					<li><a href="/user/logout">Logout</a></li>
+				<% } else { %>
+					<li><a href="/user/login">Login</a></li>
+				<% } %>
+			</ul>
+		</div>
+	</div>
+</nav>

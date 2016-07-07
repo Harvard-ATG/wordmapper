@@ -23,6 +23,14 @@ exec {'setup-nodejs-source':
 }
 
 # Make sure we have some basic tools and libraries available
+package {'build-essential':
+    ensure => latest,
+    require => Exec['apt-get-update'],
+}
+package {'python2.7':
+    ensure => latest,
+    require => Exec['apt-get-update'],
+}
 package {'git':
     ensure => latest,
     require => Exec['apt-get-update'],
@@ -30,6 +38,15 @@ package {'git':
 package {'nodejs':
     ensure => latest,
     require => [Exec['apt-get-update'],Exec['setup-nodejs-source']],
+}
+
+package {'postgresql':
+    ensure => latest,
+    require => Exec['apt-get-update'],
+}
+package {'postgresql-contrib':
+    ensure => latest,
+    require => Exec['apt-get-update'],
 }
 
 # Install npm libraries
@@ -40,6 +57,16 @@ exec {'install-node-modules':
 	user => 'vagrant',
 	group => 'vagrant',
 	logoutput => true,
+}
+
+# Setup postgres database
+exec {'setupdb':
+		cwd => '/vagrant',
+		command => '/vagrant/vagrant/setupdb.sh',
+		require => [Package['postgresql'],Package['postgresql-contrib']],
+		user => 'vagrant',
+		group => 'vagrant',
+		logoutput => true
 }
 
 # Make sure PATH is set
