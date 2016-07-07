@@ -28,7 +28,7 @@ gulp.task('webpack', function() {
 gulp.task('copy', ['webpack'], function() {
   return gulp.src('wordmapper/client/dist/app.js')
     .pipe(rename('bookmarklet.js'))
-    .pipe(gulp.dest('wordmapper/server/public/js/'));
+    .pipe(gulp.dest('wordmapper/server/src/public/js/'));
 });
 
 gulp.task('build', ['webpack', 'copy']);
