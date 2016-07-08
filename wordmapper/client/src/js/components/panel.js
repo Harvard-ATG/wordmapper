@@ -37,5 +37,8 @@ Panel.prototype.render = function() {
   this.el.html(templates.panel());
   return this;
 };
+Panel.prototype.getHeight = function() {
+  return this.el.children().outerHeight();
+};
 
 module.exports = Panel;

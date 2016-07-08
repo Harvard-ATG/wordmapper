@@ -49,6 +49,8 @@ Application.prototype.render = function() {
 Application.prototype.renderTo = function(selector) {
   $(function() {
     $(selector).append(this.render().el);
+    $(selector).css('transition', 'margin 1s');
+    $(selector).css('marginTop', this.panel.getHeight()+"px");
   }.bind(this));
   return this;
 };
