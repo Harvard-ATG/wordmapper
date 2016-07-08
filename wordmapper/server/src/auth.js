@@ -93,8 +93,8 @@ var validateRegistrationPassword = function(password, confirmpassword) {
 	return new Promise(function(resolve, reject) {
     if(!password || !confirmpassword) {
       reject('Missing password.');
-    } else if (password.length < 3) {
-      reject('Password too short (must contain at least 3 characters');
+    } else if (password.length < 4) {
+      reject('Password too short (must contain at least 4 characters');
     } else if (password !== confirmpassword) {
       reject('Passwords do not match.');
     } else {
@@ -141,6 +141,14 @@ var obtainJsonWebToken = function(userId) {
   return token;
 };
 
+// Returns the payload of the JSON Web Token (JWT).
+//
+// CAUTION: this DOES NOT verify the token to ensure authenticity.
+// You must use verifyJsonWebToken() instead to verify the token.
+var decodeJsonWebToken = function(token) {
+	return jwt.decode(token);
+};
+
 // Verifies the given JSON Web Token (JWT) is valid and returns the
 // User ID contained in it, otherwise returns FALSE.
 var verifyJsonWebToken = function(token) {
@@ -157,6 +165,7 @@ var verifyJsonWebToken = function(token) {
 };
 
 module.exports.obtainJsonWebToken = obtainJsonWebToken;
+module.exports.decodeJsonWebToken  = decodeJsonWebToken;
 module.exports.verifyJsonWebToken = verifyJsonWebToken;
 module.exports.configurePassport = configurePassport;
 module.exports.hashPassword = hashPassword;
