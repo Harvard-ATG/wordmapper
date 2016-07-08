@@ -59,9 +59,6 @@ router.route('/alignments')
 })
 .post(ensureAuthenticated(), function(req, res) {
 	res.json({ code: 201, message: "Saved alignments", data: [] });
-})
-.put(ensureAuthenticated(), function(req, res) {
-	res.json({ code: 200, message: "Updated alignments"});
 });
 
 // Pages Endpoint.
