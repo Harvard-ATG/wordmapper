@@ -5,7 +5,6 @@ var passport = require('passport');
 
 var apiRouter = require('./routes/api');
 var adminRouter = require('./routes/admin');
-var healthRouter = require('./routes/health');
 var userRouter = require('./routes/user');
 var config = require('./config');
 var middleware = require('./middleware');
@@ -32,7 +31,6 @@ app.use(middleware.commonViewVars);
 
 app.use('/static', express.static(__dirname + '/public'));
 app.use('/api', apiRouter);
-app.use('/health', healthRouter);
 app.use('/user', userRouter);
 app.use('/admin', adminRouter);
 

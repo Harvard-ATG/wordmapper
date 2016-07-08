@@ -63,12 +63,37 @@ var users = {
 };
 
 var alignments = {
-	getAllAlignments: function() {
-		return db.any('select * from alignment');
+	_getQuery: function() {
+		return [
+			'select ',
+			'   a.id AS alignment_id',
+			'   ,a.user_id AS user_id',
+			'   ,a.comment AS comment',
+			'   ,w.value AS word_value',
+			'   ,w.index AS word_index',
+			'   ,s.hash AS source_hash',
+			'   ,s.id AS source_id'
+			'from alignments a',
+			'join alignment_word aw on a.id = aw.alignment_id',
+			'join word w on w.id = aw.word_id',
+			'join source s on s.id = w.source_id',
+		].join(' ');
 	},
-	getAlignmentsByUser: function(userId) {
-		var query = 'select * from alignments where user_id = ${userId}';
-		return db.any(query, {userId: userId});
+	getAllAlignments: function() {
+		return db.any(this._getQuery());
+	},
+	getAlignmentsByUser: function(userId, sources) {
+		var query = this._getQuery(); 
+		var params = {userId: userId};
+		if(Array.isArray(sources) && sources.length > 0) {
+			query += 'where a.user_id = ${userId} and s.hash in ${sources}';
+			params.sources = sources;
+		}
+		return db.any(query, params);
+	},
+	deleteAlignmentsByUser: function() {
+		var query = 'delete from alignments where user_id = ${userId}';
+		return db.none(query, {userId: userId});
 	}
 };
 
