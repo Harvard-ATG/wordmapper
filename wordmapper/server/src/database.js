@@ -93,22 +93,15 @@ var alignments = {
 		var query = 'delete from alignments where user_id = ${userId}';
 		return db.none(query, {userId: userId});
 	},
-	insertAlignment: function(userId, comment) {
-		var query = 'insert into alignment (user_id, comment) values (${userId}, ${comment}) returning id';
-		return db.one(query, {userId:userId, comment:comment});
-	},
-	insertWords: function(alignmentId, words) {
-		var values = words.map(function(word) {
-			return [alignmentId, word.source, word.index, word.value];
-		});
-		var query = 'insert into word (alignment_id, source_hash, word_index, word_value) values (${words}) returning id';
-		return db.any(query, {words: values});
-	},
 	createAlignment: function(userId, comment, words) {
-		var _this = this;
 		return db.tx(function(t) {
-			var q1 = _this.insertAlignment(userId, comment).then(function(alignmentId) {
-				return _this.insertWords(alignmentId, words);
+			var sql1 = 'insert into alignment (user_id, comment) values (${userId}, ${comment}) returning id';
+			var q1 = t.one(sql1, {userId:userId, comment:comment}).then(function(alignmentId) {
+				var sql2 = 'insert into word (alignment_id, source_hash, word_index, word_value) values (${words}) returning id';
+				var values = words.map(function(word) {
+					return [alignmentId, word.source, word.index, word.value];
+				});
+				return t.any(sql2, {words: values});
 			});
 			return t.batch([q1]);
 		});
