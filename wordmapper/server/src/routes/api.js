@@ -58,6 +58,8 @@ router.route('/alignments')
 	res.json({ code: 204, message: "Deleted alignments"});
 })
 .post(ensureAuthenticated(), function(req, res) {
+	winston.info("user", req.user);
+	winston.info("body", req.body);
 	res.json({ code: 201, message: "Saved alignments", data: [] });
 });
 

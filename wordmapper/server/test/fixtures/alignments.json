@@ -1,0 +1,82 @@
+{
+  "type": "alignments",
+  "data": [
+    {
+      "type": "alignment",
+      "data": [
+        {
+          "type": "word",
+          "data": {
+            "index": "3",
+            "source": "40e772cc89ee7f97a5cbfb544a464d41b43b3694",
+            "value": "نذكر"
+          }
+        },
+        {
+          "type": "word",
+          "data": {
+            "index": "0",
+            "source": "1acd674e43748e1097ab0616e57f0c5c212c12dc",
+            "value": "Περὶ"
+          }
+        },
+        {
+          "type": "comment",
+          "data": {
+            "text": "This is a comment"
+          }
+        }
+      ]
+    },
+    {
+      "type": "alignment",
+      "data": [
+        {
+          "type": "word",
+          "data": {
+            "index": "34",
+            "source": "40e772cc89ee7f97a5cbfb544a464d41b43b3694",
+            "value": "إلى"
+          }
+        },
+        {
+          "type": "word",
+          "data": {
+            "index": "28",
+            "source": "1acd674e43748e1097ab0616e57f0c5c212c12dc",
+            "value": "πρὸς"
+          }
+        },
+        {
+          "type": "word",
+          "data": {
+            "index": "31",
+            "source": "1acd674e43748e1097ab0616e57f0c5c212c12dc",
+            "value": "παραβάλλοντες,"
+          }
+        }
+      ]
+    },
+    {
+      "type": "alignment",
+      "data": [
+        {
+          "type": "word",
+          "data": {
+            "index": "59",
+            "source": "40e772cc89ee7f97a5cbfb544a464d41b43b3694",
+            "value": "كثيرا"
+          }
+        },
+        {
+          "type": "word",
+          "data": {
+            "index": "59",
+            "source": "1acd674e43748e1097ab0616e57f0c5c212c12dc",
+            "value": "οἰκείαν"
+          }
+        }
+      ]
+    }
+  ]
+}

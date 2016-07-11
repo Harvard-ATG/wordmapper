@@ -29,9 +29,9 @@ CREATE TABLE page (
 DROP TABLE IF EXISTS source CASCADE;
 CREATE TABLE source (
 	id serial PRIMARY KEY,
-	hash char(40) not null,
-	textContent text,
-	htmlContent text,
+	hash char(40) not null UNIQUE,
+	normalized text,
+	original text,
 	created timestamp default current_timestamp
 );
 
@@ -54,15 +54,9 @@ CREATE TABLE alignment (
 DROP TABLE IF EXISTS word CASCADE;
 CREATE TABLE word (
 	id serial PRIMARY KEY,
-	value text not null,
-	index integer not null,
-	source_id integer not null REFERENCES source(id) ON DELETE RESTRICT
-);
-
-DROP TABLE IF EXISTS alignment_word CASCADE;
-CREATE TABLE alignment_word (
-	id serial PRIMARY KEY,
 	alignment_id integer not null REFERENCES alignment(id) ON DELETE CASCADE,
-	word_id integer not null REFERENCES word(id) ON DELETE RESTRICT
+  source_hash integer not null REFERENCES source(hash) ON DELETE RESTRICT,
+	word_index integer not null CONSTRAINT index_check CHECK (word_index >= 0),
+  word_value text not null
 );
 

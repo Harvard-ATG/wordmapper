@@ -8,6 +8,11 @@ var pgp = require('pg-promise')({
 });
 var db = pgp(config.database);
 
+// Helper for linking to external query files: 
+function sql(file) {
+    return new pgp.QueryFile(file, {minify: true});
+}
+
 var users = {
 	getAllUsers: function() {
 		return db.any("select * from user_account");
@@ -63,37 +68,56 @@ var users = {
 };
 
 var alignments = {
-	_getQuery: function() {
-		return [
-			'select ',
-			'   a.id AS alignment_id',
-			'   ,a.user_id AS user_id',
-			'   ,a.comment AS comment',
-			'   ,w.value AS word_value',
-			'   ,w.index AS word_index',
-			'   ,s.hash AS source_hash',
-			'   ,s.id AS source_id'
-			'from alignments a',
-			'join alignment_word aw on a.id = aw.alignment_id',
-			'join word w on w.id = aw.word_id',
-			'join source s on s.id = w.source_id',
-		].join(' ');
-	},
 	getAllAlignments: function() {
-		return db.any(this._getQuery());
+		var query = sql('./sql/findAlignments.sql');
+		return db.any(query);
 	},
 	getAlignmentsByUser: function(userId, sources) {
-		var query = this._getQuery(); 
+		if (!userId) {
+			throw "Missing userId parameter";
+		}
+		var query = sql('./sql/findAlignmentsByUser.sql');
 		var params = {userId: userId};
+		var wheres = ['a.user_id = ${userId}'];
+
 		if(Array.isArray(sources) && sources.length > 0) {
-			query += 'where a.user_id = ${userId} and s.hash in ${sources}';
+			wheres.push('s.hash in ${sources:csv}');
 			params.sources = sources;
 		}
+
+		query += ' WHERE ' + wheres.join(" AND ");
+
 		return db.any(query, params);
 	},
 	deleteAlignmentsByUser: function() {
 		var query = 'delete from alignments where user_id = ${userId}';
 		return db.none(query, {userId: userId});
+	},
+	insertAlignment: function(userId, comment) {
+		var query = 'insert into alignment (user_id, comment) values (${userId}, ${comment}) returning id';
+		return db.one(query, {userId:userId, comment:comment});
+	},
+	insertWords: function(alignmentId, words) {
+		var values = words.map(function(word) {
+			return [alignmentId, word.source, word.index, word.value];
+		});
+		var query = 'insert into word (alignment_id, source_hash, word_index, word_value) values (${words}) returning id';
+		return db.any(query, {words: values});
+	},
+	createAlignment: function(userId, comment, words) {
+		var _this = this;
+		return db.tx(function(t) {
+			var q1 = _this.insertAlignment(userId, comment).then(function(alignmentId) {
+				return _this.insertWords(alignmentId, words);
+			});
+			return t.batch([q1]);
+		});
+	}
+};
+
+var sources = {
+	getAllSources: function() {
+		return db.any('select * from source');
 	}
 };
 
@@ -103,7 +127,7 @@ var pages = {
 	}
 };
 
-module.exports.db = db;
 module.exports.users = users;
 module.exports.alignments = alignments;
 module.exports.pages = pages;
+module.exports.sources = sources;

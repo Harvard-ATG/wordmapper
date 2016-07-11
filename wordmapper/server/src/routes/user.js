@@ -2,7 +2,7 @@ var express = require('express');
 var winston = require('winston');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-var query = require('../query');
+var database = require('../database');
 var auth = require('../auth');
 var router = express.Router();
 
@@ -48,9 +48,9 @@ router.route('/register')
 	auth.validateRegistrationPassword(password, confirmpassword).then(function() {
 		return auth.validateRegistrationEmail(email);
 	}).then(function() {
-		return query.users.createUser(email, password);
+		return database.users.createUser(email, password);
 	}).then(function() {
-		return query.users.promoteFirstUser(email);
+		return database.users.promoteFirstUser(email);
 	}).then(function() {
 		winston.info("Account created successfully: ", email);
 		res.redirect("/user/login");

@@ -10,7 +10,6 @@ var config = require('./config');
 var middleware = require('./middleware');
 var utils = require('./utils');
 var auth = require('./auth');
-var query = require('./query');
 var app = express();
 
 utils.configureLogging(winston);

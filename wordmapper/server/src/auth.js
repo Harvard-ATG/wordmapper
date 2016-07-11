@@ -4,7 +4,7 @@ var jwt = require('jsonwebtoken');
 var LocalStrategy = require('passport-local').Strategy;
 var JwtStrategy = require('passport-jwt').Strategy;
 var ExtractJwt = require('passport-jwt').ExtractJwt;
-var query = require('./query');
+var database = require('./database');
 var config = require('./config');
 
 // Configures PassportJS authentication strategies.
@@ -32,7 +32,7 @@ var configurePassport = function(passport) {
   },
   function(jwt_payload, done) {
     winston.debug("authenticate via jwt strategy with jwt payload", jwt_payload);
-    query.users.getUserById(jwt_payload.userId).then(function(data) {
+    database.users.getUserById(jwt_payload.userId).then(function(data) {
       winston.debug("found user", data);
       return done(null, data);
     }).catch(function(err) {
@@ -46,7 +46,7 @@ var configurePassport = function(passport) {
   });
   passport.deserializeUser(function(id, done) {
     winston.debug("deserializeUser", {id:id});
-    query.users.getUserById(id).then(function(user) {
+    database.users.getUserById(id).then(function(user) {
       done(null, user);
     }).catch(function(err) {
       done(err);
@@ -74,7 +74,7 @@ var comparePassword = function(plaintext, pwhash) {
 // it is rejected.
 var validatePassword = function (email, password) {
   return new Promise(function(resolve, reject) {
-    query.users.getUserByEmail(email).then(function(user) {
+    database.users.getUserByEmail(email).then(function(user) {
       var valid = comparePassword(password, user.password);
       if(valid) {
         resolve(user);
@@ -110,7 +110,7 @@ var validateRegistrationEmail = function(email) {
     if (!email) {
       reject('Missing email.');
     } else {
-      query.users.getUserByEmail(email).then(function() {
+      database.users.getUserByEmail(email).then(function() {
         reject("User '"+email+"' already exists");
       }).catch(function() {
         resolve();
