@@ -1,5 +1,6 @@
-var AlignmentsParser = require('../../src/parser');
+var parser = require('../../src/parser');
 var fixture_data = require('../fixtures/alignments.json');
+var AlignmentsParser = parser.AlignmentsParser;
 
 describe('parser', function() {
   it("extracts alignments", function() {

@@ -2,24 +2,18 @@ var winston = require('winston');
 var database = require('./database');
 var AlignmentsParser = require('./parser').AlignmentsParser;
 
-var Repository = {
+module.exports = {
 	fetchAlignments: function(userId, sources) {
 		throw "not implemented"; 
 	},
 	deleteAlignments: function(userId) { 
 		throw "not implemented"; 
 	},
-	saveAlignments: function(data) {
-		var executor = function(resolve, reject) {
-			var parser = new AlignmentsParser(data);
-			parser.parse();
-			if (!parser.valid) {
-				reject({message: "Error parsing data", errors: parser.errors});
-			}
-			resolve();
-		};
-		return new Promise(executor);
-
+	saveAlignments: function(userId, data) {
+		var parser = new AlignmentsParser(data);
+		return parser.asPromise().then(function(alignments) {
+			return database.alignments.createAlignments({userId: userId,alignments: alignments});
+		});
 	},
 	saveComments: function(data) { 
 		throw "not implemented"; 
@@ -28,5 +22,3 @@ var Repository = {
 		throw "not implemented"; 
 	}
 };
-
-module.exports.Repository = Repository;

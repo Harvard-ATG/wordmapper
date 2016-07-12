@@ -4,6 +4,7 @@ var passport = require('passport');
 var bodyParser = require('body-parser');
 var config = require('../config');
 var auth = require('../auth');
+var repository = require('../repository');
 var router = express.Router();
 
 var getQuerySources = function(req) {
@@ -58,9 +59,14 @@ router.route('/alignments')
 	res.json({ code: 204, message: "Deleted alignments"});
 })
 .post(ensureAuthenticated(), function(req, res) {
-	winston.info("user", req.user);
-	winston.info("body", req.body);
-	res.json({ code: 201, message: "Saved alignments", data: [] });
+	winston.info("post /alignments", [req.user, req.body]);
+	repository.saveAlignments(req.user.id, req.body).then(function() {
+		winston.log("saved alignments");
+		res.json({ code: 201, message: "Saved alignments" });
+	}).catch(function(err) {
+		winston.error("error saving alignments: ", err);
+		res.json({ code: 500, message: "Error saving alignments",  error: err.message});
+	});
 });
 
 // Pages Endpoint.

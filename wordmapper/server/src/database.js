@@ -93,17 +93,49 @@ var alignments = {
 		var query = 'delete from alignments where user_id = ${userId}';
 		return db.none(query, {userId: userId});
 	},
-	createAlignment: function(userId, comment, words) {
-		return db.tx(function(t) {
-			var sql1 = 'insert into alignment (user_id, comment) values (${userId}, ${comment}) returning id';
-			var q1 = t.one(sql1, {userId:userId, comment:comment}).then(function(alignmentId) {
-				var sql2 = 'insert into word (alignment_id, source_hash, word_index, word_value) values (${words}) returning id';
-				var values = words.map(function(word) {
-					return [alignmentId, word.source, word.index, word.value];
-				});
-				return t.any(sql2, {words: values});
-			});
-			return t.batch([q1]);
+	createAlignments: function(options) {
+		var userId = options.userId;
+		var alignments = options.alignments || [];
+		var totalInserts = alignments.reduce(function(total, a) {
+			return total + a.words.length;
+		}, alignments.length);
+	
+		winston.debug("createAlignments", userId, "total inserts", totalInserts);
+
+		return db.tx(function(t1) {
+			var trackWords = {alignmentIndex: 0, wordIndex: 0};
+			var alignmentIds = [];
+			
+			// sequence of inserts in a transaction: if any fail the entire operation should be rolled back
+			return t1.sequence(function(index, data) {
+				var alignment, word, values, sql;
+				winston.debug("sequence", index, data, trackWords);
+				if (data) {
+					alignments[index-1].id = data.id;
+				}
+				
+				// insert all the alignments first
+				if (index < alignments.length) {
+					winston.debug("insert alignment");
+					sql = 'insert into alignment (user_id, comment) values (${userId}, ${comment}) returning id'
+					return t1.one(sql, {userId: userId, comment:alignments[index].comment});
+				
+				// insert all the words next
+				} else {
+					alignment = alignments[trackWords.alignmentIndex];
+					word = alignment.words[trackWords.wordIndex];
+					values = [alignment.id, word.source, word.index, word.value];
+					if (trackWords.wordIndex < alignment.words.length-1) {
+						++trackWords.wordIndex;
+					} else {
+						trackWords.wordIndex = 0;
+						++trackWords.alignmentIndex;
+					}
+					winston.debug('insert word', values);
+					sql = 'insert into word (alignment_id, source_hash, word_index, word_value) values ($1, $2, $3, $4)'
+					return t1.none(sql, values);
+				}
+			}, {limit: totalInserts});
 		});
 	}
 };

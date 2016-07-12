@@ -5,65 +5,75 @@ var AlignmentsParser = function(data) {
   this.errors = [];
   this.alignments = [];
 };
+AlignmentsParser.prototype.asPromise = function() {
+  var parser = this;
+  return new Promise(function(resolve, reject) {
+    parser.parse();
+    if (!parser.valid) {
+      reject({message: "Error parsing data", errors: parser.errors});
+    }
+    resolve(parser.alignments);
+  });
+};
 AlignmentsParser.prototype.parse = function() {
   this._validate();
   this._parse();
   return this;
 };
 AlignmentsParser.prototype._error = function(msg) {
-  throw msg;
   this.errors.push(msg);
   return this;
 };
 AlignmentsParser.prototype._validate = function() {
   this.valid = false;
-  
+
   // check alignments
   if (typeof this.input !== "object") {
     return this._error("Data must be of type 'object'");
   }
   if (!this.input.type || !this.input.data) {
-    return this._error("Missing top-level 'type' or 'data' attribute");
+    return this._error("Top-level object missing 'type' or 'data' attribute");
   }
   if (this.input.type !== "alignments") {
-    return this._error("Incorrect top-level object 'type': must be 'alignments'");
+    return this._error("Top-level object 'type' attribute must equal 'alignments'");
   }
   if (!Array.isArray(this.input.data)) {
-    return this._error("Incorrect 'alignments' object 'data' attribute: must be an array");
+    return this._error("Top-level object 'data' attribute must be an array");
   }
   
   // check each alignment
-  for(var i = 0, alignments = this.input.data, alignment; i < alignments.length; i++) {
+  for(var i = 0, alignments = this.input.data, alignment, errAlignment; i < alignments.length; i++) {
     alignment = alignments[i];
+    errAlignment = 'Alignment['+i+'] ';
     if (!alignment.type || !alignment.data) {
-      return this._error("Alignment [" + i + "] missing 'type' or 'data' attribute");
+      return this._error(errAlignment + " missing 'type' or 'data' attribute");
     }
     if (alignment.type !== "alignment") {
-      return this._error("Alignment [" + i + "] incorrect object 'type': must be 'alignment'");
+      return this._error(errAlignment + " incorrect object 'type': must be 'alignment'");
     }
     if (!Array.isArray(alignment.data)) {
-      return this._error("Alignment [" + i + "] incorrect object 'data' attribute: must be an array");
+      return this._error(errAlignment + " incorrect object 'data' attribute: must be an array");
     }
 
     // check each item
-    for(var j = 0, items = alignment.data, item; j < items.length; j++) {
+    for(var j = 0, items = alignment.data, item, errItem; j < items.length; j++) {
       item = items[j];
-      console.log("item", item, j);
+      errItem = errAlignment + ' Item['+j+']';
       if (!item.type || !item.data) {
-        return this._error("Alignment [" + i + "] Item [" + j + "] missing 'type' or 'data' attribute");
+        return this._error(errItem + " missing 'type' or 'data' attribute");
       }
       if (item.type === "word") {
         if (!item.data.hasOwnProperty("index")
           || !item.data.hasOwnProperty("source")
           ||  !item.data.hasOwnProperty("value")) {
-          return this._error("Alignment [" + i + "] Word [" + j + "] missing valid 'data' attributes index, source, value");
+          return this._error(errItem + " missing valid 'data' attributes index, source, value");
         }
       } else if (item.type === "comment") {
         if (!item.data.hasOwnProperty("text")) {
-          return this._error("Alignment [" + i + "] Comment [" + j + "] missing valid 'data' attribute 'text'");
+          return this._error(errItem + " missing valid 'data' attribute 'text'");
         }
       } else {
-        return this._error("Alignment [" + i + "] Item [" + j + "] invalid type");
+        return this._error(errItem + " invalid type");
       }
     }
   }
