@@ -1,24 +1,25 @@
 var winston = require('winston');
 var database = require('./database');
-var AlignmentsParser = require('./parser').AlignmentsParser;
+var parser = require('./parser');
+var AlignmentsParser = parser.AlignmentsParser;
 
 module.exports = {
 	fetchAlignments: function(userId, sources) {
-		throw "not implemented"; 
+		return database.alignments.getAlignmentsByUser(userId, {sources:sources});
 	},
-	deleteAlignments: function(userId) { 
-		throw "not implemented"; 
+	deleteAlignments: function(userId, sources) { 
+		return database.alignments.deleteAlignmentsByUser(userId, sources);
 	},
 	saveAlignments: function(userId, data) {
 		var parser = new AlignmentsParser(data);
 		return parser.asPromise().then(function(alignments) {
-			return database.alignments.createAlignments({userId: userId,alignments: alignments});
+			return database.alignments.createAlignments({userId: userId, alignments: alignments});
 		});
 	},
-	saveComments: function(data) { 
-		throw "not implemented"; 
+	saveSources: function(sources) {
+		return database.sources.createSources(sources);
 	},
-	saveSources: function(sources) { 
-		throw "not implemented"; 
+	fetchSources: function(hashes) {
+		return database.sources.getSourcesByHash(hashes);
 	}
 };

@@ -10,7 +10,7 @@ var db = pgp(config.database);
 
 // Helper for linking to external query files: 
 function sql(file) {
-    return new pgp.QueryFile(file, {minify: true});
+    return new pgp.QueryFile('./wordmapper/server/src/'+file, {minify: true});
 }
 
 var users = {
@@ -72,26 +72,33 @@ var alignments = {
 		var query = sql('./sql/findAlignments.sql');
 		return db.any(query);
 	},
-	getAlignmentsByUser: function(userId, sources) {
+	getAlignmentsByUser: function(userId, options) {
 		if (!userId) {
 			throw "Missing userId parameter";
 		}
-		var query = sql('./sql/findAlignmentsByUser.sql');
+		var sources = options.sources; // optional
+		var query = sql('./sql/findAlignments.sql').query;
 		var params = {userId: userId};
-		var wheres = ['a.user_id = ${userId}'];
+		var conds = ['user_id = ${userId}'];
 
 		if(Array.isArray(sources) && sources.length > 0) {
-			wheres.push('s.hash in ${sources:csv}');
+			conds.push('source_id in (${sources:csv})');
 			params.sources = sources;
 		}
 
-		query += ' WHERE ' + wheres.join(" AND ");
+		query += ' WHERE ' + conds.join(" AND ");
 
 		return db.any(query, params);
 	},
-	deleteAlignmentsByUser: function() {
-		var query = 'delete from alignments where user_id = ${userId}';
-		return db.none(query, {userId: userId});
+	deleteAlignmentsByUser: function(userId, sources) {
+		if (!userId) {
+			throw "Missing userId parameter";
+		}
+		if (!sources) {
+			throw "Missing sources parameter";
+		}
+		var query = sql('./sql/deleteAlignments.sql').query;
+		return db.none(query, {userId: userId, sources: sources});
 	},
 	createAlignments: function(options) {
 		var userId = options.userId;
@@ -132,7 +139,7 @@ var alignments = {
 						++trackWords.alignmentIndex;
 					}
 					winston.debug('insert word', values);
-					sql = 'insert into word (alignment_id, source_hash, word_index, word_value) values ($1, $2, $3, $4)'
+					sql = 'insert into word (alignment_id, source_id, word_index, word_value) values ($1, (select id from source where hash = $2), $3, $4)'
 					return t1.none(sql, values);
 				}
 			}, {limit: totalInserts});
@@ -142,7 +149,18 @@ var alignments = {
 
 var sources = {
 	getAllSources: function() {
-		return db.any('select * from source');
+		return db.any('select id, hash, normalized from source');
+	},
+	getSourcesByHash: function(hashes) {
+		return db.any('select id, hash, normalized from source where hash in (${hashes:csv})', {hashes:hashes});
+	},
+	createSources: function(sources) {
+		return db.tx(function(t) {
+			var queries = sources.map(function(source) {
+				return t.one('insert into source (hash, normalized, original) values (${hash}, ${normalized}, ${original}) returning id', source);
+			});
+			return t.batch(queries);
+		});
 	}
 };
 

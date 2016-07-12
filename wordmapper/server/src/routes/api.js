@@ -53,19 +53,53 @@ router.get('/auth/verify', ensureAuthenticated(), function(req, res) {
 // Alignments Endpoint.
 router.route('/alignments')
 .get(ensureAuthenticated(), sourcesRequired, function(req, res) {
-	res.json({ code: 200, message: "Fetched alignments", data: [] });
+	var sources = req.query.sources.split(',');
+	repository.fetchAlignments(req.user.id, sources).then(function(data) {
+		winston.log("fetched alignments", data);
+		res.json({ code: 200, message: "Fetched alignments", data: data });
+	}).catch(function(err) {
+		winston.error("error saving alignments: ", err);
+		res.json({ code: 500, message: "Error fetching alignments",  error: err.message});
+	});
 })
 .delete(ensureAuthenticated(), sourcesRequired, function(req, res) {
-	res.json({ code: 204, message: "Deleted alignments"});
+	var sources = req.query.sources.split(',');
+	repository.deleteAlignments(req.user.id, sources).then(function() {
+		winston.log("deleted alignments");
+		res.json({ code: 204, message: "Deleted alignments" });
+	}).catch(function(err) {
+		winston.error("error saving alignments: ", err);
+		res.json({ code: 500, message: "Error deleting alignments",  error: err.message});
+	});
 })
 .post(ensureAuthenticated(), function(req, res) {
-	winston.info("post /alignments", [req.user, req.body]);
 	repository.saveAlignments(req.user.id, req.body).then(function() {
 		winston.log("saved alignments");
 		res.json({ code: 201, message: "Saved alignments" });
 	}).catch(function(err) {
 		winston.error("error saving alignments: ", err);
 		res.json({ code: 500, message: "Error saving alignments",  error: err.message});
+	});
+});
+
+// Sources Endpoint.
+router.route('/sources')
+.get(ensureAuthenticated(), function(req, res) {
+	var hashes = ('hashes' in req.query ? req.query.hashes : '').split(',');
+	repository.fetchSources(hashes).then(function(data) {
+		res.json({ code: 200, message: "Fetched sources", data: data });
+	}).catch(function(err) {
+		winston.error("error fetching sources: ", err);
+		res.json({ code: 500, message: "Error saving sources",  error: err.message});
+	});
+})
+.post(ensureAuthenticated(), function(req, res) {
+	var sources = ('sources' in req.body ? req.body.sources || [] : []);
+	repository.saveSources(sources).then(function(data) {
+		res.json({ code: 201, message: "Saved sources", data: data });
+	}).catch(function(err) {
+		winston.error("error saving sources: ", err);
+		res.json({ code: 500, message: "Error saving sources",  error: err.message});
 	});
 });
 
