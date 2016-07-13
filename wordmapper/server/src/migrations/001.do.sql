@@ -1,10 +1,5 @@
------------------------------------------------------------------------
--- PSQL SETTINGS
 SET client_min_messages TO WARNING;
 
------------------------------------------------------------------------
--- CREATE TABLES
-DROP TABLE IF EXISTS user_account CASCADE;
 CREATE TABLE user_account (
 	id serial PRIMARY KEY,
 	email text not null UNIQUE,
@@ -13,20 +8,17 @@ CREATE TABLE user_account (
 	created timestamp default current_timestamp
 );
 
-DROP TABLE IF EXISTS user_admin CASCADE;
 CREATE TABLE user_admin (
-  email text not null PRIMARY KEY,
-  created timestamp default current_timestamp
+	email text not null PRIMARY KEY,
+	created timestamp default current_timestamp
 );
 
-DROP TABLE IF EXISTS page CASCADE;
 CREATE TABLE page (
 	id serial PRIMARY KEY,
 	url text not null,
 	created timestamp default current_timestamp
 );
 
-DROP TABLE IF EXISTS source CASCADE;
 CREATE TABLE source (
 	id serial PRIMARY KEY,
 	hash char(40) not null UNIQUE,
@@ -35,14 +27,12 @@ CREATE TABLE source (
 	created timestamp default current_timestamp
 );
 
-DROP TABLE IF EXISTS page_source CASCADE;
 CREATE TABLE page_source (
 	id serial PRIMARY KEY,
 	page_id integer not null REFERENCES page(id) ON DELETE CASCADE,
 	source_id integer not null REFERENCES source(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS alignment CASCADE;
 CREATE TABLE alignment (
 	id serial PRIMARY KEY,
 	user_id integer REFERENCES user_account(id) ON DELETE CASCADE,
@@ -51,7 +41,6 @@ CREATE TABLE alignment (
 	updated timestamp
 );
 
-DROP TABLE IF EXISTS word CASCADE;
 CREATE TABLE word (
 	id serial PRIMARY KEY,
 	alignment_id integer not null REFERENCES alignment(id) ON DELETE CASCADE,
@@ -60,7 +49,9 @@ CREATE TABLE word (
 	word_value text not null
 );
 
-CREATE OR REPLACE VIEW user_account_view 
-AS SELECT u.*, (CASE WHEN a.email IS NOT NULL THEN TRUE ELSE FALSE END) AS is_admin
+CREATE OR REPLACE VIEW user_account_view AS 
+SELECT 
+	u.*, 
+	(CASE WHEN a.email IS NOT NULL THEN TRUE ELSE FALSE END) AS is_admin
 FROM user_account u
 LEFT OUTER JOIN (SELECT email FROM user_admin) a ON (u.email = a.email);
