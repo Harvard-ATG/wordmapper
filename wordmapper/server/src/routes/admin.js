@@ -12,7 +12,7 @@ var ensureAuthorized = function(req, res, next) {
 var ensureAuth = [ensureAuthenticated, ensureAuthorized];
 
 router.get('/', ensureAuth, function(req, res) {
-	res.send('hooray! welcome to our admin interface!')
+	res.render('admin_home');
 });
 
 module.exports = router;

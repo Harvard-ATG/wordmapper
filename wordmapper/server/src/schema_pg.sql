@@ -9,7 +9,7 @@ CREATE TABLE user_account (
 	id serial PRIMARY KEY,
 	email text not null UNIQUE,
 	password text,
-  active boolean not null default true,
+	active boolean not null default true,
 	created timestamp default current_timestamp
 );
 
@@ -60,3 +60,7 @@ CREATE TABLE word (
 	word_value text not null
 );
 
+CREATE OR REPLACE VIEW user_account_view 
+AS SELECT u.*, (CASE WHEN a.email IS NOT NULL THEN TRUE ELSE FALSE END) AS is_admin
+FROM user_account u
+LEFT OUTER JOIN (SELECT email FROM user_admin) a ON (u.email = a.email);

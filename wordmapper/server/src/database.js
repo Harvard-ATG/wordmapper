@@ -15,17 +15,17 @@ function sql(file) {
 
 var users = {
 	getAllUsers: function() {
-		return db.any("select * from user_account");
+		return db.any("select * from user_account_view");
 	},
 	getUserCount: function() {
 		return db.one("select count(id) as count from user_account");
 	},
 	getUserByEmail: function(email) {
-		var query = 'select * from user_account where email=${email}';
+		var query = 'select * from user_account_view where email=${email}';
 		return db.one(query, {email: email});
 	},
 	getUserById: function(id) {
-		var query = 'select * from user_account where id=${id}';
+		var query = 'select * from user_account_view where id=${id}';
 		return db.one(query, {id: id});
 	},
 	createUser: function(email, password) {
