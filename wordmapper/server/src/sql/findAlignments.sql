@@ -4,6 +4,7 @@ SELECT
   ,a.comment AS comment
   ,w.word_index AS word_index
   ,w.word_value AS word_value
+  ,w.id AS word_id
   ,s.hash AS source_hash
   ,s.id AS source_id
 FROM alignment a

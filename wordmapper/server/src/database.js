@@ -69,7 +69,7 @@ var users = {
 
 var alignments = {
 	getAllAlignments: function() {
-		var query = sql('./sql/findAlignments.sql');
+		var query = sql('./sql/findAlignments.sql').query + ' ORDER BY a.id';
 		return db.any(query);
 	},
 	getAlignmentsByUser: function(userId, options) {
@@ -86,7 +86,7 @@ var alignments = {
 			params.sources = sources;
 		}
 
-		query += ' WHERE ' + conds.join(" AND ");
+		query += ' WHERE ' + conds.join(" AND ") + ' ORDER BY a.id';
 
 		return db.any(query, params);
 	},
@@ -108,6 +108,7 @@ var alignments = {
 		}, alignments.length);
 	
 		winston.debug("createAlignments", userId, "total inserts", totalInserts);
+		winston.debug("alignments: ", alignments);
 
 		return db.tx(function(t1) {
 			var trackWords = {alignmentIndex: 0, wordIndex: 0};

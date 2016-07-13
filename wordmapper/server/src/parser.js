@@ -99,7 +99,7 @@ AlignmentsParser.prototype._parse = function() {
     var comments = alignment.data.filter(typeEquals('comment')).map(function(comment) {
       return comment.data.text;
     });
-    var comment = comments.join(" "); // coalesce multiple comments, since we only support *one* comment at this time
+    var comment = comments.join(" ").trim(); // coalesce multiple comments, since we only support *one* comment at this time
     return {
       comment: comment,
       words: words
