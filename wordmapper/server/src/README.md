@@ -12,12 +12,7 @@ Migrations are simple SQL files with "do" and "undo" for each step up/down. Uses
 
 ```sh
 $ node ./migrate.js max   # migrate to the latest version
-```
-
-Or migrate up or down to a specific version:
-
-```sh
-$ node ./migrate.js 001
+$ node ./migrate.js 001   # migrate to a specific version
 ```
 
 ## API Endpoints
