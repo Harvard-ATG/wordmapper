@@ -22,7 +22,7 @@ module.exports = {
 			var sources = rows.map(function(row) { return row.id; });
 			return database.alignments.deleteAlignmentsByUser(userId, sources);
 		}).then(function() {
-			return database.alignments.createAlignments({userId: userId, alignments: parser.alignments});
+			return database.alignments.createAlignments(userId, parser.alignments);
 		});
 	},
 	saveSources: function(sources) {

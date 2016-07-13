@@ -10,7 +10,7 @@ var db = pgp(config.database);
 
 // Helper for linking to external query files: 
 function sql(file) {
-    return new pgp.QueryFile('./wordmapper/server/src/'+file, {minify: true});
+	return new pgp.QueryFile('./wordmapper/server/src/sql/'+file, {minify: true});
 }
 
 var users = {
@@ -69,7 +69,7 @@ var users = {
 
 var alignments = {
 	getAllAlignments: function() {
-		var query = sql('./sql/findAlignments.sql').query + ' ORDER BY a.id';
+		var query = sql('findAlignments.sql').query + ' ORDER BY a.id';
 		return db.any(query);
 	},
 	getAlignmentsByUser: function(userId, options) {
@@ -77,7 +77,7 @@ var alignments = {
 			throw "Missing userId parameter";
 		}
 		var sources = options.sources; // optional
-		var query = sql('./sql/findAlignments.sql').query;
+		var query = sql('findAlignments.sql').query;
 		var params = {userId: userId};
 		var conds = ['user_id = ${userId}'];
 
@@ -97,12 +97,10 @@ var alignments = {
 		if (!sources) {
 			throw "Missing sources parameter";
 		}
-		var query = sql('./sql/deleteAlignments.sql').query;
+		var query = sql('deleteAlignments.sql').query;
 		return db.none(query, {userId: userId, sources: sources});
 	},
-	createAlignments: function(options) {
-		var userId = options.userId;
-		var alignments = options.alignments || [];
+	createAlignments: function(userId, alignments) {
 		var totalInserts = alignments.reduce(function(total, a) {
 			return total + a.words.length;
 		}, alignments.length);
