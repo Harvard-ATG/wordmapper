@@ -43,16 +43,10 @@ $ gulp build     # build the client-side javascript
 $ gulp migrate   # run database migrations to setup the schema
 ```
 
-Start the NodeJS web server:
+Start the NodeJS web server (configuration can be specified via [dotenv](https://www.npmjs.com/package/dotenv) in `dotenv/`):
 
 ```sh
-$ node server.js
-```
-
-Or alternatively, with a [dotenv](https://www.npmjs.com/package/dotenv) configuration that you've created in the `dotenv/` folder:
-
-```sh
-$ node -r dotenv/config server.js dotenv_config_path=./dotenv/.env.local
+$ node --require dotenv/config server.js dotenv_config_path=./dotenv/vagrant.env
 ```
 
 Watch your client-side JS files so they're automatically rebuilt whenever they are modified:
