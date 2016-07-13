@@ -105,6 +105,13 @@ AlignmentsParser.prototype._parse = function() {
       words: words
     };
   });
+
+	this.source_hashes = Object.keys(this.alignments.reduce(function(dict, alignment) {
+		alignment.words.forEach(function(word) {
+			dict[word.source] = true;
+		});
+		return dict;
+	}, {}));
   
   this.parsed = true;
 };
