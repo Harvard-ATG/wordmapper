@@ -55,8 +55,8 @@ DROP TABLE IF EXISTS word CASCADE;
 CREATE TABLE word (
 	id serial PRIMARY KEY,
 	alignment_id integer not null REFERENCES alignment(id) ON DELETE CASCADE,
-  source_id integer not null REFERENCES source(id) ON DELETE RESTRICT,
+	source_id integer not null REFERENCES source(id) ON DELETE RESTRICT,
 	word_index integer not null CONSTRAINT index_check CHECK (word_index >= 0),
-  word_value text not null
+	word_value text not null
 );
 
