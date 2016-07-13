@@ -3,4 +3,4 @@
 /node_modules
 /wordmapper/client/dist/
 !/wordmapper/client/dist/empty
-.env
+.env*

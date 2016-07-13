@@ -49,6 +49,12 @@ Start the NodeJS web server:
 $ node server.js
 ```
 
+Or alternatively, with a dotenv configuration that you've created in the `dotenv/` folder:
+
+```sh
+$ node -r dotenv/config server.js dotenv_config_path=./dotenv/.env.local
+```
+
 Watch your client-side JS files so they're automatically rebuilt whenever they are modified:
 
 ```sh
