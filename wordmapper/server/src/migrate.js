@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var postgrator = require('postgrator');
 var zpad = require('zpad');
 var config = require('./config');
@@ -10,7 +12,6 @@ postgrator.setConfig({
 });
 
 var version = (process.argv[2] || '').trim();
-console.log("got version: ", version);
 if(version === "" || (version !== "max" && isNaN(parseInt(version,10)))) {
 	console.error("Must specify a migration version number or 'max' to migrate.");
 	process.exit(1);

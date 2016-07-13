@@ -5,7 +5,8 @@
  * USAGE:
  * 
  *    $ gulp build -- Build the JS using webpack
- *    $ gulp watch -- Watch the JS files and automatically rebuild (via webpack).
+ *    $ gulp watch -- Watch the JS client files and automatically rebuild (via webpack).
+ *    $ gulp migrate -- Migrate to the latest version of the server database 
  *    $ gulp test -- Run the JS unit tests
  *
  * NOTES:
@@ -32,6 +33,17 @@ gulp.task('copy', ['webpack'], function() {
 });
 
 gulp.task('build', ['webpack', 'copy']);
+
+gulp.task('migrate', function(done) {
+  exec('node ./wordmapper/server/src/migrate.js max', function(err, stdout, stderr) {
+    if (err) {
+      console.error(err);
+      return done(err);
+    }
+    console.log(stdout);
+    done();
+  });
+});
 
 gulp.task('testclient', function (done) {
   // This is equivalent to shell command:

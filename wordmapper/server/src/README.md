@@ -6,9 +6,15 @@ The server has 3 parts:
 2. An admin interface to manage users.
 3. An API that the client tool uses in order to persist alignments on source texts.
 
-## Migrations
+## Database Migrations
 
 Migrations are simple SQL files with "do" and "undo" for each step up/down. Uses [postgrator](https://github.com/rickbergfalk/postgrator) to run the migrations via the *migrate.js* script.
+
+```sh
+$ node ./migrate.js max   # migrate to the latest version
+```
+
+Or migrate up or down to a specific version:
 
 ```sh
 $ node ./migrate.js 001

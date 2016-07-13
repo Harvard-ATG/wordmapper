@@ -35,15 +35,15 @@ The alternative solution would be to create a browser extension or create a web 
 Setup your environment:
 
 ```sh
-$ vagrant up
-$ vagrant ssh
-$ cd /vagrant
-$ npm install
-$ export PATH=/vagrant/node_modules/.bin:$PATH
-$ gulp build
+$ vagrant up     # start virtual machine
+$ vagrant ssh    # login to virtual machine
+$ cd /vagrant    # change to the shared directory
+$ npm install    # install node depdencies
+$ gulp build     # build the client-side javascript
+$ gulp migrate   # run database migrations to setup the schema
 ```
 
-Start the nodejs web server:
+Start the NodeJS web server:
 
 ```sh
 $ node server.js
@@ -55,13 +55,13 @@ Install bookmarklet in your browser by creating a new bookmark and copying this 
 javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:8000/static/js/bookmarklet.js';})();
 ```
 
-You are now ready to develop locally. You'll want to `gulp watch` your JS files as you develop so they're automatically rebuilt:
+Watch your client-side JS files so they're automatically rebuilt whenever they are modified:
 
 ```sh
 $ gulp watch
 ```
 
-And you'll want to run the unit tests: 
+Run unit tests:
 
 - **Client-side unit tests:** 
     - `$ gulp testclient` or directly via karma:
@@ -72,8 +72,7 @@ And you'll want to run the unit tests:
 - **All unit tests:** 
     - `gulp test`
 
-
-### Testing
+### Testing the Bookmarklet 
 
 1. Ars Medica:
     - [Ars Medica 10 arabic/greek](http://www.graeco-arabic-studies.org/compare-texts/work/ars-medica-2/left/1/right/2/section/10/active/2%2C1.html). 
