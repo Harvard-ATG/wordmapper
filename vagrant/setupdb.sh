@@ -1,11 +1,15 @@
 #!/bin/bash
 
-USER=$(whoami)
+DB_USER=$(whoami)
+DB_PASSWORD=$DB_USER
+DB_NAME=wordmapper
 BASEDIR=/vagrant
-PGPASSWORD=$USER
 
 # Create postgres user + db 
-sudo -u postgres psql -c "create user \"$USER\" with password '$PGPASSWORD'"
-sudo -u postgres psql -c "create database \"wordmapper\" with owner \"$USER\" encoding='utf8' template template0"
+sudo -u postgres psql -c "create user \"$DB_USER\" with password '$DB_PASSWORD'"
+sudo -u postgres psql -c "create database \"$DB_NAME\" with owner \"$DB_USER\" encoding='utf8' template template0"
 sudo service postgresql restart
-psql -U $USER -d wordmapper -f $BASEDIR/wordmapper/server/schema_pg.sql
+
+# Run migrations
+export DATABASE_URL=postgres://$DB_USER:$DB_PASSWORD@localhost:5432/$DB_NAME
+node $BASEDIR/wordmapper/server/src/migrate.js max
