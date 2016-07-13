@@ -16,6 +16,6 @@ before_script:
     - "export PATH=$(pwd)/node_modules/.bin:$PATH"
 script: 
     - istanbul cover --root wordmapper/server --include-all-sources jasmine JASMINE_CONFIG_PATH=jasmine.server.json
-    - LCOV_INFO=./coverage/lcov.info; if [ -e $LCOV_INFO ] && [ -s $LCOV_INFO ]; then cat $LCOV_INFO | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage; fi
+    - LCOV_INFO=./coverage/lcov.info; if [ -e $LCOV_INFO ] && [ -s $LCOV_INFO ]; then cat $LCOV_INFO | ./node_modules/coveralls/bin/coveralls.js; fi
     - karma start --single-run
-    - LCOV_INFO=./coverage/report-lcov/lcov.info; if [ -e $LCOV_INFO ] && [ -s $LCOV_INFO ]; then cat $LCOV_INFO | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage; fi
+    - LCOV_INFO=./coverage/report-lcov/lcov.info; if [ -e $LCOV_INFO ] && [ -s $LCOV_INFO ]; then cat $LCOV_INFO | ./node_modules/coveralls/bin/coveralls.js; fi
