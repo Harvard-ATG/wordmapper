@@ -49,12 +49,6 @@ Start the NodeJS web server:
 $ node server.js
 ```
 
-Install bookmarklet in your browser by creating a new bookmark and copying this code into the URL field:
-
-```javascript
-javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:8000/static/js/bookmarklet.js';})();
-```
-
 Watch your client-side JS files so they're automatically rebuilt whenever they are modified:
 
 ```sh
@@ -71,6 +65,12 @@ Run unit tests:
     - `$ jasmine JASMINE_CONFIG_PATH=jasmine.server.json`
 - **All unit tests:** 
     - `gulp test`
+
+Install bookmarklet in your browser by creating a new bookmark and copying this code into the URL field:
+
+```javascript
+javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:8000/static/js/bookmarklet.js';})();
+```
 
 ### Testing the Bookmarklet 
 
