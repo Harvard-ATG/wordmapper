@@ -49,7 +49,7 @@ Start the NodeJS web server:
 $ node server.js
 ```
 
-Or alternatively, with a dotenv configuration that you've created in the `dotenv/` folder:
+Or alternatively, with a [dotenv](https://www.npmjs.com/package/dotenv) configuration that you've created in the `dotenv/` folder:
 
 ```sh
 $ node -r dotenv/config server.js dotenv_config_path=./dotenv/.env.local
