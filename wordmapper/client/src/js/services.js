@@ -101,7 +101,13 @@ var SettingsService = {
     },
     'www.graeco-arabic-studies.org': {
       'sourceSelector': '.textboxcontent'
-    }
+		},
+		'sites.google.com': {
+      'sourceSelector': '.textboxcontent'
+		},
+		'canvas.harvard.edu': {
+      'sourceSelector': '.textboxcontent'
+		}
   },
   get: function(siteContext) {
     var settings = false;
