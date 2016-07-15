@@ -96,7 +96,7 @@
 	exports.push([module.id, "@import url(http://fontawesome.io/assets/font-awesome/css/font-awesome.css);", ""]);
 
 	// module
-	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper textarea {\n    padding: 0.5em;\n    background-color: rgb(255,255,224);\n    -webkit-transition: background-color 0.30s ease-in-out;\n    -moz-transition: background-color 0.30s ease-in-out;\n    -ms-transition: background-color 0.30s ease-in-out;\n    -o-transition: background-color 0.30s ease-in-out;\n    outline: none;\n}\n.wordmapper textarea:focus {\n    background-color: rgb(255,255,164);\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    opacity: 0.75;\n    background-color: #000;\n    z-index: 1002;\n}\n.wordmapper-panel:hover {\n    opacity: 0.9;\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.98;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n    z-index: 1001;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 11px;\n    background: #333;\n    background: rgba(0,0,0,.8);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(alt);\n    left: 20%;\n    padding: 5px 15px;\n    position: absolute;\n    width: 220px;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-table td.words,\n.wordmapper-table td.comment {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #ddd;\n}\n.wordmapper-table span.word {\n    margin-right: 0.25em;\n}\n.wordmapper-table td.comment {\n    background-color: #eee;\n}\n.wordmapper-table td.comment span.comment,\n.wordmapper-table td.comment textarea.comment\n{\n    font-size: 14px;\n    color: #666;\n}\n.wordmapper-table td.comment textarea.comment {\n    border: 1px solid #ddd;\n    height: 75px;\n    min-width: 300px;\n    width: 90%;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n.wordmapper-import-messages .error {\n    color: red;\n}\n.wordmapper-import-messages .success {\n    color: green;\n}", ""]);
+	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper textarea {\n    padding: 0.5em;\n    background-color: rgb(255,255,224);\n    -webkit-transition: background-color 0.30s ease-in-out;\n    -moz-transition: background-color 0.30s ease-in-out;\n    -ms-transition: background-color 0.30s ease-in-out;\n    -o-transition: background-color 0.30s ease-in-out;\n    outline: none;\n}\n.wordmapper textarea:focus {\n    background-color: rgb(255,255,164);\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    background-color: rgba(0,0,0,.7);\n    z-index: 1002;\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.98;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n    z-index: 1001;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 12px;\n    background: #333;\n    background: rgba(0,0,0,.7);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(alt);\n    left: 0;\n    padding: 5px 15px;\n    position: absolute;\n    width: auto;\n    white-space: nowrap;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-table td.words,\n.wordmapper-table td.comment {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #ddd;\n}\n.wordmapper-table span.word {\n    margin-right: 0.25em;\n}\n.wordmapper-table td.comment {\n    background-color: #eee;\n}\n.wordmapper-table td.comment span.comment,\n.wordmapper-table td.comment textarea.comment\n{\n    font-size: 14px;\n    color: #666;\n}\n.wordmapper-table td.comment textarea.comment {\n    border: 1px solid #ddd;\n    height: 75px;\n    min-width: 300px;\n    width: 90%;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n.wordmapper-import-messages .error {\n    color: red;\n}\n.wordmapper-import-messages .success {\n    color: green;\n}\n", ""]);
 
 	// exports
 
@@ -491,6 +491,8 @@
 	Application.prototype.renderTo = function(selector) {
 	  $(function() {
 	    $(selector).append(this.render().el);
+	    $(selector).css('transition', 'margin 1s');
+	    $(selector).css('marginTop', this.panel.getHeight()+"px");
 	  }.bind(this));
 	  return this;
 	};
@@ -620,6 +622,12 @@
 	    },
 	    'www.graeco-arabic-studies.org': {
 	      'sourceSelector': '.textboxcontent'
+	    },
+	    'sites.google.com': {
+	      'sourceSelector': '.textboxcontent'
+	    },
+	    'canvas.harvard.edu': {
+	      'sourceSelector': '.textboxcontent'
 	    }
 	  },
 	  get: function(siteContext) {
@@ -722,6 +730,7 @@
 	  LocalStorageService: LocalStorageService,
 	  SettingsService: SettingsService
 	};
+
 
 /***/ },
 /* 10 */
@@ -1168,18 +1177,20 @@
 	    return this.makeSpan(word, this.nextWordIndex(), sourceIndex);
 	  }.bind(this);
 
-	  var spans = this.textToWords(textNode.nodeValue).map(makeSpan);
-
-	  var span = spans.reduce(function(parentSpan, currentSpan, index) {
-	    parentSpan.appendChild(currentSpan);
-	    parentSpan.appendChild(document.createTextNode(" "));
+	  var strings = this.splitText(textNode.nodeValue);
+	  var span = strings.reduce(function(parentSpan, str, index) {
+	    if(/\s+/.test(str)) {
+	      parentSpan.appendChild(document.createTextNode(str));
+	    } else {
+	      parentSpan.appendChild(makeSpan(str));
+	    }
 	    return parentSpan;
 	  }, document.createElement("span"));
 
 	  textNode.parentNode.replaceChild(span, textNode);
 	};
-	Source.prototype.textToWords = function(text) {
-	  return text.split(/\s+/).filter(function(word) {
+	Source.prototype.splitText = function(text) {
+	  return text.split(/(\s+)/).filter(function(word) {
 	    return word.length > 0;
 	  });
 	};
@@ -1199,6 +1210,7 @@
 	};
 
 	module.exports = Source;
+
 
 /***/ },
 /* 17 */
@@ -3285,8 +3297,12 @@
 	  this.el.html(templates.panel());
 	  return this;
 	};
+	Panel.prototype.getHeight = function() {
+	  return this.el.children().outerHeight();
+	};
 
 	module.exports = Panel;
+
 
 /***/ },
 /* 26 */
@@ -3304,12 +3320,14 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
-	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n</div>\n';
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
+	obj || (obj = {});
+	var __t, __p = '';
+	with (obj) {
+	__p += '\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n</div>\n';
+
 	}
-	return __p;
+	return __p
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
@@ -19745,68 +19763,71 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
-	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/index.html -->\n';
-	 if (!alignments.isEmpty()) { 
-	__p+='\n<div style="margin: 0 0 1em 0;" popout-exclude >\n  <button name="action_comment" data-toggle-text="Edit Comments,Save Comments">Edit Comments</button>\n</div>\n';
-	 } 
-	__p+='\n\n<table class="wordmapper-table">\n  ';
-	 if (alignments.isEmpty()) { 
-	__p+='\n    <tr><td>No words have been aligned yet</td></tr>\n  ';
-	 } 
-	__p+='\n  ';
-	 _.forEach(indexData, function(data, index) { 
-	__p+='\n    <tr>\n      ';
-	 _.forEach(data.buckets, function(words, index, arr) { 
-	__p+='\n        <td class="words" ';
-	 if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') 
-	__p+='>\n        ';
-	 _.forEach(words, function(word) { 
-	__p+='\n          <span class="word" title="Word: '+
-	((__t=( word.index ))==null?'':_.escape(__t))+
-	' Source: '+
-	((__t=( word.source.index ))==null?'':_.escape(__t))+
-	'">'+
-	((__t=( word.value ))==null?'':_.escape(__t))+
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
+	obj || (obj = {});
+	var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+	function print() { __p += __j.call(arguments, '') }
+	with (obj) {
+	__p += '\n<!-- wordmapper/client/src/html/index.html -->\n';
+	 if (!alignments.isEmpty()) { ;
+	__p += '\n<div style="margin: 0 0 1em 0;" popout-exclude >\n  <button name="action_comment" data-toggle-text="Edit Comments,Save Comments">Edit Comments</button>\n</div>\n';
+	 } ;
+	__p += '\n\n<table class="wordmapper-table">\n  ';
+	 if (alignments.isEmpty()) { ;
+	__p += '\n    <tr><td>No words have been aligned yet</td></tr>\n  ';
+	 } ;
+	__p += '\n  ';
+	 _.forEach(indexData, function(data, index) { ;
+	__p += '\n    <tr>\n      ';
+	 _.forEach(data.buckets, function(words, index, arr) { ;
+	__p += '\n        <td class="words" ';
+	 if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') ;
+	__p += '>\n        ';
+	 _.forEach(words, function(word) { ;
+	__p += '\n          <span class="word" title="Word: ' +
+	__e( word.index ) +
+	' Source: ' +
+	__e( word.source.index ) +
+	'">' +
+	__e( word.value ) +
 	'</span>\n        ';
-	 }); 
-	__p+='\n        </td>\n      ';
-	 }); 
-	__p+='\n      ';
-	 if(commentsPosition == "right") { 
-	__p+='\n      <td class="comment">\n        <span class="comment">'+
-	((__t=( data.alignment.comment ))==null?'':_.escape(__t))+
-	'</span>\n        <textarea class="comment" name="comment'+
-	((__t=( index ))==null?'':__t)+
-	'" data-alignment="'+
-	((__t=( data.alignment.id ))==null?'':__t)+
-	'" placeholder="Add comment..." style="display:none">'+
-	((__t=( data.alignment.comment || '' ))==null?'':_.escape(__t))+
+	 }); ;
+	__p += '\n        </td>\n      ';
+	 }); ;
+	__p += '\n      ';
+	 if(commentsPosition == "right") { ;
+	__p += '\n      <td class="comment">\n        <span class="comment">' +
+	__e( data.alignment.comment ) +
+	'</span>\n        <textarea class="comment" name="comment' +
+	((__t = ( index )) == null ? '' : __t) +
+	'" data-alignment="' +
+	((__t = ( data.alignment.id )) == null ? '' : __t) +
+	'" placeholder="Add comment..." style="display:none">' +
+	__e( data.alignment.comment || '' ) +
 	'</textarea>\n      </td>\n      ';
-	 } 
-	__p+='\n    </tr>\n    ';
-	 if(commentsPosition == "bottom") { 
-	__p+='\n    <tr class="comment" ';
-	 print(data.alignment.comment?'':'style="display:none;"'); 
-	__p+=';>\n      <td class="comment" colspan="'+
-	((__t=( data.buckets.length ))==null?'':_.escape(__t))+
-	'">\n        <span class="comment">'+
-	((__t=( data.alignment.comment ))==null?'':_.escape(__t))+
-	'</span>\n        <textarea class="comment" name="comment'+
-	((__t=( index ))==null?'':__t)+
-	'" data-alignment="'+
-	((__t=( data.alignment.id ))==null?'':__t)+
-	'" placeholder="Add comment..." style="display:none">'+
-	((__t=( data.alignment.comment || '' ))==null?'':_.escape(__t))+
+	 } ;
+	__p += '\n    </tr>\n    ';
+	 if(commentsPosition == "bottom") { ;
+	__p += '\n    <tr class="comment" ';
+	 print(data.alignment.comment?'':'style="display:none;"'); ;
+	__p += ';>\n      <td class="comment" colspan="' +
+	__e( data.buckets.length ) +
+	'">\n        <span class="comment">' +
+	__e( data.alignment.comment ) +
+	'</span>\n        <textarea class="comment" name="comment' +
+	((__t = ( index )) == null ? '' : __t) +
+	'" data-alignment="' +
+	((__t = ( data.alignment.id )) == null ? '' : __t) +
+	'" placeholder="Add comment..." style="display:none">' +
+	__e( data.alignment.comment || '' ) +
 	'</textarea>\n      </td>\n    </tr>\n    ';
-	 } 
-	__p+='\n  ';
-	 }); 
-	__p+='\n</table>';
+	 } ;
+	__p += '\n  ';
+	 }); ;
+	__p += '\n</table>';
+
 	}
-	return __p;
+	return __p
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
@@ -19815,14 +19836,16 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
-	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/export.html -->\nExport data:\n<textarea name="export" class="json">'+
-	((__t=( importExport.export(true) ))==null?'':__t)+
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
+	obj || (obj = {});
+	var __t, __p = '';
+	with (obj) {
+	__p += '\n<!-- wordmapper/client/src/html/export.html -->\nExport data:\n<textarea name="export" class="json">' +
+	((__t = ( importExport.export(true) )) == null ? '' : __t) +
 	'</textarea>\n\nImport data:\n<textarea name="import" class="json"></textarea>\n<button class="primary wordmapper-import">Import</button>\n<span class="wordmapper-import-messages"></span>';
+
 	}
-	return __p;
+	return __p
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
@@ -19831,24 +19854,27 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
-	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/overlay.html -->\n<div class="wordmapper wordmapper-overlay '+
-	((__t=( cls ))==null?'':__t)+
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
+	obj || (obj = {});
+	var __t, __p = '', __j = Array.prototype.join;
+	function print() { __p += __j.call(arguments, '') }
+	with (obj) {
+	__p += '\n<!-- wordmapper/client/src/html/overlay.html -->\n<div class="wordmapper wordmapper-overlay ' +
+	((__t = ( cls )) == null ? '' : __t) +
 	'">\n  ';
-	 if(title) { 
-	__p+='\n    <h2>'+
-	((__t=( title ))==null?'':__t)+
+	 if(title) { ;
+	__p += '\n    <h2>' +
+	((__t = ( title )) == null ? '' : __t) +
 	'</h2>\n  ';
-	 } 
-	__p+='\n  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-overlay-content">\n  </div>\n  ';
-	 if (canPopout) { 
-	__p+='\n    <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>\n  ';
-	 } 
-	__p+='\n</div>';
+	 } ;
+	__p += '\n  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-overlay-content">\n  </div>\n  ';
+	 if (canPopout) { ;
+	__p += '\n    <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>\n  ';
+	 } ;
+	__p += '\n</div>';
+
 	}
-	return __p;
+	return __p
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
