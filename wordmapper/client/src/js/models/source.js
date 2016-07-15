@@ -68,18 +68,20 @@ Source.prototype.transformTextNode = function(sourceIndex, textNode) {
     return this.makeSpan(word, this.nextWordIndex(), sourceIndex);
   }.bind(this);
 
-  var spans = this.textToWords(textNode.nodeValue).map(makeSpan);
-
-  var span = spans.reduce(function(parentSpan, currentSpan, index) {
-    parentSpan.appendChild(currentSpan);
-    parentSpan.appendChild(document.createTextNode(" "));
+  var strings = this.splitText(textNode.nodeValue);
+  var span = strings.reduce(function(parentSpan, str, index) {
+    if(/\s+/.test(str)) {
+      parentSpan.appendChild(document.createTextNode(str));
+    } else {
+      parentSpan.appendChild(makeSpan(str));
+    }
     return parentSpan;
   }, document.createElement("span"));
 
   textNode.parentNode.replaceChild(span, textNode);
 };
-Source.prototype.textToWords = function(text) {
-  return text.split(/\s+/).filter(function(word) {
+Source.prototype.splitText = function(text) {
+  return text.split(/(\s+)/).filter(function(word) {
     return word.length > 0;
   });
 };
