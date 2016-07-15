@@ -56,15 +56,15 @@ Application.prototype.renderTo = function(selector) {
 };
 Application.prototype.saveData = function() {
   console.log("saving to storage");
-  var deferred = this.storage.save(this.alignments);
-  deferred.done(function() {
+  var promise = this.storage.save(this.alignments);
+  promise.done(function() {
     console.log("save completed");
   });
 };
 Application.prototype.loadData = function() {
   console.log("loading from storage");
-  var deferred = this.storage.load();
-  deferred.done(function(batch) {
+  var promise = this.storage.load();
+  promise.done(function(batch) {
     this.alignments.load(batch);
     console.log("load completed", batch);
   }.bind(this));

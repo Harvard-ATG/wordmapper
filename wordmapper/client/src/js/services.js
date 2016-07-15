@@ -10,13 +10,13 @@ var StorageService = function(options) {
 StorageService.prototype.load = function() {
   var deferred = $.Deferred();
   this._load(deferred);
-  return deferred;
+  return deferred.promise();
 };
 StorageService.prototype.save = function(obj) {
   var deferred = $.Deferred();
   var serialized = this._serialize(obj);
   this._save(deferred, serialized);
-  return deferred;
+  return deferred.promise();
 };
 StorageService.prototype.getDataKey = function() {
   var sourceHashes = this.sources.map(function(source) {
