@@ -1,10 +1,15 @@
 var _ = require('lodash');
+var config = require('config');
 
-var Settings = function() {
-  this.current = {
-    'apiBaseUrl': 'http://localhost:8000/api',
-    'registerUrl': 'http://localhost:8000/user/register'
-  };  
+var Settings = function(options) {
+  options = options || {};
+  ['apiBaseUrl', 'registerUrl'].forEach(function(key) {
+    if (!config.hasOwnProperty(key) || !config[key]) {
+      throw 'Error login environment configuration. Missing required key: ' + key;
+    }
+  });
+  this.current = _.assign({}, config, options);
+  console.log("settings", this, "config", config);
 };
 Settings.prototype.defaults = {
   '*': {

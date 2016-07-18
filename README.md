@@ -72,6 +72,21 @@ Install bookmarklet in your browser by creating a new bookmark and copying this 
 javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:8000/static/js/bookmarklet.js';})();
 ```
 
+### Deployment
+
+**Configuration Files**
+
+- Client config: `./wordmapper/client/config/{env}.js` (Default: `vagrant.env`)
+- Server configuration: `./dotenv/.env.{env}` (Default: `development.js`)
+
+**Deployment Steps**
+
+1. Create an environment-specific configuration for the client code: `./wordmapper/client/config/{env}.js`.
+2. Build the client using the specified configuration via the *NODE_ENV* environment variable: `$ NODE_ENV={env} gulp build`
+3. Create an environment-specific configuration for the server code: `./dotenv/.env.{env}`
+4. Run the server: `$ node --require dotenv/config server.js dotenv_config_path=./dotenv/.env.{env}`
+
+
 ### Testing the Bookmarklet 
 
 1. Ars Medica:

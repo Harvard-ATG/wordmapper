@@ -444,9 +444,9 @@
 	var services = __webpack_require__(9);
 	var models = __webpack_require__(10);
 	var Settings = __webpack_require__(26);
-	var PanelComponent = __webpack_require__(29);
-	var OverlayComponent = __webpack_require__(37);
-	var TextComponent = __webpack_require__(40);
+	var PanelComponent = __webpack_require__(30);
+	var OverlayComponent = __webpack_require__(38);
+	var TextComponent = __webpack_require__(41);
 
 	var Application = function() {
 	  this.init();
@@ -3297,12 +3297,17 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(27);
+	var config = __webpack_require__(29);
 
-	var Settings = function() {
-	  this.current = {
-	    'apiBaseUrl': 'http://localhost:8000/api',
-	    'registerUrl': 'http://localhost:8000/user/register'
-	  };  
+	var Settings = function(options) {
+	  options = options || {};
+	  ['apiBaseUrl', 'registerUrl'].forEach(function(key) {
+	    if (!config.hasOwnProperty(key) || !config[key]) {
+	      throw 'Error login environment configuration. Missing required key: ' + key;
+	    }
+	  });
+	  this.current = _.assign({}, config, options);
+	  console.log("settings", this, "config", config);
 	};
 	Settings.prototype.defaults = {
 	  '*': {
@@ -19771,12 +19776,21 @@
 
 /***/ },
 /* 29 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  apiBaseUrl: 'http://localhost:8000/api',
+	  registerUrl: 'http://localhost:8000/user/register'
+	};
+
+/***/ },
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(12);
-	var templates = __webpack_require__(30);
-	var LoginComponent = __webpack_require__(36);
+	var templates = __webpack_require__(31);
+	var LoginComponent = __webpack_require__(37);
 
 	var PanelComponent = function(options) {
 	  options = options || {};
@@ -19845,19 +19859,19 @@
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  'panel': __webpack_require__(31),
-	  'index': __webpack_require__(32),
-	  'export': __webpack_require__(33),
-	  'overlay': __webpack_require__(34),
-	  'login': __webpack_require__(35)
+	  'panel': __webpack_require__(32),
+	  'index': __webpack_require__(33),
+	  'export': __webpack_require__(34),
+	  'overlay': __webpack_require__(35),
+	  'login': __webpack_require__(36)
 	};
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(27);
@@ -19871,7 +19885,7 @@
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(27);
@@ -19941,7 +19955,7 @@
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(27);
@@ -19957,7 +19971,7 @@
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(27);
@@ -19983,7 +19997,7 @@
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(27);
@@ -20019,12 +20033,12 @@
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(12);
-	var templates = __webpack_require__(30);
+	var templates = __webpack_require__(31);
 
 	var LoginComponent = function(options) {
 	  options = options || {};
@@ -20102,14 +20116,14 @@
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(12);
-	var templates = __webpack_require__(30);
-	var IndexView = __webpack_require__(38);
-	var ExportView = __webpack_require__(39);
+	var templates = __webpack_require__(31);
+	var IndexView = __webpack_require__(39);
+	var ExportView = __webpack_require__(40);
 
 	var OverlayComponent = function(options) {
 	  this.alignments = options.alignments;
@@ -20216,11 +20230,11 @@
 	module.exports = OverlayComponent;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var templates = __webpack_require__(30);
+	var templates = __webpack_require__(31);
 
 	var IndexView = function(options) {
 	  this.alignments = options.alignments;
@@ -20317,11 +20331,11 @@
 
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var templates = __webpack_require__(30);
+	var templates = __webpack_require__(31);
 
 	var ExportView = function(options) {
 	  this.dismiss = options.dismiss;
@@ -20367,7 +20381,7 @@
 
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);

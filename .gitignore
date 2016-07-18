@@ -3,4 +3,6 @@
 /node_modules
 /wordmapper/client/dist/
 !/wordmapper/client/dist/empty
+/wordmapper/client/config/
+!/wordmapper/client/config/development.js
 .env*
