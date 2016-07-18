@@ -2,7 +2,7 @@ var $ = require('jquery');
 var events = require('../events.js');
 var models = require('../models.js');
 
-var TextBoxes = function(options) {
+var TextComponent = function(options) {
   this.selector = options.selector;
   this.alignments = options.alignments;
   this.sources = null;
@@ -12,7 +12,7 @@ var TextBoxes = function(options) {
   }, this);
   this.init();
 };
-TextBoxes.prototype.bindMethods = [
+TextComponent.prototype.bindMethods = [
   'onClickWord',
   'onMouseoverWord',
   'onMouseoutWord',
@@ -21,13 +21,13 @@ TextBoxes.prototype.bindMethods = [
   'clearHighlighted',
   'align'
 ];
-TextBoxes.prototype.init = function() {
+TextComponent.prototype.init = function() {
   this.sources = this.loadSources();
   this.transform();
   this.textBoxes = this.select();
   this.addListeners();
 };
-TextBoxes.prototype.addListeners = function() {
+TextComponent.prototype.addListeners = function() {
   this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
   this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
   this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
@@ -36,22 +36,22 @@ TextBoxes.prototype.addListeners = function() {
   events.hub.on(events.EVT.CLEAR_ALIGNMENTS, this.resetAlignments);
   events.hub.on(events.EVT.ALIGN, this.align);
 };
-TextBoxes.prototype.onClickWord = function(evt) {
+TextComponent.prototype.onClickWord = function(evt) {
   //console.log("click", evt.target);
   this.toggleHighlight(evt.target);
 };
-TextBoxes.prototype.onMouseoverWord = function(evt) {
+TextComponent.prototype.onMouseoverWord = function(evt) {
   //console.log("mouseover", evt.target);
   var spans = this.selectAlignedWith(evt.target);
   if (spans.length > 0) {
     this.addHighlight2(spans);
   }
 };
-TextBoxes.prototype.onMouseoutWord = function(evt) {
+TextComponent.prototype.onMouseoutWord = function(evt) {
   //console.log("mouseout", evt.target);
   this.clearHighlight2();
 };
-TextBoxes.prototype.align = function() {
+TextComponent.prototype.align = function() {
   var spans = this.selectHighlighted();
   if (spans.length > 0) {
     var words = models.Source.createWords(spans.toArray(), this.sources);
@@ -60,7 +60,7 @@ TextBoxes.prototype.align = function() {
   }
   this.clearHighlighted();
 };
-TextBoxes.prototype.updateAlignments = function() {
+TextComponent.prototype.updateAlignments = function() {
   var _this = this;
   var alignments = this.alignments.alignments;
 
@@ -77,76 +77,76 @@ TextBoxes.prototype.updateAlignments = function() {
     _this.addAligned(spans);
   });
 };
-TextBoxes.prototype.resetAlignments = function() {
+TextComponent.prototype.resetAlignments = function() {
   this.alignments.reset();
 };
-TextBoxes.prototype.addAligned = function(spans) {
+TextComponent.prototype.addAligned = function(spans) {
   return $(spans).addClass("aligned");
 };
-TextBoxes.prototype.toggleHighlight = function(spans) {
+TextComponent.prototype.toggleHighlight = function(spans) {
   var has_highlight = $(spans).hasClass('highlight');
   var action = (has_highlight ? 'removeHighlight' : 'addHighlight');
   this[action](spans);
 };
-TextBoxes.prototype.addHighlight = function(spans) {
+TextComponent.prototype.addHighlight = function(spans) {
   return $(spans).addClass("highlight");
 };
-TextBoxes.prototype.removeHighlight = function(spans) {
+TextComponent.prototype.removeHighlight = function(spans) {
   return $(spans).removeClass("highlight");
 };
-TextBoxes.prototype.addHighlight2 = function(spans) {
+TextComponent.prototype.addHighlight2 = function(spans) {
   return $(spans).addClass('highlight2');
 };
-TextBoxes.prototype.clearHighlight2 = function() {
+TextComponent.prototype.clearHighlight2 = function() {
   return this.textBoxes.find('.highlight2').removeClass('highlight2');
 };
-TextBoxes.prototype.clearHighlighted = function() {
+TextComponent.prototype.clearHighlighted = function() {
   return this.selectHighlighted().removeClass('highlight');
 };
-TextBoxes.prototype.clearAligned = function() {
+TextComponent.prototype.clearAligned = function() {
   return this.textBoxes.find('.aligned').removeClass('aligned');
 };
-TextBoxes.prototype.removeAligned = function(spans) {
+TextComponent.prototype.removeAligned = function(spans) {
   return $(spans).removeClass("aligned");
 };
-TextBoxes.prototype.selectHighlighted = function() {
+TextComponent.prototype.selectHighlighted = function() {
   return this.textBoxes.find('.highlight');
 };
-TextBoxes.prototype.selectAlignedWith = function(el) {
+TextComponent.prototype.selectAlignedWith = function(el) {
   return this.selectAlignment(el.dataset.alignment);
 };
-TextBoxes.prototype.selectAlignment = function(alignment_id) {
+TextComponent.prototype.selectAlignment = function(alignment_id) {
   return this.textBoxes.find('[data-alignment="'+alignment_id+'"]');
 };
-TextBoxes.prototype.selectAlignments = function() {
+TextComponent.prototype.selectAlignments = function() {
   return this.textBoxes.find('[data-alignment]');
 };
-TextBoxes.prototype.selectWord = function(word) {
+TextComponent.prototype.selectWord = function(word) {
   return this.textBoxes.find('[data-word="'+word.index+'"][data-source="'+word.source.index+'"]');
 };
-TextBoxes.prototype.selectWords = function(words) {
+TextComponent.prototype.selectWords = function(words) {
   var selector = words.map(function(word) {
     return '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
   }).join(", ");
   return this.textBoxes.find(selector);
 };
-TextBoxes.prototype.loadSources = function() {
+TextComponent.prototype.loadSources = function() {
   return this.select().toArray().map(this.createSource);
 };
-TextBoxes.prototype.createSource = function(el, index) {
+TextComponent.prototype.createSource = function(el, index) {
   return new models.Source.fromDOM(el, index);
 };
-TextBoxes.prototype.select = function() {
+TextComponent.prototype.select = function() {
   return $(this.selector);
 };
-TextBoxes.prototype.transform = function() {
+TextComponent.prototype.transform = function() {
   var textBoxes = this.select();
   this.sources.forEach(function(source, index) {
     this.replace(textBoxes[index], source.transform().copyElement());
   }, this);
 };
-TextBoxes.prototype.replace = function(textBox, el) {
+TextComponent.prototype.replace = function(textBox, el) {
   textBox.parentNode.replaceChild(el, textBox);
 };
 
-module.exports = TextBoxes;
+module.exports = TextComponent;

@@ -2,9 +2,9 @@ var $ = require('jquery');
 var services = require('../services.js');
 var models = require('../models.js');
 var Settings = require('../settings.js');
-var Panel = require('./panel.js');
-var Overlay = require('./overlay.js');
-var TextBoxes = require('./text_boxes.js');
+var PanelComponent = require('./panel.js');
+var OverlayComponent = require('./overlay.js');
+var TextComponent = require('./text.js');
 
 var Application = function() {
   this.init();
@@ -23,7 +23,7 @@ Application.prototype.init = function() {
   this.settings.load(this.siteContext);
 
   // components
-  this.boxes = new TextBoxes({
+  this.boxes = new TextComponent({
     alignments: this.alignments,
     selector: this.settings.getSourceSelector()
   });
@@ -32,11 +32,11 @@ Application.prototype.init = function() {
     alignments: this.alignments,
     sources: this.boxes.sources
   });
-  this.panel = new Panel({
+  this.panel = new PanelComponent({
     user: this.user,
     settings: this.settings
   });
-  this.overlay = new Overlay({
+  this.overlay = new OverlayComponent({
     alignments: this.alignments,
     importExport: this.importExport,
     sources: this.boxes.sources

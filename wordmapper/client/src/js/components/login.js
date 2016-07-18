@@ -41,26 +41,10 @@ LoginComponent.prototype.onClickLogin = function(evt) {
   var credentials = {};
   credentials.email = this.el.find('input[name=email]').val();
   credentials.password = this.el.find('input[name=password]').val();
-  this.authenticate(credentials);
-  evt.stopPropagation();
-};
-LoginComponent.prototype.onClickLogout = function(evt) {
-  this.user.reset();
-  this.render();
-  evt.stopPropagation();
-};
-LoginComponent.prototype.authenticate = function(credentials) {
-  var url = this.settings.getAPIBaseUrl() + '/auth/login';
-  var deferred = $.ajax({
-    dataType: "json",
-    method: 'POST',
-    url: url,
-    contentType: "application/json; charset=utf-8",
-    data: JSON.stringify(credentials)
-  });
-  deferred.done(function(response, textStatus, jqXHR) {
-    this.tplData.error = '';
+
+  this.authenticate(credentials).done(function(response, textStatus, jqXHR) {
     this.tplData.hidden = true;
+    this.tplData.error = '';
     this.user.update(response.data);
     this.render();
   }.bind(this)).fail(function(jqXHR, textStatus, errorThrown) {
@@ -71,6 +55,23 @@ LoginComponent.prototype.authenticate = function(credentials) {
     this.tplData.error = errStr;
     this.render();
   }.bind(this));
+  
+  evt.stopPropagation();
+};
+LoginComponent.prototype.onClickLogout = function(evt) {
+  this.user.reset();
+  this.render();
+  evt.stopPropagation();
+};
+LoginComponent.prototype.authenticate = function(credentials) {
+  var url = this.settings.getAPIBaseUrl() + '/auth/login';
+  return $.ajax({
+    dataType: "json",
+    method: 'POST',
+    url: url,
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify(credentials)
+  });
 };
 
 module.exports = LoginComponent;

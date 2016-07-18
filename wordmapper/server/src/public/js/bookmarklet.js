@@ -444,9 +444,9 @@
 	var services = __webpack_require__(9);
 	var models = __webpack_require__(10);
 	var Settings = __webpack_require__(26);
-	var Panel = __webpack_require__(29);
-	var Overlay = __webpack_require__(37);
-	var TextBoxes = __webpack_require__(40);
+	var PanelComponent = __webpack_require__(29);
+	var OverlayComponent = __webpack_require__(37);
+	var TextComponent = __webpack_require__(40);
 
 	var Application = function() {
 	  this.init();
@@ -465,7 +465,7 @@
 	  this.settings.load(this.siteContext);
 
 	  // components
-	  this.boxes = new TextBoxes({
+	  this.boxes = new TextComponent({
 	    alignments: this.alignments,
 	    selector: this.settings.getSourceSelector()
 	  });
@@ -474,11 +474,11 @@
 	    alignments: this.alignments,
 	    sources: this.boxes.sources
 	  });
-	  this.panel = new Panel({
+	  this.panel = new PanelComponent({
 	    user: this.user,
 	    settings: this.settings
 	  });
-	  this.overlay = new Overlay({
+	  this.overlay = new OverlayComponent({
 	    alignments: this.alignments,
 	    importExport: this.importExport,
 	    sources: this.boxes.sources
@@ -19778,7 +19778,7 @@
 	var templates = __webpack_require__(30);
 	var LoginComponent = __webpack_require__(36);
 
-	var Panel = function(options) {
+	var PanelComponent = function(options) {
 	  options = options || {};
 	  this.el = null;
 	  this.user = options.user;
@@ -19791,9 +19791,10 @@
 	    user: this.user
 	  };
 	  this.onClickButton = this.onClickButton.bind(this);
+	  this.updateLoginButton = this.updateLoginButton.bind(this);
 	  this.init();
 	};
-	Panel.prototype.buttonEvent = {
+	PanelComponent.prototype.buttonEvent = {
 	  'align': events.EVT.ALIGN,
 	  'clear_highlights': events.EVT.CLEAR_HIGHLIGHTS,
 	  'clear_alignments': events.EVT.CLEAR_ALIGNMENTS,
@@ -19801,14 +19802,15 @@
 	  'export': events.EVT.EXPORT,
 	  'login': events.EVT.LOGIN
 	};
-	Panel.prototype.init = function() {
+	PanelComponent.prototype.init = function() {
 	  this.el = $('<div>');
 	  this.addListeners();
 	};
-	Panel.prototype.addListeners = function() {
+	PanelComponent.prototype.addListeners = function() {
 	  this.el.on('click', this.onClickButton);
+	  this.user.on('change', this.updateLoginButton);
 	};
-	Panel.prototype.onClickButton = function(evt) {
+	PanelComponent.prototype.onClickButton = function(evt) {
 	  var t = evt.target, can_trigger_event = true;
 	  
 	  // this handles the case where an icon is clicked (get the parent button)
@@ -19826,17 +19828,20 @@
 	    }
 	  }  
 	};
-	Panel.prototype.render = function() {
-	  console.log("render panel");
+	PanelComponent.prototype.render = function() {
 	  this.el.html(templates.panel(this.tplData));
 	  this.el.find('.wordmapper-panel').append(this.loginComponent.render().el);
 	  return this;
 	};
-	Panel.prototype.getHeight = function() {
+	PanelComponent.prototype.getHeight = function() {
 	  return this.el.children().outerHeight();
 	};
+	PanelComponent.prototype.updateLoginButton = function() {
+	  var $btn = this.el.find('button[name=login]');
+	  $btn.find('span').text(this.user.isAuthenticated() ? this.user : 'Account');
+	};
 
-	module.exports = Panel;
+	module.exports = PanelComponent;
 
 
 /***/ },
@@ -19859,7 +19864,7 @@
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
 	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login"><i class="fa fa-user"></i> Account</button>\n  </div>\n</div>\n';
+	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login"><i class="fa fa-user"></i> <span>Account</span></button>\n  </div>\n</div>\n';
 	}
 	return __p;
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
@@ -20060,26 +20065,10 @@
 	  var credentials = {};
 	  credentials.email = this.el.find('input[name=email]').val();
 	  credentials.password = this.el.find('input[name=password]').val();
-	  this.authenticate(credentials);
-	  evt.stopPropagation();
-	};
-	LoginComponent.prototype.onClickLogout = function(evt) {
-	  this.user.reset();
-	  this.render();
-	  evt.stopPropagation();
-	};
-	LoginComponent.prototype.authenticate = function(credentials) {
-	  var url = this.settings.getAPIBaseUrl() + '/auth/login';
-	  var deferred = $.ajax({
-	    dataType: "json",
-	    method: 'POST',
-	    url: url,
-	    contentType: "application/json; charset=utf-8",
-	    data: JSON.stringify(credentials)
-	  });
-	  deferred.done(function(response, textStatus, jqXHR) {
-	    this.tplData.error = '';
+
+	  this.authenticate(credentials).done(function(response, textStatus, jqXHR) {
 	    this.tplData.hidden = true;
+	    this.tplData.error = '';
 	    this.user.update(response.data);
 	    this.render();
 	  }.bind(this)).fail(function(jqXHR, textStatus, errorThrown) {
@@ -20090,6 +20079,23 @@
 	    this.tplData.error = errStr;
 	    this.render();
 	  }.bind(this));
+	  
+	  evt.stopPropagation();
+	};
+	LoginComponent.prototype.onClickLogout = function(evt) {
+	  this.user.reset();
+	  this.render();
+	  evt.stopPropagation();
+	};
+	LoginComponent.prototype.authenticate = function(credentials) {
+	  var url = this.settings.getAPIBaseUrl() + '/auth/login';
+	  return $.ajax({
+	    dataType: "json",
+	    method: 'POST',
+	    url: url,
+	    contentType: "application/json; charset=utf-8",
+	    data: JSON.stringify(credentials)
+	  });
 	};
 
 	module.exports = LoginComponent;
@@ -20105,7 +20111,7 @@
 	var IndexView = __webpack_require__(38);
 	var ExportView = __webpack_require__(39);
 
-	var Overlay = function(options) {
+	var OverlayComponent = function(options) {
 	  this.alignments = options.alignments;
 	  this.importExport = options.importExport;
 	  this.sources = options.sources;
@@ -20125,11 +20131,11 @@
 
 	  this.init();
 	};
-	Overlay.prototype.init = function() {
+	OverlayComponent.prototype.init = function() {
 	  this.el = $("<div>").append('<div class="'+this.hiddenCls+'"></div>');
 	  this.addListeners();
 	};
-	Overlay.prototype.addListeners = function() {
+	OverlayComponent.prototype.addListeners = function() {
 	  events.hub.on(events.EVT.BUILD_INDEX, function() {
 	    this.setView(this.indexView).render();
 	  }.bind(this));
@@ -20141,10 +20147,10 @@
 	  this.el.on('click', '.wordmapper-popout', null, this.popout);
 	  this.el.on('click', '.wordmapper-dismiss', null, this.dismiss);
 	};
-	Overlay.prototype.visible = function() {
+	OverlayComponent.prototype.visible = function() {
 	  return this.el.andSelf().find('.' + this.hiddenCls).length === 0;
 	};
-	Overlay.prototype.render = function() {
+	OverlayComponent.prototype.render = function() {
 	  var hide = true; 
 	  if (this.visible()) {
 	    hide = (this.renderer && this.renderer === this.lastRenderer);
@@ -20169,14 +20175,14 @@
 	  this.lastRenderer = this.renderer;
 	  return this;
 	};
-	Overlay.prototype.setView = function(view) {
+	OverlayComponent.prototype.setView = function(view) {
 	  this.renderer = view;
 	  return this;
 	};
-	Overlay.prototype.dismiss = function() {
+	OverlayComponent.prototype.dismiss = function() {
 	  this.render();
 	};
-	Overlay.prototype.popout = function() {
+	OverlayComponent.prototype.popout = function() {
 	  var opts = [
 	    "toolbar=no",
 	    "location=no",
@@ -20207,7 +20213,7 @@
 	  }
 	};
 
-	module.exports = Overlay;
+	module.exports = OverlayComponent;
 
 /***/ },
 /* 38 */
@@ -20368,7 +20374,7 @@
 	var events = __webpack_require__(12);
 	var models = __webpack_require__(10);
 
-	var TextBoxes = function(options) {
+	var TextComponent = function(options) {
 	  this.selector = options.selector;
 	  this.alignments = options.alignments;
 	  this.sources = null;
@@ -20378,7 +20384,7 @@
 	  }, this);
 	  this.init();
 	};
-	TextBoxes.prototype.bindMethods = [
+	TextComponent.prototype.bindMethods = [
 	  'onClickWord',
 	  'onMouseoverWord',
 	  'onMouseoutWord',
@@ -20387,13 +20393,13 @@
 	  'clearHighlighted',
 	  'align'
 	];
-	TextBoxes.prototype.init = function() {
+	TextComponent.prototype.init = function() {
 	  this.sources = this.loadSources();
 	  this.transform();
 	  this.textBoxes = this.select();
 	  this.addListeners();
 	};
-	TextBoxes.prototype.addListeners = function() {
+	TextComponent.prototype.addListeners = function() {
 	  this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
 	  this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
 	  this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
@@ -20402,22 +20408,22 @@
 	  events.hub.on(events.EVT.CLEAR_ALIGNMENTS, this.resetAlignments);
 	  events.hub.on(events.EVT.ALIGN, this.align);
 	};
-	TextBoxes.prototype.onClickWord = function(evt) {
+	TextComponent.prototype.onClickWord = function(evt) {
 	  //console.log("click", evt.target);
 	  this.toggleHighlight(evt.target);
 	};
-	TextBoxes.prototype.onMouseoverWord = function(evt) {
+	TextComponent.prototype.onMouseoverWord = function(evt) {
 	  //console.log("mouseover", evt.target);
 	  var spans = this.selectAlignedWith(evt.target);
 	  if (spans.length > 0) {
 	    this.addHighlight2(spans);
 	  }
 	};
-	TextBoxes.prototype.onMouseoutWord = function(evt) {
+	TextComponent.prototype.onMouseoutWord = function(evt) {
 	  //console.log("mouseout", evt.target);
 	  this.clearHighlight2();
 	};
-	TextBoxes.prototype.align = function() {
+	TextComponent.prototype.align = function() {
 	  var spans = this.selectHighlighted();
 	  if (spans.length > 0) {
 	    var words = models.Source.createWords(spans.toArray(), this.sources);
@@ -20426,7 +20432,7 @@
 	  }
 	  this.clearHighlighted();
 	};
-	TextBoxes.prototype.updateAlignments = function() {
+	TextComponent.prototype.updateAlignments = function() {
 	  var _this = this;
 	  var alignments = this.alignments.alignments;
 
@@ -20443,79 +20449,79 @@
 	    _this.addAligned(spans);
 	  });
 	};
-	TextBoxes.prototype.resetAlignments = function() {
+	TextComponent.prototype.resetAlignments = function() {
 	  this.alignments.reset();
 	};
-	TextBoxes.prototype.addAligned = function(spans) {
+	TextComponent.prototype.addAligned = function(spans) {
 	  return $(spans).addClass("aligned");
 	};
-	TextBoxes.prototype.toggleHighlight = function(spans) {
+	TextComponent.prototype.toggleHighlight = function(spans) {
 	  var has_highlight = $(spans).hasClass('highlight');
 	  var action = (has_highlight ? 'removeHighlight' : 'addHighlight');
 	  this[action](spans);
 	};
-	TextBoxes.prototype.addHighlight = function(spans) {
+	TextComponent.prototype.addHighlight = function(spans) {
 	  return $(spans).addClass("highlight");
 	};
-	TextBoxes.prototype.removeHighlight = function(spans) {
+	TextComponent.prototype.removeHighlight = function(spans) {
 	  return $(spans).removeClass("highlight");
 	};
-	TextBoxes.prototype.addHighlight2 = function(spans) {
+	TextComponent.prototype.addHighlight2 = function(spans) {
 	  return $(spans).addClass('highlight2');
 	};
-	TextBoxes.prototype.clearHighlight2 = function() {
+	TextComponent.prototype.clearHighlight2 = function() {
 	  return this.textBoxes.find('.highlight2').removeClass('highlight2');
 	};
-	TextBoxes.prototype.clearHighlighted = function() {
+	TextComponent.prototype.clearHighlighted = function() {
 	  return this.selectHighlighted().removeClass('highlight');
 	};
-	TextBoxes.prototype.clearAligned = function() {
+	TextComponent.prototype.clearAligned = function() {
 	  return this.textBoxes.find('.aligned').removeClass('aligned');
 	};
-	TextBoxes.prototype.removeAligned = function(spans) {
+	TextComponent.prototype.removeAligned = function(spans) {
 	  return $(spans).removeClass("aligned");
 	};
-	TextBoxes.prototype.selectHighlighted = function() {
+	TextComponent.prototype.selectHighlighted = function() {
 	  return this.textBoxes.find('.highlight');
 	};
-	TextBoxes.prototype.selectAlignedWith = function(el) {
+	TextComponent.prototype.selectAlignedWith = function(el) {
 	  return this.selectAlignment(el.dataset.alignment);
 	};
-	TextBoxes.prototype.selectAlignment = function(alignment_id) {
+	TextComponent.prototype.selectAlignment = function(alignment_id) {
 	  return this.textBoxes.find('[data-alignment="'+alignment_id+'"]');
 	};
-	TextBoxes.prototype.selectAlignments = function() {
+	TextComponent.prototype.selectAlignments = function() {
 	  return this.textBoxes.find('[data-alignment]');
 	};
-	TextBoxes.prototype.selectWord = function(word) {
+	TextComponent.prototype.selectWord = function(word) {
 	  return this.textBoxes.find('[data-word="'+word.index+'"][data-source="'+word.source.index+'"]');
 	};
-	TextBoxes.prototype.selectWords = function(words) {
+	TextComponent.prototype.selectWords = function(words) {
 	  var selector = words.map(function(word) {
 	    return '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
 	  }).join(", ");
 	  return this.textBoxes.find(selector);
 	};
-	TextBoxes.prototype.loadSources = function() {
+	TextComponent.prototype.loadSources = function() {
 	  return this.select().toArray().map(this.createSource);
 	};
-	TextBoxes.prototype.createSource = function(el, index) {
+	TextComponent.prototype.createSource = function(el, index) {
 	  return new models.Source.fromDOM(el, index);
 	};
-	TextBoxes.prototype.select = function() {
+	TextComponent.prototype.select = function() {
 	  return $(this.selector);
 	};
-	TextBoxes.prototype.transform = function() {
+	TextComponent.prototype.transform = function() {
 	  var textBoxes = this.select();
 	  this.sources.forEach(function(source, index) {
 	    this.replace(textBoxes[index], source.transform().copyElement());
 	  }, this);
 	};
-	TextBoxes.prototype.replace = function(textBox, el) {
+	TextComponent.prototype.replace = function(textBox, el) {
 	  textBox.parentNode.replaceChild(el, textBox);
 	};
 
-	module.exports = TextBoxes;
+	module.exports = TextComponent;
 
 /***/ }
 /******/ ]);

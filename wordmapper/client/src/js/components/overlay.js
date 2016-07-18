@@ -4,7 +4,7 @@ var templates = require('../templates.js');
 var IndexView = require('./overlay/index_view.js');
 var ExportView = require('./overlay/export_view.js');
 
-var Overlay = function(options) {
+var OverlayComponent = function(options) {
   this.alignments = options.alignments;
   this.importExport = options.importExport;
   this.sources = options.sources;
@@ -24,11 +24,11 @@ var Overlay = function(options) {
 
   this.init();
 };
-Overlay.prototype.init = function() {
+OverlayComponent.prototype.init = function() {
   this.el = $("<div>").append('<div class="'+this.hiddenCls+'"></div>');
   this.addListeners();
 };
-Overlay.prototype.addListeners = function() {
+OverlayComponent.prototype.addListeners = function() {
   events.hub.on(events.EVT.BUILD_INDEX, function() {
     this.setView(this.indexView).render();
   }.bind(this));
@@ -40,10 +40,10 @@ Overlay.prototype.addListeners = function() {
   this.el.on('click', '.wordmapper-popout', null, this.popout);
   this.el.on('click', '.wordmapper-dismiss', null, this.dismiss);
 };
-Overlay.prototype.visible = function() {
+OverlayComponent.prototype.visible = function() {
   return this.el.andSelf().find('.' + this.hiddenCls).length === 0;
 };
-Overlay.prototype.render = function() {
+OverlayComponent.prototype.render = function() {
   var hide = true; 
   if (this.visible()) {
     hide = (this.renderer && this.renderer === this.lastRenderer);
@@ -68,14 +68,14 @@ Overlay.prototype.render = function() {
   this.lastRenderer = this.renderer;
   return this;
 };
-Overlay.prototype.setView = function(view) {
+OverlayComponent.prototype.setView = function(view) {
   this.renderer = view;
   return this;
 };
-Overlay.prototype.dismiss = function() {
+OverlayComponent.prototype.dismiss = function() {
   this.render();
 };
-Overlay.prototype.popout = function() {
+OverlayComponent.prototype.popout = function() {
   var opts = [
     "toolbar=no",
     "location=no",
@@ -106,4 +106,4 @@ Overlay.prototype.popout = function() {
   }
 };
 
-module.exports = Overlay;
+module.exports = OverlayComponent;
