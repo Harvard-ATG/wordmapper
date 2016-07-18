@@ -11,6 +11,7 @@ var Application = function() {
 Application.prototype.init = function() {
   this.el = $('<div>');
   this.panel = new Panel();
+	this.user = new models.User();
   this.alignments = new models.Alignments();
   this.siteContext = new models.SiteContext({
     id: window.location.hostname,
