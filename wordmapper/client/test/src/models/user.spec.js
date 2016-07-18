@@ -13,9 +13,24 @@ describe("User Model", function() {
 		var options = {id: 1, email: 'foo@bar.com'};
 		var user = new User(options);
 		expect(user.isAuthenticated()).toBeFalsy();
-		user.setToken("tokenbar");
+		user.update({token:"tokenbar"});
 		expect(user.token).toBe("tokenbar");
 		expect(user.isAuthenticated()).toBeTruthy();
+	});
+	it("should be updated", function() {
+		var data = { id: 123, email: 'foofoo@barbar.com', token: 'abc123' };
+		var user = new User();
+		spyOn(user, 'triggerChange');
+		expect(user.id).toBeFalsy();
+		expect(user.email).toBeFalsy();
+		expect(user.token).toBeFalsy();
+		expect(user.triggerChange).not.toHaveBeenCalled();
+
+		user.update(data);
+		expect(user.id).toBe(data.id);
+		expect(user.email).toBe(data.email);
+		expect(user.token).toBe(data.token);
+		expect(user.triggerChange).toHaveBeenCalled();
 	});
 	it("toString()", function() {
 		var options = {id: 1, email: 'foo@bar.com', token: 'tokenfoo'};
