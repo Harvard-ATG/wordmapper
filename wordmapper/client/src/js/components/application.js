@@ -1,6 +1,7 @@
 var $ = require('jquery');
 var services = require('../services.js');
 var models = require('../models.js');
+var Settings = require('../settings.js');
 var Panel = require('./panel.js');
 var Overlay = require('./overlay.js');
 var TextBoxes = require('./text_boxes.js');
@@ -10,32 +11,42 @@ var Application = function() {
 };
 Application.prototype.init = function() {
   this.el = $('<div>');
-  this.panel = new Panel();
+  
+  // models
 	this.user = new models.User();
   this.alignments = new models.Alignments();
   this.siteContext = new models.SiteContext({
     id: window.location.hostname,
     url: window.location.toString()
   });
-  this.settings = services.SettingsService.get(this.siteContext);
+  this.settings = new Settings();
+  this.settings.load(this.siteContext);
+
+  // components
   this.boxes = new TextBoxes({
     alignments: this.alignments,
-    selector: this.settings.sourceSelector
+    selector: this.settings.getSourceSelector()
   });
   this.importExport = new services.ImportExportService({
     siteContext: this.siteContext,
     alignments: this.alignments,
     sources: this.boxes.sources
   });
+  this.panel = new Panel({
+    user: this.user,
+    settings: this.settings
+  });
   this.overlay = new Overlay({
     alignments: this.alignments,
     importExport: this.importExport,
     sources: this.boxes.sources
   });
+
   this.storage = new services.LocalStorageService({
     siteContext: this.siteContext,
     sources: this.boxes.sources
   });
+
   this.loadData();
   this.addListeners();
 };
@@ -50,8 +61,7 @@ Application.prototype.render = function() {
 Application.prototype.renderTo = function(selector) {
   $(function() {
     $(selector).append(this.render().el);
-    $(selector).css('transition', 'margin 1s');
-    $(selector).css('marginTop', this.panel.getHeight()+"px");
+    $(selector).css({'marginTop': this.panel.getHeight()+"px"});
   }.bind(this));
   return this;
 };

@@ -91,39 +91,6 @@ LocalStorageService.prototype._save = function(deferred, serialized) {
   deferred.resolve();
 };
 
-//---------------------------------------------------------------------
-var SettingsService = {
-  // Settings are keyed by domain name
-  // If a domain name has no associated settings, use some default/fallback settings.
-  _settings: {
-    '*': {
-      'sourceSelector': 'body'
-    },
-    'www.graeco-arabic-studies.org': {
-      'sourceSelector': '.textboxcontent'
-    },
-    'sites.google.com': {
-      'sourceSelector': '.textboxcontent'
-    },
-    'canvas.harvard.edu': {
-      'sourceSelector': '.textboxcontent'
-    }
-  },
-  get: function(siteContext) {
-    var settings = false;
-    console.log("Loading settings for site ID: ", siteContext.id);
-    if (siteContext.id in this._settings) {
-      settings = this._settings[siteContext.id];
-      console.log("Site ID exists. Settings: ", settings);
-    } else {
-      settings = this._settings['*'];
-      console.log("No such site ID exists. Using default settings: ", settings);
-    }
-    
-    return settings;
-  }
-};
-
 var ImportExportService = function(options) {
   this.sources = options.sources || [];
   this.alignments = options.alignments;
@@ -206,6 +173,5 @@ ImportExportService.prototype.export = function(serialize) {
 
 module.exports = {
   ImportExportService: ImportExportService,
-  LocalStorageService: LocalStorageService,
-  SettingsService: SettingsService
+  LocalStorageService: LocalStorageService
 };

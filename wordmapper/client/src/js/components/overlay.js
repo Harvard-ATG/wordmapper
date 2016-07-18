@@ -9,8 +9,10 @@ var Overlay = function(options) {
   this.importExport = options.importExport;
   this.sources = options.sources;
   this.hiddenCls = 'wordmapper-overlay-hidden';
+
   this.popout = this.popout.bind(this);
   this.dismiss = this.dismiss.bind(this);
+
   this.indexView = new IndexView({
     alignments: this.alignments,
     sources: this.sources
@@ -19,6 +21,7 @@ var Overlay = function(options) {
     importExport: this.importExport,
     dismiss: this.dismiss
   });
+
   this.init();
 };
 Overlay.prototype.init = function() {

@@ -11,9 +11,12 @@ User.prototype.isAuthenticated = function() {
 };
 User.prototype.update = function(data) {
 	var changed = false;
+	if (!data) {
+		return this;
+	}
 
 	['id', 'email', 'token'].forEach(function(prop) {
-		if(prop in data && data[prop] && data[prop] !== this[prop]) {
+		if(prop in data && data[prop] !== this[prop]) {
 			this[prop] = data[prop];
 			changed = true;
 		}
@@ -22,6 +25,10 @@ User.prototype.update = function(data) {
 	if(changed) {
 		this.triggerChange();
 	}
+	return this;
+};
+User.prototype.reset = function() {
+	return this.update({id:undefined,email:undefined,token:undefined});
 };
 User.prototype.triggerChange = function() {
   this.trigger("change");

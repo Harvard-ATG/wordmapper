@@ -1,6 +1,13 @@
 var winston = require('winston');
 
 module.exports = {
+	accessControlAllow: function(req, res, next) {
+		res.setHeader('Access-Control-Allow-Origin', '*');
+		res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS, DELETE');
+		res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+		res.setHeader('Access-Control-Allow-Credentials', true);
+		next();
+	},
 	// Adds values to the response that views can access via "response.locals"
 	// http://expressjs.com/en/api.html#res.locals
 	commonViewVars: function(req, res, next) {

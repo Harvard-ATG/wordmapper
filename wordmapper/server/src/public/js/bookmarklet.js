@@ -96,7 +96,7 @@
 	exports.push([module.id, "@import url(http://fontawesome.io/assets/font-awesome/css/font-awesome.css);", ""]);
 
 	// module
-	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper textarea {\n    padding: 0.5em;\n    background-color: rgb(255,255,224);\n    -webkit-transition: background-color 0.30s ease-in-out;\n    -moz-transition: background-color 0.30s ease-in-out;\n    -ms-transition: background-color 0.30s ease-in-out;\n    -o-transition: background-color 0.30s ease-in-out;\n    outline: none;\n}\n.wordmapper textarea:focus {\n    background-color: rgb(255,255,164);\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    background-color: rgba(0,0,0,.7);\n    z-index: 1002;\n}\n.wordmapper-panel a {\n  color: rgb(0, 192, 255);\n}\n.wordmapper-panel a:hover, .wordmapper-panel a:active {\n  color: rgb(255, 0, 0);\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.98;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n    z-index: 1001;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-buttons-right {\n  position: absolute;\n  right: 0;\n  top: 0;\n  margin-right: 4px;\n}\n.wordmapper-account {\n  position: absolute;\n  right: 0;\n  width: 250px;\n  padding: 10px;\n  background-color: rgba(0,0,0,.7);\n  z-index: 1002;\n}\n.wordmapper-account input {\n  width: calc(100% - 10px);\n  padding: 5px;\n  margin: 0 0 5px 0;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 12px;\n    background: #333;\n    background: rgba(0,0,0,.7);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(alt);\n    left: 0;\n    padding: 5px 15px;\n    position: absolute;\n    width: auto;\n    white-space: nowrap;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-table td.words,\n.wordmapper-table td.comment {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #ddd;\n}\n.wordmapper-table span.word {\n    margin-right: 0.25em;\n}\n.wordmapper-table td.comment {\n    background-color: #eee;\n}\n.wordmapper-table td.comment span.comment,\n.wordmapper-table td.comment textarea.comment\n{\n    font-size: 14px;\n    color: #666;\n}\n.wordmapper-table td.comment textarea.comment {\n    border: 1px solid #ddd;\n    height: 75px;\n    min-width: 300px;\n    width: 90%;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n.wordmapper-import-messages .error {\n    color: red;\n}\n.wordmapper-import-messages .success {\n    color: green;\n}\n", ""]);
+	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper textarea {\n    padding: 0.5em;\n    background-color: rgb(255,255,224);\n    -webkit-transition: background-color 0.30s ease-in-out;\n    -moz-transition: background-color 0.30s ease-in-out;\n    -ms-transition: background-color 0.30s ease-in-out;\n    -o-transition: background-color 0.30s ease-in-out;\n    outline: none;\n}\n.wordmapper textarea:focus {\n    background-color: rgb(255,255,164);\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    background-color: rgba(0,0,0,.7);\n    z-index: 1002;\n}\n.wordmapper-panel a {\n  color: rgb(0, 192, 255);\n}\n.wordmapper-panel a:hover, .wordmapper-panel a:active {\n  color: rgb(255, 0, 0);\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.98;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n    z-index: 1001;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-buttons-right {\n  position: absolute;\n  right: 0;\n  top: 0;\n  margin-right: 4px;\n}\n.wordmapper-account {\n  position: absolute;\n  right: 0;\n  width: 250px;\n  padding: 10px;\n  background-color: rgba(0,0,0,.7);\n  z-index: 1002;\n}\n.wordmapper-account input {\n  width: calc(100% - 10px);\n  padding: 5px;\n  margin: 0 0 5px 0;\n  font-size: 14px;\n}\n.wordmapper-logged-in {\n    display: block;\n    font-size: 14px;\n    color: #fff;\n    margin: .5em 0;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 12px;\n    background: #333;\n    background: rgba(0,0,0,.7);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(alt);\n    left: 0;\n    padding: 5px 15px;\n    position: absolute;\n    width: auto;\n    white-space: nowrap;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-table td.words,\n.wordmapper-table td.comment {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #ddd;\n}\n.wordmapper-table span.word {\n    margin-right: 0.25em;\n}\n.wordmapper-table td.comment {\n    background-color: #eee;\n}\n.wordmapper-table td.comment span.comment,\n.wordmapper-table td.comment textarea.comment\n{\n    font-size: 14px;\n    color: #666;\n}\n.wordmapper-table td.comment textarea.comment {\n    border: 1px solid #ddd;\n    height: 75px;\n    min-width: 300px;\n    width: 90%;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n.wordmapper-error,\n.wordmapper-import-messages .error {\n    color: red;\n}\n.wordmapper-success,\n.wordmapper-import-messages .success {\n    color: green;\n}\n", ""]);
 
 	// exports
 
@@ -443,40 +443,52 @@
 	var $ = __webpack_require__(5);
 	var services = __webpack_require__(9);
 	var models = __webpack_require__(10);
-	var Panel = __webpack_require__(25);
-	var Overlay = __webpack_require__(33);
-	var TextBoxes = __webpack_require__(36);
+	var Settings = __webpack_require__(26);
+	var Panel = __webpack_require__(29);
+	var Overlay = __webpack_require__(37);
+	var TextBoxes = __webpack_require__(40);
 
 	var Application = function() {
 	  this.init();
 	};
 	Application.prototype.init = function() {
 	  this.el = $('<div>');
-	  this.panel = new Panel();
+	  
+	  // models
+		this.user = new models.User();
 	  this.alignments = new models.Alignments();
 	  this.siteContext = new models.SiteContext({
 	    id: window.location.hostname,
 	    url: window.location.toString()
 	  });
-	  this.settings = services.SettingsService.get(this.siteContext);
+	  this.settings = new Settings();
+	  this.settings.load(this.siteContext);
+
+	  // components
 	  this.boxes = new TextBoxes({
 	    alignments: this.alignments,
-	    selector: this.settings.sourceSelector
+	    selector: this.settings.getSourceSelector()
 	  });
 	  this.importExport = new services.ImportExportService({
 	    siteContext: this.siteContext,
 	    alignments: this.alignments,
 	    sources: this.boxes.sources
 	  });
+	  this.panel = new Panel({
+	    user: this.user,
+	    settings: this.settings
+	  });
 	  this.overlay = new Overlay({
 	    alignments: this.alignments,
 	    importExport: this.importExport,
 	    sources: this.boxes.sources
 	  });
+
 	  this.storage = new services.LocalStorageService({
 	    siteContext: this.siteContext,
 	    sources: this.boxes.sources
 	  });
+
 	  this.loadData();
 	  this.addListeners();
 	};
@@ -491,8 +503,7 @@
 	Application.prototype.renderTo = function(selector) {
 	  $(function() {
 	    $(selector).append(this.render().el);
-	    $(selector).css('transition', 'margin 1s');
-	    $(selector).css('marginTop', this.panel.getHeight()+"px");
+	    $(selector).css({'marginTop': this.panel.getHeight()+"px"});
 	  }.bind(this));
 	  return this;
 	};
@@ -612,39 +623,6 @@
 	  deferred.resolve();
 	};
 
-	//---------------------------------------------------------------------
-	var SettingsService = {
-	  // Settings are keyed by domain name
-	  // If a domain name has no associated settings, use some default/fallback settings.
-	  _settings: {
-	    '*': {
-	      'sourceSelector': 'body'
-	    },
-	    'www.graeco-arabic-studies.org': {
-	      'sourceSelector': '.textboxcontent'
-	    },
-	    'sites.google.com': {
-	      'sourceSelector': '.textboxcontent'
-	    },
-	    'canvas.harvard.edu': {
-	      'sourceSelector': '.textboxcontent'
-	    }
-	  },
-	  get: function(siteContext) {
-	    var settings = false;
-	    console.log("Loading settings for site ID: ", siteContext.id);
-	    if (siteContext.id in this._settings) {
-	      settings = this._settings[siteContext.id];
-	      console.log("Site ID exists. Settings: ", settings);
-	    } else {
-	      settings = this._settings['*'];
-	      console.log("No such site ID exists. Using default settings: ", settings);
-	    }
-	    
-	    return settings;
-	  }
-	};
-
 	var ImportExportService = function(options) {
 	  this.sources = options.sources || [];
 	  this.alignments = options.alignments;
@@ -727,8 +705,7 @@
 
 	module.exports = {
 	  ImportExportService: ImportExportService,
-	  LocalStorageService: LocalStorageService,
-	  SettingsService: SettingsService
+	  LocalStorageService: LocalStorageService
 	};
 
 
@@ -741,7 +718,8 @@
 	  Alignment: __webpack_require__(13),
 	  Word: __webpack_require__(15),
 	  Source: __webpack_require__(16),
-	  SiteContext: __webpack_require__(24)
+	  SiteContext: __webpack_require__(24),
+	  User: __webpack_require__(25)
 	};
 
 /***/ },
@@ -914,7 +892,8 @@
 	    CLEAR_HIGHLIGHTS: 'clear_highlights',
 	    CLEAR_ALIGNMENTS: 'clear_alignments',
 	    BUILD_INDEX: 'build_index',
-	    EXPORT: 'export'
+	    EXPORT: 'export',
+	    LOGIN: 'login'
 	  },
 	  hub: new Events({debug: true})
 	};
@@ -3258,81 +3237,113 @@
 /* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $ = __webpack_require__(5);
 	var events = __webpack_require__(12);
-	var templates = __webpack_require__(26);
 
-	var Panel = function() {
-	  this.el = null;
-	  this.onClickButton = this.onClickButton.bind(this);
-	  this.init();
+	var User = function(options) {
+		options = options || {};
+		this.id = options.id;
+		this.email = options.email;
+		this.token = options.token;
 	};
-	Panel.prototype.buttonEvent = {
-	  'align': events.EVT.ALIGN,
-	  'clear_highlights': events.EVT.CLEAR_HIGHLIGHTS,
-	  'clear_alignments': events.EVT.CLEAR_ALIGNMENTS,
-	  'build_index': events.EVT.BUILD_INDEX,
-	  'export': events.EVT.EXPORT
+	User.prototype.isAuthenticated = function() {
+		return this.token ? true : false;
 	};
-	Panel.prototype.init = function() {
-	  this.el = $('<div>');
-	  this.addListeners();
-	};
-	Panel.prototype.addListeners = function() {
-	  this.el.on('click', this.onClickButton);
-	};
-	Panel.prototype.onClickButton = function(evt) {
-	  var t = evt.target;
-	  var can_trigger_event = true;
-	  if (t.nodeName == 'BUTTON' && t.name in this.buttonEvent) {
-	    if (t.dataset.confirm) {
-	      can_trigger_event = window.confirm(t.dataset.confirm);
-	    }
-	    if (can_trigger_event) {
-	      events.hub.trigger(this.buttonEvent[t.name]);
-	    }
-	  }  
-	};
-	Panel.prototype.render = function() {
-	  this.el.html(templates.panel());
-	  return this;
-	};
-	Panel.prototype.getHeight = function() {
-	  return this.el.children().outerHeight();
-	};
+	User.prototype.update = function(data) {
+		var changed = false;
+		if (!data) {
+			return this;
+		}
 
-	module.exports = Panel;
+		['id', 'email', 'token'].forEach(function(prop) {
+			if(prop in data && data[prop] !== this[prop]) {
+				this[prop] = data[prop];
+				changed = true;
+			}
+		}, this);
+
+		if(changed) {
+			this.triggerChange();
+		}
+		return this;
+	};
+	User.prototype.reset = function() {
+		return this.update({id:undefined,email:undefined,token:undefined});
+	};
+	User.prototype.triggerChange = function() {
+	  this.trigger("change");
+	};
+	User.prototype.toString = function() {
+		return this.email || 'guest';
+	};
+	User.prototype.toJSON = function() {
+		return {
+			"type": "user",
+			"data": {
+				"id": this.id,
+				"email": this.email
+			}
+		};
+	};
+	User.prototype.serialize = function() {
+	  return JSON.stringify(this.toJSON(), null, '\t');
+	};
+	events.Events.mixin(User.prototype);
+
+	module.exports = User;
 
 
 /***/ },
 /* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {
-	  panel: __webpack_require__(27),
-	  index: __webpack_require__(30),
-	  export: __webpack_require__(31),
-	  overlay: __webpack_require__(32)
+	var _ = __webpack_require__(27);
+
+	var Settings = function() {
+	  this.current = {
+	    'apiBaseUrl': 'http://localhost:8000/api',
+	    'registerUrl': 'http://localhost:8000/user/register'
+	  };  
 	};
+	Settings.prototype.defaults = {
+	  '*': {
+	    'sourceSelector': 'body'
+	  },
+	  'www.graeco-arabic-studies.org': {
+	    'sourceSelector': '.textboxcontent'
+	  },
+	  'sites.google.com': {
+	    'sourceSelector': '.textboxcontent'
+	  },
+	  'canvas.harvard.edu': {
+	    'sourceSelector': '.textboxcontent'
+	  }
+	};
+	Settings.prototype.load = function(siteContext) {
+	  var data = false;
+	  console.log("Loading source selector for site ID: ", siteContext.id);
+	  if (siteContext.id in this.defaults) {
+	    data = this.defaults[siteContext.id];
+	    console.log("Site ID exists. Settings: ", data);
+	  } else {
+	    data = this.defaults['*'];
+	    console.log("No such site ID exists. Using base settings: ", data);
+	  }
+	  _.assign(this.current, data);
+	  return this;
+	};
+	Settings.prototype.getSourceSelector = function() {
+	  return this.current.sourceSelector;
+	};
+	Settings.prototype.getAPIBaseUrl = function() {
+	  return this.current.apiBaseUrl;
+	};
+	Settings.prototype.getRegisterUrl = function() {
+	  return this.current.registerUrl;
+	};
+	module.exports = Settings;
 
 /***/ },
 /* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '';
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login"><i class="fa fa-user"></i> Account</button>\n  </div>\n  <div class="wordmapper-account">\n    <div class="wordmapper-login">\n      <input type="text" name="email" placeholder="enter email...">\n      <input type="password" name="password" placeholder="enter password...">\n      <button name="login" class="primary" style="width: 125px;">Sign In</button>\n      <a href="javascript:void(0);" target="_blank" style="margin-left:1em;">Register</a>\n    </div>\n  </div>\n</div>\n';
-
-	}
-	return __p
-	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
-
-
-/***/ },
-/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -19740,10 +19751,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)(module), (function() { return this; }())))
 
 /***/ },
-/* 29 */
+/* 28 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -19759,93 +19770,98 @@
 
 
 /***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $ = __webpack_require__(5);
+	var events = __webpack_require__(12);
+	var templates = __webpack_require__(30);
+	var LoginComponent = __webpack_require__(36);
+
+	var Panel = function(options) {
+	  options = options || {};
+	  this.el = null;
+	  this.user = options.user;
+	  this.settings = options.settings;
+	  this.loginComponent = new LoginComponent({
+	    user: this.user,
+	    settings: this.settings
+	  });
+	  this.tplData = {
+	    user: this.user
+	  };
+	  this.onClickButton = this.onClickButton.bind(this);
+	  this.init();
+	};
+	Panel.prototype.buttonEvent = {
+	  'align': events.EVT.ALIGN,
+	  'clear_highlights': events.EVT.CLEAR_HIGHLIGHTS,
+	  'clear_alignments': events.EVT.CLEAR_ALIGNMENTS,
+	  'build_index': events.EVT.BUILD_INDEX,
+	  'export': events.EVT.EXPORT,
+	  'login': events.EVT.LOGIN
+	};
+	Panel.prototype.init = function() {
+	  this.el = $('<div>');
+	  this.addListeners();
+	};
+	Panel.prototype.addListeners = function() {
+	  this.el.on('click', this.onClickButton);
+	};
+	Panel.prototype.onClickButton = function(evt) {
+	  var t = evt.target, can_trigger_event = true;
+	  
+	  // this handles the case where an icon is clicked (get the parent button)
+	  if (t.nodeName != 'BUTTON' && t.parentNode.nodeName == 'BUTTON') {
+	    t = t.parentNode;
+	  }
+	  
+	  // check if the node is a valid button, in which case broadcast an event
+	  if (t.nodeName == 'BUTTON' && t.name in this.buttonEvent) {
+	    if (t.dataset.confirm) {
+	      can_trigger_event = window.confirm(t.dataset.confirm);
+	    }
+	    if (can_trigger_event) {
+	      events.hub.trigger(this.buttonEvent[t.name]);
+	    }
+	  }  
+	};
+	Panel.prototype.render = function() {
+	  console.log("render panel");
+	  this.el.html(templates.panel(this.tplData));
+	  this.el.find('.wordmapper-panel').append(this.loginComponent.render().el);
+	  return this;
+	};
+	Panel.prototype.getHeight = function() {
+	  return this.el.children().outerHeight();
+	};
+
+	module.exports = Panel;
+
+
+/***/ },
 /* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
-	function print() { __p += __j.call(arguments, '') }
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/index.html -->\n';
-	 if (!alignments.isEmpty()) { ;
-	__p += '\n<div style="margin: 0 0 1em 0;" popout-exclude >\n  <button name="action_comment" data-toggle-text="Edit Comments,Save Comments">Edit Comments</button>\n</div>\n';
-	 } ;
-	__p += '\n\n<table class="wordmapper-table">\n  ';
-	 if (alignments.isEmpty()) { ;
-	__p += '\n    <tr><td>No words have been aligned yet</td></tr>\n  ';
-	 } ;
-	__p += '\n  ';
-	 _.forEach(indexData, function(data, index) { ;
-	__p += '\n    <tr>\n      ';
-	 _.forEach(data.buckets, function(words, index, arr) { ;
-	__p += '\n        <td class="words" ';
-	 if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') ;
-	__p += '>\n        ';
-	 _.forEach(words, function(word) { ;
-	__p += '\n          <span class="word" title="Word: ' +
-	__e( word.index ) +
-	' Source: ' +
-	__e( word.source.index ) +
-	'">' +
-	__e( word.value ) +
-	'</span>\n        ';
-	 }); ;
-	__p += '\n        </td>\n      ';
-	 }); ;
-	__p += '\n      ';
-	 if(commentsPosition == "right") { ;
-	__p += '\n      <td class="comment">\n        <span class="comment">' +
-	__e( data.alignment.comment ) +
-	'</span>\n        <textarea class="comment" name="comment' +
-	((__t = ( index )) == null ? '' : __t) +
-	'" data-alignment="' +
-	((__t = ( data.alignment.id )) == null ? '' : __t) +
-	'" placeholder="Add comment..." style="display:none">' +
-	__e( data.alignment.comment || '' ) +
-	'</textarea>\n      </td>\n      ';
-	 } ;
-	__p += '\n    </tr>\n    ';
-	 if(commentsPosition == "bottom") { ;
-	__p += '\n    <tr class="comment" ';
-	 print(data.alignment.comment?'':'style="display:none;"'); ;
-	__p += ';>\n      <td class="comment" colspan="' +
-	__e( data.buckets.length ) +
-	'">\n        <span class="comment">' +
-	__e( data.alignment.comment ) +
-	'</span>\n        <textarea class="comment" name="comment' +
-	((__t = ( index )) == null ? '' : __t) +
-	'" data-alignment="' +
-	((__t = ( data.alignment.id )) == null ? '' : __t) +
-	'" placeholder="Add comment..." style="display:none">' +
-	__e( data.alignment.comment || '' ) +
-	'</textarea>\n      </td>\n    </tr>\n    ';
-	 } ;
-	__p += '\n  ';
-	 }); ;
-	__p += '\n</table>';
-
-	}
-	return __p
-	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
-
+	module.exports = {
+	  'panel': __webpack_require__(31),
+	  'index': __webpack_require__(32),
+	  'export': __webpack_require__(33),
+	  'overlay': __webpack_require__(34),
+	  'login': __webpack_require__(35)
+	};
 
 /***/ },
 /* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '';
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/export.html -->\nExport data:\n<textarea name="export" class="json">' +
-	((__t = ( importExport.export(true) )) == null ? '' : __t) +
-	'</textarea>\n\nImport data:\n<textarea name="import" class="json"></textarea>\n<button class="primary wordmapper-import">Import</button>\n<span class="wordmapper-import-messages"></span>';
-
+	var _ = __webpack_require__(27);
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login"><i class="fa fa-user"></i> Account</button>\n  </div>\n</div>\n';
 	}
-	return __p
+	return __p;
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
@@ -19853,28 +19869,69 @@
 /* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '', __j = Array.prototype.join;
-	function print() { __p += __j.call(arguments, '') }
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/overlay.html -->\n<div class="wordmapper wordmapper-overlay ' +
-	((__t = ( cls )) == null ? '' : __t) +
-	'">\n  ';
-	 if(title) { ;
-	__p += '\n    <h2>' +
-	((__t = ( title )) == null ? '' : __t) +
-	'</h2>\n  ';
-	 } ;
-	__p += '\n  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-overlay-content">\n  </div>\n  ';
-	 if (canPopout) { ;
-	__p += '\n    <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>\n  ';
-	 } ;
-	__p += '\n</div>';
-
+	var _ = __webpack_require__(27);
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/index.html -->\n';
+	 if (!alignments.isEmpty()) { 
+	__p+='\n<div style="margin: 0 0 1em 0;" popout-exclude >\n  <button name="action_comment" data-toggle-text="Edit Comments,Save Comments">Edit Comments</button>\n</div>\n';
+	 } 
+	__p+='\n\n<table class="wordmapper-table">\n  ';
+	 if (alignments.isEmpty()) { 
+	__p+='\n    <tr><td>No words have been aligned yet</td></tr>\n  ';
+	 } 
+	__p+='\n  ';
+	 _.forEach(indexData, function(data, index) { 
+	__p+='\n    <tr>\n      ';
+	 _.forEach(data.buckets, function(words, index, arr) { 
+	__p+='\n        <td class="words" ';
+	 if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') 
+	__p+='>\n        ';
+	 _.forEach(words, function(word) { 
+	__p+='\n          <span class="word" title="Word: '+
+	((__t=( word.index ))==null?'':_.escape(__t))+
+	' Source: '+
+	((__t=( word.source.index ))==null?'':_.escape(__t))+
+	'">'+
+	((__t=( word.value ))==null?'':_.escape(__t))+
+	'</span>\n        ';
+	 }); 
+	__p+='\n        </td>\n      ';
+	 }); 
+	__p+='\n      ';
+	 if(commentsPosition == "right") { 
+	__p+='\n      <td class="comment">\n        <span class="comment">'+
+	((__t=( data.alignment.comment ))==null?'':_.escape(__t))+
+	'</span>\n        <textarea class="comment" name="comment'+
+	((__t=( index ))==null?'':__t)+
+	'" data-alignment="'+
+	((__t=( data.alignment.id ))==null?'':__t)+
+	'" placeholder="Add comment..." style="display:none">'+
+	((__t=( data.alignment.comment || '' ))==null?'':_.escape(__t))+
+	'</textarea>\n      </td>\n      ';
+	 } 
+	__p+='\n    </tr>\n    ';
+	 if(commentsPosition == "bottom") { 
+	__p+='\n    <tr class="comment" ';
+	 print(data.alignment.comment?'':'style="display:none;"'); 
+	__p+=';>\n      <td class="comment" colspan="'+
+	((__t=( data.buckets.length ))==null?'':_.escape(__t))+
+	'">\n        <span class="comment">'+
+	((__t=( data.alignment.comment ))==null?'':_.escape(__t))+
+	'</span>\n        <textarea class="comment" name="comment'+
+	((__t=( index ))==null?'':__t)+
+	'" data-alignment="'+
+	((__t=( data.alignment.id ))==null?'':__t)+
+	'" placeholder="Add comment..." style="display:none">'+
+	((__t=( data.alignment.comment || '' ))==null?'':_.escape(__t))+
+	'</textarea>\n      </td>\n    </tr>\n    ';
+	 } 
+	__p+='\n  ';
+	 }); 
+	__p+='\n</table>';
 	}
-	return __p
+	return __p;
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
@@ -19882,19 +19939,181 @@
 /* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var _ = __webpack_require__(27);
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/export.html -->\nExport data:\n<textarea name="export" class="json">'+
+	((__t=( importExport.export(true) ))==null?'':__t)+
+	'</textarea>\n\nImport data:\n<textarea name="import" class="json"></textarea>\n<button class="primary wordmapper-import">Import</button>\n<span class="wordmapper-import-messages"></span>';
+	}
+	return __p;
+	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(27);
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/overlay.html -->\n<div class="wordmapper wordmapper-overlay '+
+	((__t=( cls ))==null?'':__t)+
+	'">\n  ';
+	 if(title) { 
+	__p+='\n    <h2>'+
+	((__t=( title ))==null?'':__t)+
+	'</h2>\n  ';
+	 } 
+	__p+='\n  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-overlay-content">\n  </div>\n  ';
+	 if (canPopout) { 
+	__p+='\n    <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>\n  ';
+	 } 
+	__p+='\n</div>';
+	}
+	return __p;
+	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(27);
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/login.html -->\n<div class="wordmapper-account" style="';
+	 if(hidden) { print('display:none;'); } 
+	__p+='">\n  ';
+	 if(user.isAuthenticated()) { 
+	__p+='\n  <div class="wordmapper-logged-in">Logged in as '+
+	((__t=( user ))==null?'':__t)+
+	'.</div>\n  <button name="logout" class="primary" style="width: 100%">Sign Out</button>\n  ';
+	 } else { 
+	__p+='\n  <div class="wordmapper-login">\n    <input type="text" name="email" placeholder="enter email...">\n    <input type="password" name="password" placeholder="enter password...">\n    ';
+	 if(error) { 
+	__p+='\n      <div class="wordmapper-error">'+
+	((__t=( error ))==null?'':__t)+
+	'</div>\n    ';
+	 } 
+	__p+='\n    <button name="login" class="primary" style="width: 125px;">Sign In</button>\n    ';
+	 if(register_url) { 
+	__p+='\n      <a href="'+
+	((__t=( register_url ))==null?'':__t)+
+	'" target="_blank" style="margin-left:1em;">Register</a>\n    ';
+	 } 
+	__p+='\n  </div>\n  ';
+	 } 
+	__p+='\n</div>';
+	}
+	return __p;
+	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+
+
+/***/ },
+/* 36 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(12);
-	var templates = __webpack_require__(26);
-	var IndexView = __webpack_require__(34);
-	var ExportView = __webpack_require__(35);
+	var templates = __webpack_require__(30);
+
+	var LoginComponent = function(options) {
+	  options = options || {};
+	  this.el = null;
+	  this.user = options.user;
+	  this.settings = options.settings;
+	  this.tplData = {
+	    register_url: this.settings.getRegisterUrl(),
+	    user: this.user,
+	    hidden: true,
+	    error: ''
+	  };
+	  this.onClickLogin = this.onClickLogin.bind(this);
+	  this.onClickLogout = this.onClickLogout.bind(this);
+	  this.init();
+	};
+	LoginComponent.prototype.init = function() {
+	  this.el = $('<div>');
+	  this.addListeners();
+	};
+	LoginComponent.prototype.addListeners = function() {
+	  events.hub.on(events.EVT.LOGIN, function() {
+	    var $el = this.el.find('.wordmapper-account');
+	    var hidden = this.tplData.hidden;
+	    this.tplData.hidden = !hidden;
+	    $el[hidden?'show':'hide']();
+	  }.bind(this));
+
+	  this.el.on('click', 'button[name=login]', null, this.onClickLogin);
+	  this.el.on('click', 'button[name=logout]', null, this.onClickLogout);
+	};
+	LoginComponent.prototype.render = function() {
+	  var html = templates.login(this.tplData);
+	  this.el.html(html);
+	  return this;
+	};
+	LoginComponent.prototype.onClickLogin = function(evt) {
+	  var credentials = {};
+	  credentials.email = this.el.find('input[name=email]').val();
+	  credentials.password = this.el.find('input[name=password]').val();
+	  this.authenticate(credentials);
+	  evt.stopPropagation();
+	};
+	LoginComponent.prototype.onClickLogout = function(evt) {
+	  this.user.reset();
+	  this.render();
+	  evt.stopPropagation();
+	};
+	LoginComponent.prototype.authenticate = function(credentials) {
+	  var url = this.settings.getAPIBaseUrl() + '/auth/login';
+	  var deferred = $.ajax({
+	    dataType: "json",
+	    method: 'POST',
+	    url: url,
+	    contentType: "application/json; charset=utf-8",
+	    data: JSON.stringify(credentials)
+	  });
+	  deferred.done(function(response, textStatus, jqXHR) {
+	    this.tplData.error = '';
+	    this.tplData.hidden = true;
+	    this.user.update(response.data);
+	    this.render();
+	  }.bind(this)).fail(function(jqXHR, textStatus, errorThrown) {
+	    var errStr = errorThrown;
+	    if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+	      errStr = jqXHR.responseJSON.message;
+	    }
+	    this.tplData.error = errStr;
+	    this.render();
+	  }.bind(this));
+	};
+
+	module.exports = LoginComponent;
+
+
+/***/ },
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $ = __webpack_require__(5);
+	var events = __webpack_require__(12);
+	var templates = __webpack_require__(30);
+	var IndexView = __webpack_require__(38);
+	var ExportView = __webpack_require__(39);
 
 	var Overlay = function(options) {
 	  this.alignments = options.alignments;
 	  this.importExport = options.importExport;
 	  this.sources = options.sources;
 	  this.hiddenCls = 'wordmapper-overlay-hidden';
+
 	  this.popout = this.popout.bind(this);
 	  this.dismiss = this.dismiss.bind(this);
+
 	  this.indexView = new IndexView({
 	    alignments: this.alignments,
 	    sources: this.sources
@@ -19903,6 +20122,7 @@
 	    importExport: this.importExport,
 	    dismiss: this.dismiss
 	  });
+
 	  this.init();
 	};
 	Overlay.prototype.init = function() {
@@ -19990,11 +20210,11 @@
 	module.exports = Overlay;
 
 /***/ },
-/* 34 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var templates = __webpack_require__(26);
+	var templates = __webpack_require__(30);
 
 	var IndexView = function(options) {
 	  this.alignments = options.alignments;
@@ -20091,11 +20311,11 @@
 
 
 /***/ },
-/* 35 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var templates = __webpack_require__(26);
+	var templates = __webpack_require__(30);
 
 	var ExportView = function(options) {
 	  this.dismiss = options.dismiss;
@@ -20141,7 +20361,7 @@
 
 
 /***/ },
-/* 36 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);

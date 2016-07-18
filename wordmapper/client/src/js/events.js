@@ -46,7 +46,8 @@ module.exports = {
     CLEAR_HIGHLIGHTS: 'clear_highlights',
     CLEAR_ALIGNMENTS: 'clear_alignments',
     BUILD_INDEX: 'build_index',
-    EXPORT: 'export'
+    EXPORT: 'export',
+    LOGIN: 'login'
   },
   hub: new Events({debug: true})
 };

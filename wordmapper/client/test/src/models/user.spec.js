@@ -17,7 +17,7 @@ describe("User Model", function() {
 		expect(user.token).toBe("tokenbar");
 		expect(user.isAuthenticated()).toBeTruthy();
 	});
-	it("should be updated", function() {
+	it("should be possible to update user attributes", function() {
 		var data = { id: 123, email: 'foofoo@barbar.com', token: 'abc123' };
 		var user = new User();
 		spyOn(user, 'triggerChange');
@@ -31,6 +31,19 @@ describe("User Model", function() {
 		expect(user.email).toBe(data.email);
 		expect(user.token).toBe(data.token);
 		expect(user.triggerChange).toHaveBeenCalled();
+	});
+	it("should be possible to reset the user attributes", function() {
+		var options = {id: 1, email: 'foo@bar.com', token: 'tokenfoo'};
+		var user = new User(options);
+		spyOn(user, 'triggerChange');
+		expect(user.id).toBe(options.id);
+		expect(user.email).toBe(options.email);
+		expect(user.token).toBe(options.token);
+		user.reset();
+		expect(user.triggerChange).toHaveBeenCalled();
+		expect(user.id).toBe(undefined);
+		expect(user.email).toBe(undefined);
+		expect(user.token).toBe(undefined);
 	});
 	it("toString()", function() {
 		var options = {id: 1, email: 'foo@bar.com', token: 'tokenfoo'};

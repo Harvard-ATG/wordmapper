@@ -146,6 +146,13 @@
   width: calc(100% - 10px);
   padding: 5px;
   margin: 0 0 5px 0;
+  font-size: 14px;
+}
+.wordmapper-logged-in {
+    display: block;
+    font-size: 14px;
+    color: #fff;
+    margin: .5em 0;
 }
 .wordmapper-word.highlight {
     background-color: yellow;
@@ -226,9 +233,11 @@
     font-size: 12px;
     font-family: monospace;
 }
+.wordmapper-error,
 .wordmapper-import-messages .error {
     color: red;
 }
+.wordmapper-success,
 .wordmapper-import-messages .success {
     color: green;
 }

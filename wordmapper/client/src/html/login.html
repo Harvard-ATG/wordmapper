@@ -1,0 +1,18 @@
+<div class="wordmapper-account" style="<% if(hidden) { print('display:none;'); } %>">
+  <% if(user.isAuthenticated()) { %>
+  <div class="wordmapper-logged-in">Logged in as <%= user %>.</div>
+  <button name="logout" class="primary" style="width: 100%">Sign Out</button>
+  <% } else { %>
+  <div class="wordmapper-login">
+    <input type="text" name="email" placeholder="enter email...">
+    <input type="password" name="password" placeholder="enter password...">
+    <% if(error) { %>
+      <div class="wordmapper-error"><%= error %></div>
+    <% } %>
+    <button name="login" class="primary" style="width: 125px;">Sign In</button>
+    <% if(register_url) { %>
+      <a href="<%= register_url %>" target="_blank" style="margin-left:1em;">Register</a>
+    <% } %>
+  </div>
+  <% } %>
+</div>
