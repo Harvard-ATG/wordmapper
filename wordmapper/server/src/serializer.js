@@ -1,20 +1,41 @@
 var winston = require('winston');
+var _ = require('lodash');
 
-var AlignmentsSerializer = function(data) {
+/**
+ * Serializer.
+ *
+ * Takes data from the database and serializes or converts it into a standard
+ * format for output to clients.
+ */
+var Serializer = function(data) {
 	this.rows = data;  // expected to come from database
 	this.output = null;
 };
-AlignmentsSerializer.prototype.asPromise = function() {
+Serializer.prototype.asPromise = function() {
 	var serializer = this;
 	return new Promise(function(resolve, reject) {
 		try {
-			resolve(serializer.serialize().output);
+			serializer.serialize();
+			resolve(serializer.output);
 		} catch (e) {
 			reject(e);
 		}
 	});
 };
-AlignmentsSerializer.prototype.serialize = function() {
+Serializer.prototype.serialize = function() {
+	this._serialize();
+	return this;
+};
+
+/**
+ * AlignmentsSerializer
+ */
+var AlignmentsSerializer = function(data) {
+	Serializer.call(this, data);
+};
+_.assign(AlignmentsSerializer.prototype, Serializer.prototype);
+
+AlignmentsSerializer.prototype._serialize = function() {
 	if (!Array.isArray(this.rows)) {
 		throw "Expected row data as type 'array' but got something else"
 	}
@@ -63,8 +84,36 @@ AlignmentsSerializer.prototype.serialize = function() {
 	});
 
 	this.output = output;
+	return this;
+};
 
+/**
+ * SourcesSerializer
+ */
+var SourcesSerializer = function(data) {
+	Serializer.call(this, data);
+};
+_.assign(SourcesSerializer.prototype, Serializer.prototype);
+
+SourcesSerializer.prototype._serialize = function() {
+	if (!Array.isArray(this.rows)) {
+		throw "Expected row data as type 'array' but got something else"
+	}
+	var output = {
+		"type": "sources",
+		"data": []
+	};
+
+	output.data = this.rows.map(function(source) {
+		return {
+			"type": "source",
+			"data": source
+		};
+	});
+	
+	this.output = output;
 	return this;
 };
 
 module.exports.AlignmentsSerializer = AlignmentsSerializer;
+module.exports.SourcesSerializer = SourcesSerializer;

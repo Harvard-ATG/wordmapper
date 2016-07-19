@@ -1,0 +1,22 @@
+{
+    "type": "sources",
+    "data": [
+        {
+            "type": "source",
+            "data": {
+                "hash": "40e772cc89ee7f97a5cbfb544a464d41b43b3694",
+                "normalized": "a b c",
+                "original": "a     b c    "
+            }
+        },
+        {
+            
+            "type": "source",
+            "data": {
+                "hash": "1acd674e43748e1097ab0616e57f0c5c212c12dc",
+                "normalized": "foo bar",
+                "original": "  foo bar   "
+            }
+        }
+    ]
+}

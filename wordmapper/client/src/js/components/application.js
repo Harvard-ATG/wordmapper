@@ -34,10 +34,8 @@ Application.prototype.init = function() {
     sources: this.models.sources
   });
   this.services.persistence = new services.Persistence({
-    user: this.models.user,
-    alignments: this.models.alignments,
-    sources: this.models.sources,
-    siteContext: this.models.siteContext
+    models: this.models,
+    sources: ['local']
   });
 
   // components

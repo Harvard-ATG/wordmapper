@@ -476,10 +476,8 @@
 	    sources: this.models.sources
 	  });
 	  this.services.persistence = new services.Persistence({
-	    user: this.models.user,
-	    alignments: this.models.alignments,
-	    sources: this.models.sources,
-	    siteContext: this.models.siteContext
+	    models: this.models,
+	    sources: ['local']
 	  });
 
 	  // components
@@ -541,7 +539,7 @@
 	    models: {}
 	  }, options || {});
 
-	  this.models = _.assign({
+	  this.models = _.assign({}, {
 	    user: null,
 	    alignments: null,
 	    siteContext: null,
@@ -557,6 +555,10 @@
 	    return false;
 	  }, this).filter(Boolean);
 
+	  this.onAlignmentsChange = this.onAlignmentsChange.bind(this);
+	  this.onSourcesChange = this.onSourcesChange.bind(this);
+	  this.onUserChange = this.onUserChange.bind(this);
+
 	  this.init();
 	};
 	Persistence.storeFactory = {
@@ -566,6 +568,23 @@
 	  this.addListeners();
 	};
 	Persistence.prototype.addListeners = function() {
+	  this.models.alignments.on('change', this.onAlignmentsChange);
+	  this.models.sources.on('change', this.onSourcesChange);
+	  this.models.user.on('change', this.onUserChange);
+	};
+	Persistence.prototype.onAlignmentsChange = function() {
+	  console.log("alignments change", this.models.alignments);
+	};
+	Persistence.prototype.onSourcesChange = function() {
+	  console.log("sources change", this.models.sources);
+	};
+	Persistence.prototype.onUserChange = function() {
+	  console.log("user change", this.models.user);
+	};
+	Persistence.prototype.load = function() {
+	  
+	};
+	Persistence.prototype.save = function() {
 	  
 	};
 	module.exports = Persistence;

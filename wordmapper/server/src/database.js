@@ -148,10 +148,10 @@ var alignments = {
 
 var sources = {
 	getAllSources: function() {
-		return db.any('select id, hash, normalized from source');
+		return db.any('select id, hash, normalized, original from source');
 	},
 	getSourcesByHash: function(hashes) {
-		return db.any('select id, hash, normalized from source where hash in (${hashes:csv})', {hashes:hashes});
+		return db.any('select id, hash, normalized, original from source where hash in (${hashes:csv})', {hashes:hashes});
 	},
 	createSources: function(sources) {
 		return db.tx(function(t) {

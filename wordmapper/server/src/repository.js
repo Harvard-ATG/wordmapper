@@ -1,7 +1,12 @@
 var winston = require('winston');
 var database = require('./database');
-var AlignmentsParser = require('./parser').AlignmentsParser;
-var AlignmentsSerializer = require('./serializer').AlignmentsSerializer;
+var parser = require('./parser');
+var serializer = require('./serializer');
+
+var AlignmentsParser = parser.AlignmentsParser;
+var AlignmentsSerializer = serializer.AlignmentsSerializer;
+var SourcesParser = parser.SourcesParser;
+var SourcesSerializer = serializer.SourcesSerializer;
 
 module.exports = {
 	fetchAlignments: function(userId, sources) {
@@ -25,10 +30,17 @@ module.exports = {
 			return database.alignments.createAlignments(userId, parser.alignments);
 		});
 	},
-	saveSources: function(sources) {
-		return database.sources.createSources(sources);
+	saveSources: function(data) {
+		var parser = new SourcesParser(data);
+		return parser.asPromise().then(function() {
+			return database.sources.createSources(parser.sources);
+		});
 	},
 	fetchSources: function(hashes) {
-		return database.sources.getSourcesByHash(hashes);
+		var promise = database.sources.getSourcesByHash(hashes);
+		return promise.then(function(data) {
+			var serializer = new SourcesSerializer(data);
+			return serializer.asPromise();
+		});
 	}
 };
