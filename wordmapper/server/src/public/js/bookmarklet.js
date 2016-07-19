@@ -54,7 +54,7 @@
 	  console.log("WordMapper already loaded! To reload the bookmarklet,please refresh the page.");
 	} else {
 	    app = new components.Application();
-	    app.renderTo("body");
+	    app.renderTo("body").loadData();
 	    global.WordMapper = app;
 	}
 
@@ -443,10 +443,10 @@
 	var $ = __webpack_require__(5);
 	var services = __webpack_require__(9);
 	var models = __webpack_require__(14);
-	var Settings = __webpack_require__(32);
-	var PanelComponent = __webpack_require__(34);
-	var OverlayComponent = __webpack_require__(42);
-	var TextComponent = __webpack_require__(45);
+	var Settings = __webpack_require__(34);
+	var PanelComponent = __webpack_require__(36);
+	var OverlayComponent = __webpack_require__(44);
+	var TextComponent = __webpack_require__(47);
 
 	var Application = function() {
 	  this.init();
@@ -476,8 +476,7 @@
 	    sources: this.models.sources
 	  });
 	  this.services.persistence = new services.Persistence({
-	    models: this.models,
-	    sources: ['local']
+	    models: this.models
 	  });
 
 	  // components
@@ -512,6 +511,10 @@
 	  }.bind(this));
 	  return this;
 	};
+	Application.prototype.loadData = function() {
+	  this.services.persistence.load();
+	  return this;
+	};
 
 	module.exports = Application;
 
@@ -522,8 +525,8 @@
 
 	module.exports = {
 	  Persistence: __webpack_require__(10),
-	  ImportExportService: __webpack_require__(31),
-	  LocalStorageService: __webpack_require__(13)
+	  ImportExportService: __webpack_require__(32),
+	  LocalStorageService: __webpack_require__(33)
 	};
 
 
@@ -532,37 +535,33 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(11);
+	var StorageLocal = __webpack_require__(13);
+	var StorageRemote = __webpack_require__(31);
 
 	var Persistence = function(options) {
-	  options = _.assign({
-	    stores: ['local'],
-	    models: {}
-	  }, options || {});
+	  options = options || {};
+	  options = _.assign({models: {}}, options);
 
-	  this.models = _.assign({}, {
+	  this.models = _.assign({
 	    user: null,
 	    alignments: null,
 	    siteContext: null,
 	    sources: null
-	  }, options.models || {});
-
-	  this.stores = options.stores.map(function(store) {
-	    if (store in Persistence.storeFactory) {
-	      return new Persistence.storeFactory[store](this);
-	    } else {
-	      console.log("Invalid store type: ", store);
-	    }
-	    return false;
-	  }, this).filter(Boolean);
-
+	  }, options.models);
+	  
+	  this.stores = {};
+	  this.stores.local = new StorageLocal(this, { enabled: true });
+	  this.stores.remote = new StorageRemote(this, { enabled: false });
+	  this.primaryStore = this.stores.local;
+	  
+	  // true when then source models have been initialized 
+	  this.sourcesReady = false; 
+	  
 	  this.onAlignmentsChange = this.onAlignmentsChange.bind(this);
 	  this.onSourcesChange = this.onSourcesChange.bind(this);
 	  this.onUserChange = this.onUserChange.bind(this);
 
 	  this.init();
-	};
-	Persistence.storeFactory = {
-	  'local': __webpack_require__(13)
 	};
 	Persistence.prototype.init = function() {
 	  this.addListeners();
@@ -574,20 +573,84 @@
 	};
 	Persistence.prototype.onAlignmentsChange = function() {
 	  console.log("alignments change", this.models.alignments);
+	  this.saveAlignments();
 	};
 	Persistence.prototype.onSourcesChange = function() {
 	  console.log("sources change", this.models.sources);
+	  this.sourcesReady = true;
 	};
 	Persistence.prototype.onUserChange = function() {
 	  console.log("user change", this.models.user);
+	  if (this.models.user.isAuthenticated()) {
+	    this.stores.remote.enable();
+	    this.stores.local.disable();
+	    this.primaryStore = this.stores.remote;
+	  } else {
+	    this.stores.remote.disable();
+	    this.stores.local.enable();
+	    this.primaryStore = this.stores.local;
+	  }
+
+	  this.load();
 	};
 	Persistence.prototype.load = function() {
-	  
+	  return this.loadSources().then(function() {
+	    return this.loadAlignments();
+	  }.bind(this), function() {
+	    return this.saveSources().then(this.loadAlignments());
+	  }.bind(this));
 	};
-	Persistence.prototype.save = function() {
-	  
+	Persistence.prototype.loadAlignments = function() {
+	  var _this = this, store = this.primaryStore;
+	  console.log("load alignments");
+	  return new Promise(function(resolve, reject) {
+	    store.loadAlignments().then(function(data) {
+	      _this.models.alignments.load(data);
+	      resolve();
+	    }, reject);
+	  });
 	};
+	Persistence.prototype.loadSources = function() {
+	  var _this = this, store = this.primaryStore;
+	  console.log("load sources");
+	  return new Promise(function(resolve, reject) {
+	    store.loadSources().then(resolve, reject);
+	  });
+	};
+	Persistence.prototype.saveAlignments = function() {
+	  var _this = this;
+	  console.log("save alignments");
+	  return new Promise(function(resolve, reject) {
+	    var promises = _this.mapEnabled(function(store) {
+	      return store.saveAlignments();
+	    });
+	    Promise.all(promises).then(resolve).catch(reject);
+	  });
+	};
+	Persistence.prototype.saveSources = function() {
+	  var _this = this;
+	  console.log("save sources");
+	  return new Promise(function(resolve, reject) {
+	    var promises = _this.mapEnabled(function(store) {
+	      return store.saveSources();
+	    });
+	    Promise.all(promises).then(resolve).catch(reject);
+	  });
+	};
+	Persistence.prototype.mapEnabled = function(callback) {
+	  var results = [];
+	  for(var k in this.stores) {
+	    if (this.stores.hasOwnProperty(k)) {
+	      if (this.stores[k].enabled()) {
+	        results.push(callback(this.stores[k], k));
+	      }
+	    }
+	  }
+	  return results;
+	};
+
 	module.exports = Persistence;
+
 
 /***/ },
 /* 11 */
@@ -17023,50 +17086,59 @@
 	var $ = __webpack_require__(5);
 	var models = __webpack_require__(14);
 
-	var StorageService = function(options) {
+	var StorageLocal = function(parent, options) {
 	  options = options || {};
-	  this.siteContext = options.siteContext || '';
-	  this.sources = options.sources || [];
+	  this.parent = parent;
+	  this._enabled = options.enabled || false;
+	  if (window.Storage === undefined) {
+	    console.error("LocalStorage not supported in this browser.");
+	    this._enabled = false;
+	  }
 	};
-	StorageService.prototype.load = function() {
+	StorageLocal.prototype.enabled = function() {
+	  return this._enabled;
+	};
+	StorageLocal.prototype.enable = function() {
+	  this._enabled = true;
+	};
+	StorageLocal.prototype.disable = function() {
+	  this._enabled = false;
+	};
+	StorageLocal.prototype.loadAlignments = function() {
+	  console.log("StorageLocal loadAlignments");
 	  var deferred = $.Deferred();
-	  this._load(deferred);
+	  var jsonData = localStorage.getItem(this._getAlignmentsKey());
+	  if (jsonData === null) {
+	    deferred.resolve([]);
+	  } else {
+	    deferred.resolve(this._parseAlignments(jsonData));
+	  }
 	  return deferred.promise();
 	};
-	StorageService.prototype.save = function(obj) {
+	StorageLocal.prototype.saveAlignments = function() {
+	  console.log("StorageLocal saveAlignments");
 	  var deferred = $.Deferred();
-	  var serialized = this._serialize(obj);
-	  this._save(deferred, serialized);
+	  var serialized = this.parent.models.alignments.serialize();
+	  localStorage.setItem(this._getAlignmentsKey(), serialized);
+	  deferred.resolve();
 	  return deferred.promise();
 	};
-	StorageService.prototype.getDataKey = function() {
-	  var sourceHashes = this.sources.map(function(source) {
-	    return source.hash;
-	  });
-	  sourceHashes.sort(function(a, b) {
-	    return (a == b ? 0 : (a < b ? -1 : 1));
-	  });
-	  return this.siteContext.id + "::" + sourceHashes.join(",");
+	StorageLocal.prototype.loadSources = function() {
+	  console.log("StorageLocal loadSources");
+	  return $.Deferred().resolve().promise();
 	};
-	StorageService.prototype.getSourceMap = function() {
-	  var dict = {};
-	  this.sources.forEach(function(source) {
-	    dict[source.hash] = source;
-	  });
-	  return dict;
+	StorageLocal.prototype.saveSources = function() {
+	  console.log("StorageLocal saveSources");
+	  return $.Deferred().resolve().promise();
 	};
-	StorageService.prototype._load = function() {
-	  throw "Subclass responsibility";
+	StorageLocal.prototype._getAlignmentsKey = function() {
+	  var hashes = this.parent.models.sources.getHashes();
+	  var siteId = this.parent.models.siteContext.id;
+	  return siteId + "::" + hashes.join(",");
 	};
-	StorageService.prototype._save = function() {
-	  throw "Subclass responsibility";
-	};
-	StorageService.prototype._serialize = function(obj) {
-	  return obj.serialize();
-	};
-	StorageService.prototype._parse = function(jsonData) {
-	  var sourceMap = this.getSourceMap();
+	StorageLocal.prototype._parseAlignments = function(jsonData) {
 	  var result = JSON.parse(jsonData);
+	  var sourceMap = this.parent.models.sources.getSourceHashMap();
 	  var alignments = result.data.map(function(alignment) {
 	    var words = alignment.data.filter(function(item) {
 	      return item.type == 'word';
@@ -17091,28 +17163,7 @@
 	  return alignments;
 	};
 
-	//---------------------------------------------------------------------
-	var LocalStorageService = function() {
-	  if (window.Storage === undefined) {
-	    throw "LocalStorage not supported in this browser.";
-	  }
-	  StorageService.apply(this, arguments);
-	};
-	LocalStorageService.prototype = new StorageService();
-	LocalStorageService.prototype._load = function(deferred) {
-	  var jsonData = localStorage.getItem(this.getDataKey());
-	  if (jsonData === null) {
-	    deferred.resolve([]);
-	  } else {
-	    deferred.resolve(this._parse(jsonData));
-	  }
-	};
-	LocalStorageService.prototype._save = function(deferred, serialized) {
-	  localStorage.setItem(this.getDataKey(), serialized);
-	  deferred.resolve();
-	};
-
-	module.exports = LocalStorageService;
+	module.exports = StorageLocal;
 
 /***/ },
 /* 14 */
@@ -17154,6 +17205,9 @@
 	Alignments.prototype.triggerChange = function() {
 	  this.trigger("change");
 	};
+	Alignments.prototype.triggerLoad = function() {
+	  this.trigger("load");
+	};
 	Alignments.prototype.add = function(alignment) {
 	  this._removeDuplicates(alignment);
 	  this._removeEmpty();
@@ -17193,7 +17247,7 @@
 	Alignments.prototype.load = function(alignments) {
 	  this.alignments = Array.prototype.slice.call(alignments);
 	  this.sort();
-	  this.triggerChange();
+	  this.triggerLoad();
 	};
 	Alignments.prototype.sort = function() {
 	  this.alignments.sort(function(a, b) {
@@ -19798,6 +19852,41 @@
 
 	var models = __webpack_require__(14);
 
+	var StorageRemote = function(parent, options) {
+	  options = options || {};
+	  this.parent = parent;
+	  this._enabled = options.enabled || false;
+	};
+	StorageRemote.prototype.enabled = function() {
+	  return this._enabled;
+	};
+	StorageRemote.prototype.enable = function() {
+	  this._enabled = true;
+	};
+	StorageRemote.prototype.disable = function() {
+	  this._enabled = false;
+	};
+	StorageRemote.prototype.loadAlignments = function() {
+	  console.log("StorageRemote loadAlignments");
+	};
+	StorageRemote.prototype.saveAlignments = function() {
+	  console.log("StorageRemote saveAlignments");
+	};
+	StorageRemote.prototype.loadSources = function() {
+	  console.log("StorageRemote loadSources");
+	};
+	StorageRemote.prototype.saveSources = function() {
+	  console.log("StorageRemote saveSources");
+	};
+
+	module.exports = StorageRemote;
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var models = __webpack_require__(14);
+
 	var ImportExportService = function(options) {
 	  this.sources = options.sources;
 	  this.alignments = options.alignments;
@@ -19875,11 +19964,109 @@
 	module.exports = ImportExportService;
 
 /***/ },
-/* 32 */
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $ = __webpack_require__(5);
+	var models = __webpack_require__(14);
+
+	var StorageService = function(options) {
+	  options = options || {};
+	  this.siteContext = options.siteContext || '';
+	  this.sources = options.sources || [];
+	};
+	StorageService.prototype.load = function() {
+	  var deferred = $.Deferred();
+	  this._load(deferred);
+	  return deferred.promise();
+	};
+	StorageService.prototype.save = function(obj) {
+	  var deferred = $.Deferred();
+	  var serialized = this._serialize(obj);
+	  this._save(deferred, serialized);
+	  return deferred.promise();
+	};
+	StorageService.prototype.getDataKey = function() {
+	  var sourceHashes = this.sources.map(function(source) {
+	    return source.hash;
+	  });
+	  sourceHashes.sort(function(a, b) {
+	    return (a == b ? 0 : (a < b ? -1 : 1));
+	  });
+	  return this.siteContext.id + "::" + sourceHashes.join(",");
+	};
+	StorageService.prototype.getSourceMap = function() {
+	  var dict = {};
+	  this.sources.forEach(function(source) {
+	    dict[source.hash] = source;
+	  });
+	  return dict;
+	};
+	StorageService.prototype._load = function() {
+	  throw "Subclass responsibility";
+	};
+	StorageService.prototype._save = function() {
+	  throw "Subclass responsibility";
+	};
+	StorageService.prototype._serialize = function(obj) {
+	  return obj.serialize();
+	};
+	StorageService.prototype._parse = function(jsonData) {
+	  var sourceMap = this.getSourceMap();
+	  var result = JSON.parse(jsonData);
+	  var alignments = result.data.map(function(alignment) {
+	    var words = alignment.data.filter(function(item) {
+	      return item.type == 'word';
+	    }).map(function(word) {
+	      return models.Word.create({
+	        index: word.data.index,
+	        value: word.data.value,
+	        source: sourceMap[word.data.source]
+	      });
+	    });
+	    var comment_texts = alignment.data.filter(function(item) {
+	      return item.type == 'comment';
+	    }).map(function(comment) {
+	      return comment.data.text;
+	    });
+	    var alignment_obj = models.Alignments.createAlignment(words);
+	    if (comment_texts.length > 0) {
+	      alignment_obj.setComment(comment_texts[0]);
+	    }
+	    return alignment_obj;
+	  });
+	  return alignments;
+	};
+
+	//---------------------------------------------------------------------
+	var LocalStorageService = function() {
+	  if (window.Storage === undefined) {
+	    throw "LocalStorage not supported in this browser.";
+	  }
+	  StorageService.apply(this, arguments);
+	};
+	LocalStorageService.prototype = new StorageService();
+	LocalStorageService.prototype._load = function(deferred) {
+	  var jsonData = localStorage.getItem(this.getDataKey());
+	  if (jsonData === null) {
+	    deferred.resolve([]);
+	  } else {
+	    deferred.resolve(this._parse(jsonData));
+	  }
+	};
+	LocalStorageService.prototype._save = function(deferred, serialized) {
+	  localStorage.setItem(this.getDataKey(), serialized);
+	  deferred.resolve();
+	};
+
+	module.exports = LocalStorageService;
+
+/***/ },
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(11);
-	var config = __webpack_require__(33);
+	var config = __webpack_require__(35);
 
 	var Settings = function(options) {
 	  options = options || {};
@@ -19930,7 +20117,7 @@
 	module.exports = Settings;
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -19939,13 +20126,13 @@
 	};
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(16);
-	var templates = __webpack_require__(35);
-	var LoginComponent = __webpack_require__(41);
+	var templates = __webpack_require__(37);
+	var LoginComponent = __webpack_require__(43);
 
 	var PanelComponent = function(options) {
 	  options = options || {};
@@ -20014,19 +20201,19 @@
 
 
 /***/ },
-/* 35 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  'panel': __webpack_require__(36),
-	  'index': __webpack_require__(37),
-	  'export': __webpack_require__(38),
-	  'overlay': __webpack_require__(39),
-	  'login': __webpack_require__(40)
+	  'panel': __webpack_require__(38),
+	  'index': __webpack_require__(39),
+	  'export': __webpack_require__(40),
+	  'overlay': __webpack_require__(41),
+	  'login': __webpack_require__(42)
 	};
 
 /***/ },
-/* 36 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(11);
@@ -20040,7 +20227,7 @@
 
 
 /***/ },
-/* 37 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(11);
@@ -20110,7 +20297,7 @@
 
 
 /***/ },
-/* 38 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(11);
@@ -20126,7 +20313,7 @@
 
 
 /***/ },
-/* 39 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(11);
@@ -20152,7 +20339,7 @@
 
 
 /***/ },
-/* 40 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(11);
@@ -20188,12 +20375,12 @@
 
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(16);
-	var templates = __webpack_require__(35);
+	var templates = __webpack_require__(37);
 
 	var LoginComponent = function(options) {
 	  options = options || {};
@@ -20271,14 +20458,14 @@
 
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(16);
-	var templates = __webpack_require__(35);
-	var IndexView = __webpack_require__(43);
-	var ExportView = __webpack_require__(44);
+	var templates = __webpack_require__(37);
+	var IndexView = __webpack_require__(45);
+	var ExportView = __webpack_require__(46);
 
 	var OverlayComponent = function(options) {
 	  this.alignments = options.alignments;
@@ -20385,11 +20572,11 @@
 	module.exports = OverlayComponent;
 
 /***/ },
-/* 43 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var templates = __webpack_require__(35);
+	var templates = __webpack_require__(37);
 
 	var IndexView = function(options) {
 	  this.alignments = options.alignments;
@@ -20485,11 +20672,11 @@
 
 
 /***/ },
-/* 44 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var templates = __webpack_require__(35);
+	var templates = __webpack_require__(37);
 
 	var ExportView = function(options) {
 	  this.dismiss = options.dismiss;
@@ -20535,7 +20722,7 @@
 
 
 /***/ },
-/* 45 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
@@ -20572,6 +20759,7 @@
 	  this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
 	  this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
 	  this.alignments.on('change', this.updateAlignments);
+	  this.alignments.on('load', this.updateAlignments);
 	  events.hub.on(events.EVT.CLEAR_HIGHLIGHTS, this.clearHighlighted);
 	  events.hub.on(events.EVT.CLEAR_ALIGNMENTS, this.resetAlignments);
 	  events.hub.on(events.EVT.ALIGN, this.align);

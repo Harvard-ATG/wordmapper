@@ -34,8 +34,7 @@ Application.prototype.init = function() {
     sources: this.models.sources
   });
   this.services.persistence = new services.Persistence({
-    models: this.models,
-    sources: ['local']
+    models: this.models
   });
 
   // components
@@ -68,6 +67,10 @@ Application.prototype.renderTo = function(selector) {
     $(selector).append(this.render().el);
     $(selector).css({'marginTop': this.components.panel.getHeight()+"px"});
   }.bind(this));
+  return this;
+};
+Application.prototype.loadData = function() {
+  this.services.persistence.load();
   return this;
 };
 

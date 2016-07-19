@@ -20,6 +20,9 @@ Alignments.createAlignment = Alignments.prototype.createAlignment = function(wor
 Alignments.prototype.triggerChange = function() {
   this.trigger("change");
 };
+Alignments.prototype.triggerLoad = function() {
+  this.trigger("load");
+};
 Alignments.prototype.add = function(alignment) {
   this._removeDuplicates(alignment);
   this._removeEmpty();
@@ -59,7 +62,7 @@ Alignments.prototype.reset = function() {
 Alignments.prototype.load = function(alignments) {
   this.alignments = Array.prototype.slice.call(alignments);
   this.sort();
-  this.triggerChange();
+  this.triggerLoad();
 };
 Alignments.prototype.sort = function() {
   this.alignments.sort(function(a, b) {

@@ -32,6 +32,7 @@ TextComponent.prototype.addListeners = function() {
   this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
   this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
   this.alignments.on('change', this.updateAlignments);
+  this.alignments.on('load', this.updateAlignments);
   events.hub.on(events.EVT.CLEAR_HIGHLIGHTS, this.clearHighlighted);
   events.hub.on(events.EVT.CLEAR_ALIGNMENTS, this.resetAlignments);
   events.hub.on(events.EVT.ALIGN, this.align);

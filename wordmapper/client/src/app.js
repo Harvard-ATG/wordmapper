@@ -8,7 +8,7 @@ if (global.WordMapper) {
   console.log("WordMapper already loaded! To reload the bookmarklet,please refresh the page.");
 } else {
     app = new components.Application();
-    app.renderTo("body");
+    app.renderTo("body").loadData();
     global.WordMapper = app;
 }
 
