@@ -43,10 +43,10 @@ $ gulp build     # build the client-side javascript
 $ gulp migrate   # run database migrations to setup the schema
 ```
 
-Start the NodeJS web server (configuration can be specified via [dotenv](https://www.npmjs.com/package/dotenv) in `dotenv/`):
+Start the NodeJS web server (configuration can be specified via [dotenv](https://www.npmjs.com/package/dotenv) in `wordmapper/server/dotenv/`):
 
 ```sh
-$ node --require dotenv/config server.js dotenv_config_path=./dotenv/vagrant.env
+$ node --require dotenv/config server.js dotenv_config_path=./wordmapper/server/dotenv/vagrant.env
 ```
 
 Watch your client-side JS files so they're automatically rebuilt whenever they are modified:
@@ -76,15 +76,15 @@ javascript:(function(){document.body.appendChild(document.createElement('script'
 
 **Configuration Files**
 
-- Client config: `./wordmapper/client/config/{env}.js` (Default: `vagrant.env`)
-- Server configuration: `./dotenv/.env.{env}` (Default: `development.js`)
+- Client config: `./wordmapper/client/config/{env}.js` (Default: `development.js`)
+- Server configuration: `./wordmapper/server/dotenv/.env.{env}` (Default: `.env.vagrant`)
 
 **Deployment Steps**
 
 1. Create an environment-specific configuration for the client code: `./wordmapper/client/config/{env}.js`.
 2. Build the client using the specified configuration via the *NODE_ENV* environment variable: `$ NODE_ENV={env} gulp build`
-3. Create an environment-specific configuration for the server code: `./dotenv/.env.{env}`
-4. Run the server: `$ node --require dotenv/config server.js dotenv_config_path=./dotenv/.env.{env}`
+3. Create an environment-specific configuration for the server code: `./wordmapper/server/dotenv/.env.{env}`
+4. Run the server: `$ node --require dotenv/config server.js dotenv_config_path=./wordmapper/server/dotenv/.env.{env}`
 
 
 ### Testing the Bookmarklet 

@@ -5,4 +5,5 @@
 !/wordmapper/client/dist/empty
 /wordmapper/client/config/
 !/wordmapper/client/config/development.js
-.env*
+/wordmapper/server/dotenv/.env*
+!/wordmapper/server/dotenv/.env.vagrant
