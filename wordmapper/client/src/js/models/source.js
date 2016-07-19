@@ -11,6 +11,7 @@ var Source = function(options) {
   if (this.index === "" || isNaN(Number(this.index))) {
     throw "Invalid Source: required 'index' attribute must be a valid number";
   }
+  this.original = this.el.innerHTML;
   this.normalizedText = this.el.textContent.replace(/\s+/g, ' ').trim();
   this.hash = sha1(this.normalizedText);
   this.nextWordIndex = this.createWordIndexer();
@@ -25,14 +26,11 @@ Source.fromHTML = function(html, index) {
   return new Source({ el: fragment, index: index });
 };
 Source.createWords = function(spans, sources) {
-  var source_dict = sources.reduce(function(dict, source) {
-    dict[source.index] = source;
-    return dict;
-  }, {});
+  sourceMap = sources.getSourceIndexMap();
   return spans.map(function(span) {
     return Word.create({
       index: span.dataset.word,
-      source: source_dict[span.dataset.source],
+      source: sourceMap[span.dataset.source],
       value: span.textContent
     });
   });
@@ -98,6 +96,22 @@ Source.prototype.createWordIndexer = function() {
   return function() {
     return index++;
   };
+};
+Source.prototype.toString = function() {
+  return this.hash;
+};
+Source.prototype.toJSON = function() {
+  return {
+    "type": "source",
+    "data": {
+      "hash": this.hash,
+      "original": this.original,
+      "normalized": this.normalizedText
+    }
+  };
+};
+Source.prototype.serialize = function() {
+  return JSON.stringify(this.toJSON(), null, '\t');
 };
 
 module.exports = Source;

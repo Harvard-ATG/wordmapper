@@ -14,14 +14,14 @@ User.prototype.update = function(data) {
 	if (!data) {
 		return this;
 	}
-
+	
 	['id', 'email', 'token'].forEach(function(prop) {
 		if(prop in data && data[prop] !== this[prop]) {
 			this[prop] = data[prop];
 			changed = true;
 		}
 	}, this);
-
+	
 	if(changed) {
 		this.triggerChange();
 	}
@@ -31,7 +31,7 @@ User.prototype.reset = function() {
 	return this.update({id:undefined,email:undefined,token:undefined});
 };
 User.prototype.triggerChange = function() {
-  this.trigger("change");
+	this.trigger("change");
 };
 User.prototype.toString = function() {
 	return this.email || 'guest';

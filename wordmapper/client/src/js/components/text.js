@@ -5,7 +5,7 @@ var models = require('../models.js');
 var TextComponent = function(options) {
   this.selector = options.selector;
   this.alignments = options.alignments;
-  this.sources = null;
+  this.sources = options.sources;
   this.textBoxes = null;
   this.bindMethods.forEach(function(method) {
     this[method] = this[method].bind(this);
@@ -22,7 +22,7 @@ TextComponent.prototype.bindMethods = [
   'align'
 ];
 TextComponent.prototype.init = function() {
-  this.sources = this.loadSources();
+  this.sources.addSources(this.loadSources());
   this.transform();
   this.textBoxes = this.select();
   this.addListeners();
@@ -62,14 +62,13 @@ TextComponent.prototype.align = function() {
 };
 TextComponent.prototype.updateAlignments = function() {
   var _this = this;
-  var alignments = this.alignments.alignments;
 
   this.selectAlignments().each(function(index, el) {
     delete el.dataset.alignment;
     _this.removeAligned(el);
   });
 
-  alignments.forEach(function(alignment, index) {
+  this.alignments.forEach(function(alignment, index) {
     var spans = _this.selectWords(alignment.words);
     $(spans).each(function(index, el) {
       el.dataset.alignment = alignment.id;

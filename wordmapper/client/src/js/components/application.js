@@ -13,72 +13,64 @@ Application.prototype.init = function() {
   this.el = $('<div>');
   
   // models
-	this.user = new models.User();
-  this.alignments = new models.Alignments();
-  this.siteContext = new models.SiteContext({
+  this.models = {};
+	this.models.user = new models.User();
+  this.models.sources = new models.Sources();
+  this.models.alignments = new models.Alignments();
+  this.models.siteContext = new models.SiteContext({
     id: window.location.hostname,
     url: window.location.toString()
   });
+  
+  // settings
   this.settings = new Settings();
-  this.settings.load(this.siteContext);
+  this.settings.load(this.models.siteContext);
+
+  // services
+  this.services = {};
+  this.services.importExport = new services.ImportExportService({
+    siteContext: this.models.siteContext,
+    alignments: this.models.alignments,
+    sources: this.models.sources
+  });
+  this.services.persistence = new services.Persistence({
+    user: this.models.user,
+    alignments: this.models.alignments,
+    sources: this.models.sources,
+    siteContext: this.models.siteContext
+  });
 
   // components
-  this.boxes = new TextComponent({
-    alignments: this.alignments,
+  this.components = {};
+  this.components.boxes = new TextComponent({
+    alignments: this.models.alignments,
+    sources: this.models.sources,
     selector: this.settings.getSourceSelector()
   });
-  this.importExport = new services.ImportExportService({
-    siteContext: this.siteContext,
-    alignments: this.alignments,
-    sources: this.boxes.sources
-  });
-  this.panel = new PanelComponent({
-    user: this.user,
+  this.components.panel = new PanelComponent({
+    user: this.models.user,
     settings: this.settings
   });
-  this.overlay = new OverlayComponent({
-    alignments: this.alignments,
-    importExport: this.importExport,
-    sources: this.boxes.sources
+  this.components.overlay = new OverlayComponent({
+    alignments: this.models.alignments,
+    importExport: this.services.importExport,
+    sources: this.models.sources
   });
 
-  this.storage = new services.LocalStorageService({
-    siteContext: this.siteContext,
-    sources: this.boxes.sources
-  });
-
-  this.loadData();
   this.addListeners();
 };
-Application.prototype.addListeners = function() {
-  this.alignments.on('change', this.saveData.bind(this));
-};
+Application.prototype.addListeners = function() {};
 Application.prototype.render = function() {
-  this.el.append(this.panel.render().el);
-  this.el.append(this.overlay.render().el);
+  this.el.append(this.components.panel.render().el);
+  this.el.append(this.components.overlay.render().el);
   return this;
 };
 Application.prototype.renderTo = function(selector) {
   $(function() {
     $(selector).append(this.render().el);
-    $(selector).css({'marginTop': this.panel.getHeight()+"px"});
+    $(selector).css({'marginTop': this.components.panel.getHeight()+"px"});
   }.bind(this));
   return this;
-};
-Application.prototype.saveData = function() {
-  console.log("saving to storage");
-  var promise = this.storage.save(this.alignments);
-  promise.done(function() {
-    console.log("save completed");
-  });
-};
-Application.prototype.loadData = function() {
-  console.log("loading from storage");
-  var promise = this.storage.load();
-  promise.done(function(batch) {
-    this.alignments.load(batch);
-    console.log("load completed", batch);
-  }.bind(this));
 };
 
 module.exports = Application;

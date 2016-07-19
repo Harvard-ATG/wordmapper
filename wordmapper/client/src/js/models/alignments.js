@@ -108,6 +108,14 @@ Alignments.prototype.toJSON = function() {
 Alignments.prototype.serialize = function() {
   return JSON.stringify(this.toJSON(), null, '\t');
 };
+
+// convenience methods to operate on the underlying objects by callers...
+['map', 'forEach', 'reduce', 'filter'].forEach(function(method) {
+  Alignments.prototype[method] = function() {
+    return Array.prototype[method].apply(this.alignments, arguments);
+  };
+});
+
 events.Events.mixin(Alignments.prototype);
 
 module.exports = Alignments;
