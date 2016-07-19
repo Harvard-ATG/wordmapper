@@ -46,7 +46,7 @@ $ gulp migrate   # run database migrations to setup the schema
 Start the NodeJS web server (configuration can be specified via [dotenv](https://www.npmjs.com/package/dotenv) in `wordmapper/server/dotenv/`):
 
 ```sh
-$ node --require dotenv/config server.js dotenv_config_path=./wordmapper/server/dotenv/vagrant.env
+$ node --require dotenv/config server.js dotenv_config_path=./wordmapper/server/dotenv/.env.vagrant
 ```
 
 Watch your client-side JS files so they're automatically rebuilt whenever they are modified:
