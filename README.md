@@ -82,10 +82,11 @@ javascript:(function(){document.body.appendChild(document.createElement('script'
 **Deployment Steps**
 
 1. Create an environment-specific configuration for the client code: `./wordmapper/client/config/{env}.js`.
-2. Build the client using the specified configuration via the *NODE_ENV* environment variable: `$ NODE_ENV={env} gulp build`
+2. Build the client using the specified configuration via the *NODE_ENV* environment variable: 
+    - `$ NODE_ENV={env} gulp build`
 3. Create an environment-specific configuration for the server code: `./wordmapper/server/dotenv/.env.{env}`
-4. Run the server: `$ node --require dotenv/config server.js dotenv_config_path=./wordmapper/server/dotenv/.env.{env}`
-
+4. Run the server: 
+    - `$ node --require dotenv/config server.js dotenv_config_path=./wordmapper/server/dotenv/.env.{env}`
 
 ### Testing the Bookmarklet 
 
