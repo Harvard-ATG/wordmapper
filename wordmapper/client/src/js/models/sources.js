@@ -6,7 +6,7 @@ var Sources = function(options) {
   this.sources = options.sources || [];
 };
 Sources.prototype.triggerChange = function() {
-	this.trigger("change");
+  this.trigger("change");
 };
 Sources.prototype.addSources = function(sources) {
   this.sources = this.sources.concat(sources || []);
@@ -62,6 +62,5 @@ Sources.prototype.serialize = function() {
 });
 
 events.Events.mixin(Sources.prototype);
-
 
 module.exports = Sources;
