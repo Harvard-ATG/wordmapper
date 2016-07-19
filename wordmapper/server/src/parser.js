@@ -23,8 +23,8 @@ Parser.prototype.asPromise = function() {
   });
 };
 Parser.prototype.parse = function() {
-	this.valid = false;
-	this.parsed = false;
+  this.valid = false;
+  this.parsed = false;
   this._validate();
   this._parse();
   return this;
@@ -34,39 +34,39 @@ Parser.prototype.error = function(msg) {
   return this;
 };
 Parser.prototype._validateTopLevel = function(inputType) {
-	var valid = true;
+  var valid = true;
   if (typeof this.input !== "object") {
-		valid = false;
+    valid = false;
     this.error("Data must be of type 'object'");
   }
   if (!this.input.type || !this.input.data) {
-		valid = false;
+    valid = false;
     this.error("Top-level object missing 'type' or 'data' attribute");
   }
   if (this.input.type !== inputType) {
-		valid = false;
+    valid = false;
     this.error("Top-level object 'type' attribute must equal '"+inputType+"'");
   }
   if (!Array.isArray(this.input.data)) {
-		valid = false;
+    valid = false;
     this.error("Top-level object 'data' attribute must be an array");
   }
-	return valid;
+  return valid;
 };
 
 /**
  * AlignmentsParser
  */
 var AlignmentsParser = function(data) {
-	Parser.call(this, data);
+  Parser.call(this, data);
   this.alignments = [];
 };
 _.assign(AlignmentsParser.prototype, Parser.prototype);
 
 AlignmentsParser.prototype._validate = function() {
-	if(!this._validateTopLevel("alignments")) {
-		return this;
-	}
+  if(!this._validateTopLevel("alignments")) {
+    return this;
+  }
 
   // check each alignment
   for(var i = 0, alignments = this.input.data, alignment, errAlignment; i < alignments.length; i++) {
@@ -112,11 +112,11 @@ AlignmentsParser.prototype._parse = function() {
   if (!this.valid) {
     return this;
   }
-	var typeEquals = function(typeValue) {
-		return function(item) {
-			return item.type == typeValue;
-		};
-	};
+  var typeEquals = function(typeValue) {
+    return function(item) {
+      return item.type == typeValue;
+    };
+  };
 
   this.alignments = this.input.data.map(function(alignment) {
     var words = alignment.data.filter(typeEquals('word')).map(function(word) {
@@ -132,15 +132,15 @@ AlignmentsParser.prototype._parse = function() {
     };
   });
 
-	this.source_hashes = Object.keys(this.alignments.reduce(function(dict, alignment) {
-		alignment.words.forEach(function(word) {
-			dict[word.source] = true;
-		});
-		return dict;
-	}, {}));
+  this.source_hashes = Object.keys(this.alignments.reduce(function(dict, alignment) {
+    alignment.words.forEach(function(word) {
+      dict[word.source] = true;
+    });
+    return dict;
+  }, {}));
   
   this.parsed = true;
-	return this;
+  return this;
 };
 
 
@@ -148,15 +148,15 @@ AlignmentsParser.prototype._parse = function() {
  * SourcesParser
  */
 var SourcesParser = function(data) {
-	Parser.call(this, data);
-	this.sources = [];
+  Parser.call(this, data);
+  this.sources = [];
 };
 _.assign(SourcesParser.prototype, Parser.prototype);
 
 SourcesParser.prototype._validate = function() {
-	if(!this._validateTopLevel("sources")) {
-		return this;
-	}
+  if(!this._validateTopLevel("sources")) {
+    return this;
+  }
 
   // check each source
   for(var i = 0, sources = this.input.data, source, errAerrSourcelignment; i < sources.length; i++) {
@@ -171,16 +171,16 @@ SourcesParser.prototype._validate = function() {
     if (!(typeof source.data == "object" && !Array.isArray(source.data))) {
       return this.error(errSource + " incorrect object 'data' attribute: must be a plain object");
     }
-		
-		for (var j = 0, attrs = ['hash','normalized','original']; j < attrs.length; j++) {
-			if (!source.data.hasOwnProperty(attrs[j])) {
-				return this.error(errSource + " missing '"+attrs[j]+"' attribute");
-			}
-		}
-	}
+    
+    for (var j = 0, attrs = ['hash','normalized','original']; j < attrs.length; j++) {
+      if (!source.data.hasOwnProperty(attrs[j])) {
+        return this.error(errSource + " missing '"+attrs[j]+"' attribute");
+      }
+    }
+  }
 
-	this.valid = true;
-	return this;
+  this.valid = true;
+  return this;
 };
 SourcesParser.prototype._parse = function() {
   if (!this.valid) {
@@ -188,15 +188,15 @@ SourcesParser.prototype._parse = function() {
   }
 
   this.sources = this.input.data.map(function(source) {
-		return source.data;
-	});
-	
-	this.source_hashes = this.input.data.map(function(source) {
-		return source.data.hash;
-	});
+    return source.data;
+  });
+  
+  this.source_hashes = this.input.data.map(function(source) {
+    return source.data.hash;
+  });
 
-	this.parsed = true;
-	return this;
+  this.parsed = true;
+  return this;
 };
 
 
