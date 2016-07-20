@@ -63,6 +63,7 @@ Alignments.prototype.load = function(alignments) {
   this.alignments = Array.prototype.slice.call(alignments);
   this.sort();
   this.triggerLoad();
+  return this;
 };
 Alignments.prototype.sort = function() {
   this.alignments.sort(function(a, b) {

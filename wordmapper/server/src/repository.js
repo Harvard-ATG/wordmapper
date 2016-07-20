@@ -10,7 +10,18 @@ var SourcesSerializer = serializer.SourcesSerializer;
 
 module.exports = {
 	fetchAlignments: function(userId, sources) {
-		var promise = database.alignments.getAlignmentsByUser(userId, {sources:sources});
+		var is_list_of_ids = sources.filter(function(source) {
+			return /^\d+$/.test(source);
+		}).length > 0;
+		
+		var options = {};
+		if (is_list_of_ids) {
+			options.sourceIds = sources;
+		} else {
+			options.sourceHashes = sources;
+		}
+		
+		var promise = database.alignments.getAlignmentsByUser(userId, options);
 		return promise.then(function(data) {
 			var serializer = new AlignmentsSerializer(data);
 			return serializer.asPromise();
@@ -36,10 +47,11 @@ module.exports = {
 			return database.sources.createSources(parser.sources);
 		});
 	},
-	fetchSources: function(hashes) {
+	fetchSources: function(hashes, options) {
+		options = options || {};
 		var promise = database.sources.getSourcesByHash(hashes);
 		return promise.then(function(data) {
-			var serializer = new SourcesSerializer(data);
+			var serializer = new SourcesSerializer(data, options);
 			return serializer.asPromise();
 		});
 	}

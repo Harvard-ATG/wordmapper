@@ -1,5 +1,7 @@
 var $ = require('jquery');
-var models = require('../models.js');
+var parser = require('./parser.js');
+
+var AlignmentsParser = parser.AlignmentsParser;
 
 var StorageLocal = function(parent, options) {
   options = options || {};
@@ -47,35 +49,14 @@ StorageLocal.prototype.saveSources = function() {
   return $.Deferred().resolve().promise();
 };
 StorageLocal.prototype._getAlignmentsKey = function() {
-  var hashes = this.parent.models.sources.getHashes();
+  var hashKey = this.parent.models.sources.getHashKey();
   var siteId = this.parent.models.siteContext.id;
-  return siteId + "::" + hashes.join(",");
+  return siteId + "::" + hashKey;
 };
-StorageLocal.prototype._parseAlignments = function(jsonData) {
-  var result = JSON.parse(jsonData);
-  var sourceMap = this.parent.models.sources.getSourceHashMap();
-  var alignments = result.data.map(function(alignment) {
-    var words = alignment.data.filter(function(item) {
-      return item.type == 'word';
-    }).map(function(word) {
-      return models.Word.create({
-        index: word.data.index,
-        value: word.data.value,
-        source: sourceMap[word.data.source]
-      });
-    });
-    var comment_texts = alignment.data.filter(function(item) {
-      return item.type == 'comment';
-    }).map(function(comment) {
-      return comment.data.text;
-    });
-    var alignment_obj = models.Alignments.createAlignment(words);
-    if (comment_texts.length > 0) {
-      alignment_obj.setComment(comment_texts[0]);
-    }
-    return alignment_obj;
-  });
-  return alignments;
+StorageLocal.prototype._parseAlignments = function(data) {
+  var parser = new AlignmentsParser(data, this.parent.models.sources);
+  parser.parse();
+  return parser.output;
 };
 
 module.exports = StorageLocal;

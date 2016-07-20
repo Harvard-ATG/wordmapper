@@ -6,12 +6,8 @@ var Persistence = function(options) {
   options = options || {};
   options = _.assign({models: {}}, options);
 
-  this.models = _.assign({
-    user: null,
-    alignments: null,
-    siteContext: null,
-    sources: null
-  }, options.models);
+  this.settings = options.settings;
+  this.models = options.models;
   
   this.stores = {};
   this.stores.local = new StorageLocal(this, { enabled: true });
@@ -36,11 +32,9 @@ Persistence.prototype.addListeners = function() {
   this.models.user.on('change', this.onUserChange);
 };
 Persistence.prototype.onAlignmentsChange = function() {
-  console.log("alignments change", this.models.alignments);
   this.saveAlignments();
 };
 Persistence.prototype.onSourcesChange = function() {
-  console.log("sources change", this.models.sources);
   this.sourcesReady = true;
 };
 Persistence.prototype.onUserChange = function() {
@@ -66,7 +60,6 @@ Persistence.prototype.load = function() {
 };
 Persistence.prototype.loadAlignments = function() {
   var _this = this, store = this.primaryStore;
-  console.log("load alignments");
   return new Promise(function(resolve, reject) {
     store.loadAlignments().then(function(data) {
       _this.models.alignments.load(data);
@@ -76,14 +69,12 @@ Persistence.prototype.loadAlignments = function() {
 };
 Persistence.prototype.loadSources = function() {
   var _this = this, store = this.primaryStore;
-  console.log("load sources");
   return new Promise(function(resolve, reject) {
     store.loadSources().then(resolve, reject);
   });
 };
 Persistence.prototype.saveAlignments = function() {
   var _this = this;
-  console.log("save alignments");
   return new Promise(function(resolve, reject) {
     var promises = _this.mapEnabled(function(store) {
       return store.saveAlignments();
@@ -93,7 +84,6 @@ Persistence.prototype.saveAlignments = function() {
 };
 Persistence.prototype.saveSources = function() {
   var _this = this;
-  console.log("save sources");
   return new Promise(function(resolve, reject) {
     var promises = _this.mapEnabled(function(store) {
       return store.saveSources();

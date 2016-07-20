@@ -47,7 +47,9 @@ Sources.prototype.toString = function() {
 Sources.prototype.toJSON = function() {
   return {
     "type": "sources",
-    "data": this.sources.toJSON()
+    "data": this.sources.map(function(source) {
+      return source.toJSON();
+    })
   };
 };
 Sources.prototype.serialize = function() {

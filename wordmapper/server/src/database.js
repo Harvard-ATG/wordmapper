@@ -76,14 +76,15 @@ var alignments = {
 		if (!userId) {
 			throw "Missing userId parameter";
 		}
-		var sources = options.sources; // optional
+		var source_col = options.hasOwnProperty('sourceIds') ? 'source_id' : 'hash';
+		var source_vals = options.hasOwnProperty('sourceIds') ? options.sourceIds : options.sourceHashes;
 		var query = sql('findAlignments.sql').query;
 		var params = {userId: userId};
 		var conds = ['user_id = ${userId}'];
 
-		if(Array.isArray(sources) && sources.length > 0) {
-			conds.push('source_id in (${sources:csv})');
-			params.sources = sources;
+		if(Array.isArray(source_vals) && source_vals.length > 0) {
+			conds.push(source_col + ' in (${sources:csv})');
+			params.sources = source_vals;
 		}
 
 		query += ' WHERE ' + conds.join(" AND ") + ' ORDER BY a.id';
@@ -156,7 +157,7 @@ var sources = {
 	createSources: function(sources) {
 		return db.tx(function(t) {
 			var queries = sources.map(function(source) {
-				return t.one('insert into source (hash, normalized, original) values (${hash}, ${normalized}, ${original}) returning id', source);
+				return t.one('insert into source (hash, normalized, original) values (${hash}, ${normalized}, ${original}) returning id, hash', source);
 			});
 			return t.batch(queries);
 		});

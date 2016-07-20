@@ -34,7 +34,8 @@ Application.prototype.init = function() {
     sources: this.models.sources
   });
   this.services.persistence = new services.Persistence({
-    models: this.models
+    models: this.models,
+    settings: this.settings
   });
 
   // components
@@ -70,7 +71,10 @@ Application.prototype.renderTo = function(selector) {
   return this;
 };
 Application.prototype.loadData = function() {
-  this.services.persistence.load();
+  this.models.user.restoreLogin();
+  if (!this.models.user.isAuthenticated()) {
+    this.services.persistence.load();
+  }
   return this;
 };
 

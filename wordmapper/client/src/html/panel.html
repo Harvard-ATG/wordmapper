@@ -10,6 +10,6 @@
     <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>
   </div>
   <div class="wordmapper-buttons wordmapper-buttons-right">
-    <button name="login"><i class="fa fa-user"></i> <span>Account</span></button>
+    <button name="login"><i class="fa fa-user"></i> <span><% print(user.isAuthenticated() ? user : 'Account'); %></span></button>
   </div>
 </div>

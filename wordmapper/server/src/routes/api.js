@@ -94,12 +94,19 @@ router.route('/alignments')
 router.route('/sources')
 .get(ensureAuthenticated(), function(req, res) {
 	var hashes = ('hashes' in req.query ? req.query.hashes : '').split(',');
-	console.log("hashes=", hashes);
-	repository.fetchSources(hashes).then(function(data) {
-		res.json({ code: 200, message: "Fetched sources", data: data });
+	var options = {fields: ['id', 'hash']};
+	if ('fields' in req.query && req.query.fields) {
+		options.fields = req.query.fields.split(',');
+	}
+	repository.fetchSources(hashes, options).then(function(sources) {
+		if (sources.data.length == 0) {
+			res.status(404).json({ code: 404, message: "Sources not found" });
+		} else {
+			res.json({ code: 200, message: "Fetched sources", data: sources });
+		}
 	}).catch(function(err) {
 		winston.error("error fetching sources: ", err);
-		res.status(500).json({ code: 500, message: "Error saving sources",  error: err.message});
+		res.status(500).json({ code: 500, message: "Error fetching sources",  error: err.message});
 	});
 })
 .post(ensureAuthenticated(), function(req, res) {

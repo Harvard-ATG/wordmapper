@@ -46,6 +46,7 @@ LoginComponent.prototype.onClickLogin = function(evt) {
     this.tplData.hidden = true;
     this.tplData.error = '';
     this.user.update(response.data);
+    this.user.saveLogin();
     this.render();
   }.bind(this)).fail(function(jqXHR, textStatus, errorThrown) {
     var errStr = errorThrown;
@@ -60,6 +61,7 @@ LoginComponent.prototype.onClickLogin = function(evt) {
 };
 LoginComponent.prototype.onClickLogout = function(evt) {
   this.user.reset();
+  this.user.saveLogin();
   this.render();
   evt.stopPropagation();
 };

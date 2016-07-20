@@ -443,10 +443,10 @@
 	var $ = __webpack_require__(5);
 	var services = __webpack_require__(9);
 	var models = __webpack_require__(11);
-	var Settings = __webpack_require__(33);
-	var PanelComponent = __webpack_require__(35);
-	var OverlayComponent = __webpack_require__(43);
-	var TextComponent = __webpack_require__(46);
+	var Settings = __webpack_require__(34);
+	var PanelComponent = __webpack_require__(36);
+	var OverlayComponent = __webpack_require__(44);
+	var TextComponent = __webpack_require__(47);
 
 	var Application = function() {
 	  this.init();
@@ -476,7 +476,8 @@
 	    sources: this.models.sources
 	  });
 	  this.services.persistence = new services.Persistence({
-	    models: this.models
+	    models: this.models,
+	    settings: this.settings
 	  });
 
 	  // components
@@ -512,7 +513,10 @@
 	  return this;
 	};
 	Application.prototype.loadData = function() {
-	  this.services.persistence.load();
+	  this.models.user.restoreLogin();
+	  if (!this.models.user.isAuthenticated()) {
+	    this.services.persistence.load();
+	  }
 	  return this;
 	};
 
@@ -526,8 +530,8 @@
 	module.exports = {
 	  ImportExportService: __webpack_require__(10),
 	  Persistence: __webpack_require__(28),
-		StorageLocal: __webpack_require__(31),
-		StorageRemote: __webpack_require__(32)
+	  StorageLocal: __webpack_require__(31),
+	  StorageRemote: __webpack_require__(33)
 	};
 
 
@@ -592,7 +596,7 @@
 	    });
 
 	    // Load the batch of alignment objects
-	    this.alignments.load(batch);
+	    this.alignments.load(batch).triggerChange();
 
 	  } catch(e) {
 	    retvalue.success = false;
@@ -696,6 +700,7 @@
 	  this.alignments = Array.prototype.slice.call(alignments);
 	  this.sort();
 	  this.triggerLoad();
+	  return this;
 	};
 	Alignments.prototype.sort = function() {
 	  this.alignments.sort(function(a, b) {
@@ -1051,7 +1056,9 @@
 	Sources.prototype.toJSON = function() {
 	  return {
 	    "type": "sources",
-	    "data": this.sources.toJSON()
+	    "data": this.sources.map(function(source) {
+	      return source.toJSON();
+	    })
 	  };
 	};
 	Sources.prototype.serialize = function() {
@@ -3250,6 +3257,9 @@
 	User.prototype.isAuthenticated = function() {
 		return this.token ? true : false;
 	};
+	User.prototype.getToken = function() {
+		return this.token;
+	};
 	User.prototype.update = function(data) {
 		var changed = false;
 		if (!data) {
@@ -3270,6 +3280,47 @@
 	};
 	User.prototype.reset = function() {
 		return this.update({id:undefined,email:undefined,token:undefined});
+	};
+	User.prototype.saveLogin = function() {
+		if (!this.isAuthenticated()) {
+			localStorage.removeItem("wordmapper-user");
+			return this;
+		}
+	  if (!window.localStorage) {
+	    return this;
+	  }
+		var data = {
+			id: this.id,
+			email: this.email,
+			token: this.token
+		};
+		data.expires = new Date();
+		data.expires.setHours(data.expires.getHours() + 3);
+
+		localStorage.setItem("wordmapper-user", JSON.stringify(data));
+
+		return this;
+	};
+	User.prototype.restoreLogin = function() {
+	  var result = null;
+	  if (!window.localStorage) {
+	    return this;
+	  }
+	  result = localStorage.getItem("wordmapper-user");
+	  if (result === null) {
+	    return this;
+	  }
+		result = JSON.parse(result);
+
+		var expires = new Date(result.expires);
+		var now = new Date();
+		if (now >= expires) {
+			localStorage.removeItem("wordmapper-user");
+			return this;
+		}
+		this.update(result);
+
+	  return this;
 	};
 	User.prototype.triggerChange = function() {
 		this.trigger("change");
@@ -3300,18 +3351,14 @@
 
 	var _ = __webpack_require__(29);
 	var StorageLocal = __webpack_require__(31);
-	var StorageRemote = __webpack_require__(32);
+	var StorageRemote = __webpack_require__(33);
 
 	var Persistence = function(options) {
 	  options = options || {};
 	  options = _.assign({models: {}}, options);
 
-	  this.models = _.assign({
-	    user: null,
-	    alignments: null,
-	    siteContext: null,
-	    sources: null
-	  }, options.models);
+	  this.settings = options.settings;
+	  this.models = options.models;
 	  
 	  this.stores = {};
 	  this.stores.local = new StorageLocal(this, { enabled: true });
@@ -3336,11 +3383,9 @@
 	  this.models.user.on('change', this.onUserChange);
 	};
 	Persistence.prototype.onAlignmentsChange = function() {
-	  console.log("alignments change", this.models.alignments);
 	  this.saveAlignments();
 	};
 	Persistence.prototype.onSourcesChange = function() {
-	  console.log("sources change", this.models.sources);
 	  this.sourcesReady = true;
 	};
 	Persistence.prototype.onUserChange = function() {
@@ -3366,7 +3411,6 @@
 	};
 	Persistence.prototype.loadAlignments = function() {
 	  var _this = this, store = this.primaryStore;
-	  console.log("load alignments");
 	  return new Promise(function(resolve, reject) {
 	    store.loadAlignments().then(function(data) {
 	      _this.models.alignments.load(data);
@@ -3376,14 +3420,12 @@
 	};
 	Persistence.prototype.loadSources = function() {
 	  var _this = this, store = this.primaryStore;
-	  console.log("load sources");
 	  return new Promise(function(resolve, reject) {
 	    store.loadSources().then(resolve, reject);
 	  });
 	};
 	Persistence.prototype.saveAlignments = function() {
 	  var _this = this;
-	  console.log("save alignments");
 	  return new Promise(function(resolve, reject) {
 	    var promises = _this.mapEnabled(function(store) {
 	      return store.saveAlignments();
@@ -3393,7 +3435,6 @@
 	};
 	Persistence.prototype.saveSources = function() {
 	  var _this = this;
-	  console.log("save sources");
 	  return new Promise(function(resolve, reject) {
 	    var promises = _this.mapEnabled(function(store) {
 	      return store.saveSources();
@@ -19848,7 +19889,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var models = __webpack_require__(11);
+	var parser = __webpack_require__(32);
+
+	var AlignmentsParser = parser.AlignmentsParser;
 
 	var StorageLocal = function(parent, options) {
 	  options = options || {};
@@ -19896,18 +19939,46 @@
 	  return $.Deferred().resolve().promise();
 	};
 	StorageLocal.prototype._getAlignmentsKey = function() {
-	  var hashes = this.parent.models.sources.getHashes();
+	  var hashKey = this.parent.models.sources.getHashKey();
 	  var siteId = this.parent.models.siteContext.id;
-	  return siteId + "::" + hashes.join(",");
+	  return siteId + "::" + hashKey;
 	};
-	StorageLocal.prototype._parseAlignments = function(jsonData) {
-	  var result = JSON.parse(jsonData);
-	  var sourceMap = this.parent.models.sources.getSourceHashMap();
-	  var alignments = result.data.map(function(alignment) {
+	StorageLocal.prototype._parseAlignments = function(data) {
+	  var parser = new AlignmentsParser(data, this.parent.models.sources);
+	  parser.parse();
+	  return parser.output;
+	};
+
+	module.exports = StorageLocal;
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var models = __webpack_require__(11);
+	var Word = models.Word;
+	var Alignments = models.Alignments;
+
+	var AlignmentsParser = function(data, sources) {
+	  this.input = data;
+	  this.sources = sources;
+	  this.output = null;
+	};
+	AlignmentsParser.prototype.parse = function() {
+	  if (typeof this.input === "string") {
+	    this.input = JSON.parse(this.input);
+	  }
+	  this.output = this._parse();
+	  return this;
+	};
+	AlignmentsParser.prototype._parse = function() {
+	  var sourceMap = this.sources.getSourceHashMap();
+
+	  return this.input.data.map(function(alignment) {
 	    var words = alignment.data.filter(function(item) {
 	      return item.type == 'word';
 	    }).map(function(word) {
-	      return models.Word.create({
+	      return Word.create({
 	        index: word.data.index,
 	        value: word.data.value,
 	        source: sourceMap[word.data.source]
@@ -19918,22 +19989,22 @@
 	    }).map(function(comment) {
 	      return comment.data.text;
 	    });
-	    var alignment_obj = models.Alignments.createAlignment(words);
-	    if (comment_texts.length > 0) {
-	      alignment_obj.setComment(comment_texts[0]);
-	    }
-	    return alignment_obj;
+	    return Alignments.createAlignment(words).setComment(comment_texts.join(" "));
 	  });
-	  return alignments;
 	};
 
-	module.exports = StorageLocal;
+	module.exports.AlignmentsParser = AlignmentsParser;
+
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var models = __webpack_require__(11);
+	var $ = __webpack_require__(5);
+	var _ = __webpack_require__(29);
+	var parser = __webpack_require__(32);
+
+	var AlignmentsParser = parser.AlignmentsParser;
 
 	var StorageRemote = function(parent, options) {
 	  options = options || {};
@@ -19951,25 +20022,100 @@
 	};
 	StorageRemote.prototype.loadAlignments = function() {
 	  console.log("StorageRemote loadAlignments");
+	  var _this = this;
+	  var url = this._url("/alignments");
+	  var hashes = this.parent.models.sources.getHashes();
+	  var promise = this._ajax({
+	    method: "GET",
+	    url: url,
+	    data: {sources: hashes.join(",")}
+	  });
+	  var deferred = $.Deferred();
+
+	  promise.done(function(responseData, textStatus, jqXHR) {
+	    try {
+	      var alignment_objects = _this._parseAlignments(responseData.data);
+	      deferred.resolve(alignment_objects);
+	    } catch (e) {
+	      deferred.fail(e);
+	    }
+	  }).fail(function() {
+	    deferred.fail.apply(deferred, arguments);
+	  });
+
+	  return deferred.promise();
 	};
 	StorageRemote.prototype.saveAlignments = function() {
 	  console.log("StorageRemote saveAlignments");
+	  var url = this._url("/alignments");
+	  var serialized = this.parent.models.alignments.serialize();
+	  var promise = this._ajax({
+	    method: "POST",
+	    url: url,
+	    processData: false,
+	    data: serialized
+	  });
+	  return promise;
 	};
 	StorageRemote.prototype.loadSources = function() {
 	  console.log("StorageRemote loadSources");
+	  var url = this._url("/sources");
+	  var hashes = this.parent.models.sources.getHashes();
+	  return this._ajax({
+	    method: "GET",
+	    url: url,
+	    data: {hashes: hashes.join(",")}
+	  });
 	};
 	StorageRemote.prototype.saveSources = function() {
 	  console.log("StorageRemote saveSources");
+	  var url = this._url("/sources");
+	  var serialized = this.parent.models.sources.serialize();
+	  var promise = this._ajax({
+	    method: "POST",
+	    url: url,
+	    processData: false,
+	    data: serialized
+	  });
+	  var deferred = $.Deferred();
+
+	  promise.done(function(data, textStatus, jqXHR) {
+	    deferred.resolve(data);
+	  }).fail(function() {
+	    deferred.fail.apply(deferred, arguments);
+	  });
+
+	  return deferred.promise();
+	};
+	StorageRemote.prototype._url = function(path) {
+	  return this.parent.settings.getAPIBaseUrl() + path;
+	};
+	StorageRemote.prototype._ajax = function(options) {
+	  var user = this.parent.models.user;
+	  var defaults = {
+	    dataType: "json",
+	    contentType: "application/json; charset=utf-8",
+	    beforeSend: function(jqXHR, settings) {
+	      jqXHR.setRequestHeader('Authorization', 'JWT ' + user.getToken());
+	    }
+	  };
+	  var ajaxOptions = _.assign({}, options, defaults);
+	  return $.ajax(ajaxOptions);
+	};
+	StorageRemote.prototype._parseAlignments = function(data) {
+	  var parser = new AlignmentsParser(data, this.parent.models.sources);
+	  parser.parse();
+	  return parser.output;
 	};
 
 	module.exports = StorageRemote;
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(29);
-	var config = __webpack_require__(34);
+	var config = __webpack_require__(35);
 
 	var Settings = function(options) {
 	  options = options || {};
@@ -20020,7 +20166,7 @@
 	module.exports = Settings;
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -20029,13 +20175,13 @@
 	};
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(13);
-	var templates = __webpack_require__(36);
-	var LoginComponent = __webpack_require__(42);
+	var templates = __webpack_require__(37);
+	var LoginComponent = __webpack_require__(43);
 
 	var PanelComponent = function(options) {
 	  options = options || {};
@@ -20104,103 +20250,30 @@
 
 
 /***/ },
-/* 36 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  'panel': __webpack_require__(37),
-	  'index': __webpack_require__(38),
-	  'export': __webpack_require__(39),
-	  'overlay': __webpack_require__(40),
-	  'login': __webpack_require__(41)
-	};
-
-/***/ },
 /* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(29);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '';
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login"><i class="fa fa-user"></i> <span>Account</span></button>\n  </div>\n</div>\n';
-
-	}
-	return __p
-	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
-
+	module.exports = {
+	  'panel': __webpack_require__(38),
+	  'index': __webpack_require__(39),
+	  'export': __webpack_require__(40),
+	  'overlay': __webpack_require__(41),
+	  'login': __webpack_require__(42)
+	};
 
 /***/ },
 /* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(29);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
-	function print() { __p += __j.call(arguments, '') }
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/index.html -->\n';
-	 if (!alignments.isEmpty()) { ;
-	__p += '\n<div style="margin: 0 0 1em 0;" popout-exclude >\n  <button name="action_comment" data-toggle-text="Edit Comments,Save Comments">Edit Comments</button>\n</div>\n';
-	 } ;
-	__p += '\n\n<table class="wordmapper-table">\n  ';
-	 if (alignments.isEmpty()) { ;
-	__p += '\n    <tr><td>No words have been aligned yet</td></tr>\n  ';
-	 } ;
-	__p += '\n  ';
-	 _.forEach(indexData, function(data, index) { ;
-	__p += '\n    <tr>\n      ';
-	 _.forEach(data.buckets, function(words, index, arr) { ;
-	__p += '\n        <td class="words" ';
-	 if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') ;
-	__p += '>\n        ';
-	 _.forEach(words, function(word) { ;
-	__p += '\n          <span class="word" title="Word: ' +
-	__e( word.index ) +
-	' Source: ' +
-	__e( word.source.index ) +
-	'">' +
-	__e( word.value ) +
-	'</span>\n        ';
-	 }); ;
-	__p += '\n        </td>\n      ';
-	 }); ;
-	__p += '\n      ';
-	 if(commentsPosition == "right") { ;
-	__p += '\n      <td class="comment">\n        <span class="comment">' +
-	__e( data.alignment.comment ) +
-	'</span>\n        <textarea class="comment" name="comment' +
-	((__t = ( index )) == null ? '' : __t) +
-	'" data-alignment="' +
-	((__t = ( data.alignment.id )) == null ? '' : __t) +
-	'" placeholder="Add comment..." style="display:none">' +
-	__e( data.alignment.comment || '' ) +
-	'</textarea>\n      </td>\n      ';
-	 } ;
-	__p += '\n    </tr>\n    ';
-	 if(commentsPosition == "bottom") { ;
-	__p += '\n    <tr class="comment" ';
-	 print(data.alignment.comment?'':'style="display:none;"'); ;
-	__p += ';>\n      <td class="comment" colspan="' +
-	__e( data.buckets.length ) +
-	'">\n        <span class="comment">' +
-	__e( data.alignment.comment ) +
-	'</span>\n        <textarea class="comment" name="comment' +
-	((__t = ( index )) == null ? '' : __t) +
-	'" data-alignment="' +
-	((__t = ( data.alignment.id )) == null ? '' : __t) +
-	'" placeholder="Add comment..." style="display:none">' +
-	__e( data.alignment.comment || '' ) +
-	'</textarea>\n      </td>\n    </tr>\n    ';
-	 } ;
-	__p += '\n  ';
-	 }); ;
-	__p += '\n</table>';
-
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login"><i class="fa fa-user"></i> <span>';
+	 print(user.isAuthenticated() ? user : 'Account'); 
+	__p+='</span></button>\n  </div>\n</div>\n';
 	}
-	return __p
+	return __p;
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
@@ -20209,16 +20282,68 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(29);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '';
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/export.html -->\nExport data:\n<textarea name="export" class="json">' +
-	((__t = ( importExport.export(true) )) == null ? '' : __t) +
-	'</textarea>\n\nImport data:\n<textarea name="import" class="json"></textarea>\n<button class="primary wordmapper-import">Import</button>\n<span class="wordmapper-import-messages"></span>';
-
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/index.html -->\n';
+	 if (!alignments.isEmpty()) { 
+	__p+='\n<div style="margin: 0 0 1em 0;" popout-exclude >\n  <button name="action_comment" data-toggle-text="Edit Comments,Save Comments">Edit Comments</button>\n</div>\n';
+	 } 
+	__p+='\n\n<table class="wordmapper-table">\n  ';
+	 if (alignments.isEmpty()) { 
+	__p+='\n    <tr><td>No words have been aligned yet</td></tr>\n  ';
+	 } 
+	__p+='\n  ';
+	 _.forEach(indexData, function(data, index) { 
+	__p+='\n    <tr>\n      ';
+	 _.forEach(data.buckets, function(words, index, arr) { 
+	__p+='\n        <td class="words" ';
+	 if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') 
+	__p+='>\n        ';
+	 _.forEach(words, function(word) { 
+	__p+='\n          <span class="word" title="Word: '+
+	((__t=( word.index ))==null?'':_.escape(__t))+
+	' Source: '+
+	((__t=( word.source.index ))==null?'':_.escape(__t))+
+	'">'+
+	((__t=( word.value ))==null?'':_.escape(__t))+
+	'</span>\n        ';
+	 }); 
+	__p+='\n        </td>\n      ';
+	 }); 
+	__p+='\n      ';
+	 if(commentsPosition == "right") { 
+	__p+='\n      <td class="comment">\n        <span class="comment">'+
+	((__t=( data.alignment.comment ))==null?'':_.escape(__t))+
+	'</span>\n        <textarea class="comment" name="comment'+
+	((__t=( index ))==null?'':__t)+
+	'" data-alignment="'+
+	((__t=( data.alignment.id ))==null?'':__t)+
+	'" placeholder="Add comment..." style="display:none">'+
+	((__t=( data.alignment.comment || '' ))==null?'':_.escape(__t))+
+	'</textarea>\n      </td>\n      ';
+	 } 
+	__p+='\n    </tr>\n    ';
+	 if(commentsPosition == "bottom") { 
+	__p+='\n    <tr class="comment" ';
+	 print(data.alignment.comment?'':'style="display:none;"'); 
+	__p+=';>\n      <td class="comment" colspan="'+
+	((__t=( data.buckets.length ))==null?'':_.escape(__t))+
+	'">\n        <span class="comment">'+
+	((__t=( data.alignment.comment ))==null?'':_.escape(__t))+
+	'</span>\n        <textarea class="comment" name="comment'+
+	((__t=( index ))==null?'':__t)+
+	'" data-alignment="'+
+	((__t=( data.alignment.id ))==null?'':__t)+
+	'" placeholder="Add comment..." style="display:none">'+
+	((__t=( data.alignment.comment || '' ))==null?'':_.escape(__t))+
+	'</textarea>\n      </td>\n    </tr>\n    ';
+	 } 
+	__p+='\n  ';
+	 }); 
+	__p+='\n</table>';
 	}
-	return __p
+	return __p;
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
@@ -20227,27 +20352,14 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(29);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '', __j = Array.prototype.join;
-	function print() { __p += __j.call(arguments, '') }
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/overlay.html -->\n<div class="wordmapper wordmapper-overlay ' +
-	((__t = ( cls )) == null ? '' : __t) +
-	'">\n  ';
-	 if(title) { ;
-	__p += '\n    <h2>' +
-	((__t = ( title )) == null ? '' : __t) +
-	'</h2>\n  ';
-	 } ;
-	__p += '\n  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-overlay-content">\n  </div>\n  ';
-	 if (canPopout) { ;
-	__p += '\n    <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>\n  ';
-	 } ;
-	__p += '\n</div>';
-
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/export.html -->\nExport data:\n<textarea name="export" class="json">'+
+	((__t=( importExport.export(true) ))==null?'':__t)+
+	'</textarea>\n\nImport data:\n<textarea name="import" class="json"></textarea>\n<button class="primary wordmapper-import">Import</button>\n<span class="wordmapper-import-messages"></span>';
 	}
-	return __p
+	return __p;
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
@@ -20256,37 +20368,24 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(29);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '', __j = Array.prototype.join;
-	function print() { __p += __j.call(arguments, '') }
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/login.html -->\n<div class="wordmapper-account" style="';
-	 if(hidden) { print('display:none;'); } ;
-	__p += '">\n  ';
-	 if(user.isAuthenticated()) { ;
-	__p += '\n  <div class="wordmapper-logged-in">Logged in as ' +
-	((__t = ( user )) == null ? '' : __t) +
-	'.</div>\n  <button name="logout" class="primary" style="width: 100%">Sign Out</button>\n  ';
-	 } else { ;
-	__p += '\n  <div class="wordmapper-login">\n    <input type="text" name="email" placeholder="enter email...">\n    <input type="password" name="password" placeholder="enter password...">\n    ';
-	 if(error) { ;
-	__p += '\n      <div class="wordmapper-error">' +
-	((__t = ( error )) == null ? '' : __t) +
-	'</div>\n    ';
-	 } ;
-	__p += '\n    <button name="login" class="primary" style="width: 125px;">Sign In</button>\n    ';
-	 if(register_url) { ;
-	__p += '\n      <a href="' +
-	((__t = ( register_url )) == null ? '' : __t) +
-	'" target="_blank" style="margin-left:1em;">Register</a>\n    ';
-	 } ;
-	__p += '\n  </div>\n  ';
-	 } ;
-	__p += '\n</div>';
-
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/overlay.html -->\n<div class="wordmapper wordmapper-overlay '+
+	((__t=( cls ))==null?'':__t)+
+	'">\n  ';
+	 if(title) { 
+	__p+='\n    <h2>'+
+	((__t=( title ))==null?'':__t)+
+	'</h2>\n  ';
+	 } 
+	__p+='\n  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-overlay-content">\n  </div>\n  ';
+	 if (canPopout) { 
+	__p+='\n    <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>\n  ';
+	 } 
+	__p+='\n</div>';
 	}
-	return __p
+	return __p;
 	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
 
 
@@ -20294,9 +20393,45 @@
 /* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var _ = __webpack_require__(29);
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/login.html -->\n<div class="wordmapper-account" style="';
+	 if(hidden) { print('display:none;'); } 
+	__p+='">\n  ';
+	 if(user.isAuthenticated()) { 
+	__p+='\n  <div class="wordmapper-logged-in">Logged in as '+
+	((__t=( user ))==null?'':__t)+
+	'.</div>\n  <button name="logout" class="primary" style="width: 100%">Sign Out</button>\n  ';
+	 } else { 
+	__p+='\n  <div class="wordmapper-login">\n    <input type="text" name="email" placeholder="enter email...">\n    <input type="password" name="password" placeholder="enter password...">\n    ';
+	 if(error) { 
+	__p+='\n      <div class="wordmapper-error">'+
+	((__t=( error ))==null?'':__t)+
+	'</div>\n    ';
+	 } 
+	__p+='\n    <button name="login" class="primary" style="width: 125px;">Sign In</button>\n    ';
+	 if(register_url) { 
+	__p+='\n      <a href="'+
+	((__t=( register_url ))==null?'':__t)+
+	'" target="_blank" style="margin-left:1em;">Register</a>\n    ';
+	 } 
+	__p+='\n  </div>\n  ';
+	 } 
+	__p+='\n</div>';
+	}
+	return __p;
+	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+
+
+/***/ },
+/* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(13);
-	var templates = __webpack_require__(36);
+	var templates = __webpack_require__(37);
 
 	var LoginComponent = function(options) {
 	  options = options || {};
@@ -20342,6 +20477,7 @@
 	    this.tplData.hidden = true;
 	    this.tplData.error = '';
 	    this.user.update(response.data);
+	    this.user.saveLogin();
 	    this.render();
 	  }.bind(this)).fail(function(jqXHR, textStatus, errorThrown) {
 	    var errStr = errorThrown;
@@ -20356,6 +20492,7 @@
 	};
 	LoginComponent.prototype.onClickLogout = function(evt) {
 	  this.user.reset();
+	  this.user.saveLogin();
 	  this.render();
 	  evt.stopPropagation();
 	};
@@ -20374,14 +20511,14 @@
 
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(13);
-	var templates = __webpack_require__(36);
-	var IndexView = __webpack_require__(44);
-	var ExportView = __webpack_require__(45);
+	var templates = __webpack_require__(37);
+	var IndexView = __webpack_require__(45);
+	var ExportView = __webpack_require__(46);
 
 	var OverlayComponent = function(options) {
 	  this.alignments = options.alignments;
@@ -20488,11 +20625,11 @@
 	module.exports = OverlayComponent;
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var templates = __webpack_require__(36);
+	var templates = __webpack_require__(37);
 
 	var IndexView = function(options) {
 	  this.alignments = options.alignments;
@@ -20588,11 +20725,11 @@
 
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var templates = __webpack_require__(36);
+	var templates = __webpack_require__(37);
 
 	var ExportView = function(options) {
 	  this.dismiss = options.dismiss;
@@ -20638,7 +20775,7 @@
 
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);

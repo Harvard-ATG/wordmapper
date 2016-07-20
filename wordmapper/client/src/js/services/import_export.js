@@ -55,7 +55,7 @@ ImportExportService.prototype.import = function(jsonData) {
     });
 
     // Load the batch of alignment objects
-    this.alignments.load(batch);
+    this.alignments.load(batch).triggerChange();
 
   } catch(e) {
     retvalue.success = false;
