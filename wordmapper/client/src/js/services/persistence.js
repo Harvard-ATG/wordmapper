@@ -20,6 +20,7 @@ var Persistence = function(options) {
   this.onAlignmentsChange = this.onAlignmentsChange.bind(this);
   this.onSourcesChange = this.onSourcesChange.bind(this);
   this.onUserChange = this.onUserChange.bind(this);
+  this.loadAlignments = this.loadAlignments.bind(this);
 
   this.init();
 };
@@ -52,10 +53,8 @@ Persistence.prototype.onUserChange = function() {
   this.load();
 };
 Persistence.prototype.load = function() {
-  return this.loadSources().then(function() {
-    return this.loadAlignments();
-  }.bind(this), function() {
-    return this.saveSources().then(this.loadAlignments());
+  return this.loadSources().then(this.loadAlignments, function() {
+    return this.saveSources().then(this.loadAlignments);
   }.bind(this));
 };
 Persistence.prototype.loadAlignments = function() {
