@@ -14,7 +14,7 @@ Application.prototype.init = function() {
   
   // models
   this.models = {};
-	this.models.user = new models.User();
+  this.models.user = new models.User();
   this.models.sources = new models.Sources();
   this.models.alignments = new models.Alignments();
   this.models.siteContext = new models.SiteContext({
