@@ -20516,7 +20516,6 @@
 	LoginComponent.prototype.onKeyDown = function(evt) {
 	  var keyCode = evt.keyCode || evt.which;
 	  var enterKey = 13;
-	  console.log("keydown",keyCode);
 	  if (keyCode == enterKey) {
 	    if(this.user.isAuthenticated()) {
 	      this.logout();
