@@ -20481,6 +20481,7 @@
 	  };
 	  this.onClickLogin = this.onClickLogin.bind(this);
 	  this.onClickLogout = this.onClickLogout.bind(this);
+	  this.onKeyDown = this.onKeyDown.bind(this);
 	  this.init();
 	};
 	LoginComponent.prototype.init = function() {
@@ -20497,6 +20498,7 @@
 
 	  this.el.on('click', 'button[name=login]', null, this.onClickLogin);
 	  this.el.on('click', 'button[name=logout]', null, this.onClickLogout);
+	  this.el.on('keydown', 'input', null, this.onKeyDown);
 	};
 	LoginComponent.prototype.render = function() {
 	  var html = templates.login(this.tplData);
@@ -20504,12 +20506,28 @@
 	  return this;
 	};
 	LoginComponent.prototype.onClickLogin = function(evt) {
-	  var credentials = {};
-	  credentials.email = this.el.find('input[name=email]').val();
-	  credentials.password = this.el.find('input[name=password]').val();
-
+	  evt.stopPropagation();
+	  this.login(this.credentials());
+	};
+	LoginComponent.prototype.onClickLogout = function(evt) {
+	  evt.stopPropagation();
+	  this.logout();
+	};
+	LoginComponent.prototype.onKeyDown = function(evt) {
+	  var keyCode = evt.keyCode || evt.which;
+	  var enterKey = 13;
+	  console.log("keydown",keyCode);
+	  if (keyCode == enterKey) {
+	    if(this.user.isAuthenticated()) {
+	      this.logout();
+	    } else {
+	      this.login(this.credentials());
+	    }
+	  }
+	};
+	LoginComponent.prototype.login = function(credentials) {
 	  this.startLogin();
-	  this.authenticate(credentials).done(function(response, textStatus, jqXHR) {
+	  return this.authenticate(credentials).done(function(response, textStatus, jqXHR) {
 	    this.tplData.hidden = true;
 	    this.tplData.error = '';
 	    this.user.update(response.data);
@@ -20525,14 +20543,11 @@
 	  }.bind(this)).always(function() {
 	    this.endLogin();
 	  }.bind(this));
-	  
-	  evt.stopPropagation();
 	};
-	LoginComponent.prototype.onClickLogout = function(evt) {
+	LoginComponent.prototype.logout = function() {
 	  this.user.reset();
 	  this.user.saveLogin();
 	  this.render();
-	  evt.stopPropagation();
 	};
 	LoginComponent.prototype.authenticate = function(credentials) {
 	  var url = this.settings.getAPIBaseUrl() + '/auth/login';
@@ -20543,6 +20558,12 @@
 	    contentType: "application/json; charset=utf-8",
 	    data: JSON.stringify(credentials)
 	  });
+	};
+	LoginComponent.prototype.credentials = function() {
+	  var credentials = {};
+	  credentials.email = this.el.find('input[name=email]').val();
+	  credentials.password = this.el.find('input[name=password]').val();
+	  return credentials;
 	};
 	LoginComponent.prototype.startLogin = function() {
 	  events.hub.trigger(events.EVT.LOADING, "start", "login");
