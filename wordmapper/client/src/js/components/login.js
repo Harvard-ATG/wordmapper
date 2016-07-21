@@ -42,6 +42,7 @@ LoginComponent.prototype.onClickLogin = function(evt) {
   credentials.email = this.el.find('input[name=email]').val();
   credentials.password = this.el.find('input[name=password]').val();
 
+  this.startLogin();
   this.authenticate(credentials).done(function(response, textStatus, jqXHR) {
     this.tplData.hidden = true;
     this.tplData.error = '';
@@ -55,6 +56,8 @@ LoginComponent.prototype.onClickLogin = function(evt) {
     }
     this.tplData.error = errStr;
     this.render();
+  }.bind(this)).always(function() {
+    this.endLogin();
   }.bind(this));
   
   evt.stopPropagation();
@@ -74,6 +77,12 @@ LoginComponent.prototype.authenticate = function(credentials) {
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify(credentials)
   });
+};
+LoginComponent.prototype.startLogin = function() {
+  events.hub.trigger(events.EVT.LOADING, "start", "login");
+};
+LoginComponent.prototype.endLogin = function() {
+  events.hub.trigger(events.EVT.LOADING, "end", "login");
 };
 
 module.exports = LoginComponent;

@@ -9,7 +9,8 @@
     <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>
     <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>
   </div>
+  <div class="wordmapper-loading" style="display:none"><i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true"></i></div>
   <div class="wordmapper-buttons wordmapper-buttons-right">
-    <button name="login"><i class="fa fa-user"></i> <span><% print(user.isAuthenticated() ? user : 'Account'); %></span></button>
+    <button name="login" class="wordmapper-account-btn"><i class="fa fa-user"></i> <span><% print(user.isAuthenticated() ? user : 'Account'); %></span></button>
   </div>
 </div>

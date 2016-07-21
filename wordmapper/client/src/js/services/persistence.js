@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var events = require('../events.js');
 var StorageLocal = require('./storage_local.js');
 var StorageRemote = require('./storage_remote.js');
 
@@ -21,6 +22,8 @@ var Persistence = function(options) {
   this.onSourcesChange = this.onSourcesChange.bind(this);
   this.onUserChange = this.onUserChange.bind(this);
   this.loadAlignments = this.loadAlignments.bind(this);
+  this.endLoading = this.endLoading.bind(this);
+  this.startLoading = this.startLoading.bind(this);
 
   this.init();
 };
@@ -53,9 +56,15 @@ Persistence.prototype.onUserChange = function() {
   this.load();
 };
 Persistence.prototype.load = function() {
-  return this.loadSources().then(this.loadAlignments, function() {
-    return this.saveSources().then(this.loadAlignments);
-  }.bind(this));
+  var _this = this;
+  this.startLoading();
+
+  return _this.loadSources().then(_this.loadAlignments, function() {
+    return _this.saveSources().then(_this.loadAlignments);
+  }).then(_this.endLoading).catch(function(err) {
+    _this.endLoading();
+    console.error(err);
+  });
 };
 Persistence.prototype.loadAlignments = function() {
   var _this = this, store = this.primaryStore;
@@ -100,6 +109,12 @@ Persistence.prototype.mapEnabled = function(callback) {
     }
   }
   return results;
+};
+Persistence.prototype.startLoading = function() {
+  events.hub.trigger(events.EVT.LOADING, "start", "data");
+};
+Persistence.prototype.endLoading = function() {
+  events.hub.trigger(events.EVT.LOADING, "end", "data");
 };
 
 module.exports = Persistence;

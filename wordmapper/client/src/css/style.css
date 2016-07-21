@@ -104,8 +104,7 @@
     color: rgb(0, 120, 231);
 }
 .wordmapper-logo {
-    display: block;
-    float: left;
+    display: inline-block;
     line-height: 45px;
     font-size: 22.5px;
     vertical-align: middle;
@@ -123,20 +122,28 @@
     font-size: 100%;
 }
 .wordmapper-buttons {
-    margin: 2px 0;
+  display: inline-block;
+  margin: 2px 0;
 }
 .wordmapper-buttons > button {
-    margin: 4px 2px;
+  margin: 4px 2px;
 }
 .wordmapper-buttons-right {
-  position: absolute;
-  right: 0;
-  top: 0;
+  display: inline-block;
+  float: right;
   margin-right: 4px;
+}
+.wordmapper-loading {
+  display: inline-block;
+  color: #fff;
+}
+.wordmapper-account-btn {
+  max-width: 270px;
 }
 .wordmapper-account {
   position: absolute;
   right: 0;
+  top: 45px;
   width: 250px;
   padding: 10px;
   background-color: rgba(0,0,0,.7);

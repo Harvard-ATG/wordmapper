@@ -23,7 +23,7 @@ Events.prototype.trigger = function(event) {
     return;
   }
   if (_this.debug) {
-    console.log("trigger: ", event);
+    console.log("trigger: ", event, arguments);
   }
   for(var i = 0; i < _this._events[event].length; i++) {
     _this._events[event][i].apply(_this, Array.prototype.slice.call(arguments, 1));
@@ -47,7 +47,8 @@ module.exports = {
     CLEAR_ALIGNMENTS: 'clear_alignments',
     BUILD_INDEX: 'build_index',
     EXPORT: 'export',
-    LOGIN: 'login'
+    LOGIN: 'login',
+    LOADING: 'loading'
   },
   hub: new Events({debug: true})
 };

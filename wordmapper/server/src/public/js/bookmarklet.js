@@ -96,7 +96,7 @@
 	exports.push([module.id, "@import url(http://fontawesome.io/assets/font-awesome/css/font-awesome.css);", ""]);
 
 	// module
-	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper textarea {\n    padding: 0.5em;\n    background-color: rgb(255,255,224);\n    -webkit-transition: background-color 0.30s ease-in-out;\n    -moz-transition: background-color 0.30s ease-in-out;\n    -ms-transition: background-color 0.30s ease-in-out;\n    -o-transition: background-color 0.30s ease-in-out;\n    outline: none;\n}\n.wordmapper textarea:focus {\n    background-color: rgb(255,255,164);\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    background-color: rgba(0,0,0,.7);\n    z-index: 1002;\n}\n.wordmapper-panel a {\n  color: rgb(0, 192, 255);\n}\n.wordmapper-panel a:hover, .wordmapper-panel a:active {\n  color: rgb(255, 0, 0);\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.98;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n    z-index: 1001;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-buttons-right {\n  position: absolute;\n  right: 0;\n  top: 0;\n  margin-right: 4px;\n}\n.wordmapper-account {\n  position: absolute;\n  right: 0;\n  width: 250px;\n  padding: 10px;\n  background-color: rgba(0,0,0,.7);\n  z-index: 1002;\n}\n.wordmapper-account input {\n  width: calc(100% - 10px);\n  padding: 5px;\n  margin: 0 0 5px 0;\n  font-size: 14px;\n}\n.wordmapper-logged-in {\n    display: block;\n    font-size: 14px;\n    color: #fff;\n    margin: .5em 0;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 12px;\n    background: #333;\n    background: rgba(0,0,0,.7);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(alt);\n    left: 0;\n    padding: 5px 15px;\n    position: absolute;\n    width: auto;\n    white-space: nowrap;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-table td.words,\n.wordmapper-table td.comment {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #ddd;\n}\n.wordmapper-table span.word {\n    margin-right: 0.25em;\n}\n.wordmapper-table td.comment {\n    background-color: #eee;\n}\n.wordmapper-table td.comment span.comment,\n.wordmapper-table td.comment textarea.comment\n{\n    font-size: 14px;\n    color: #666;\n}\n.wordmapper-table td.comment textarea.comment {\n    border: 1px solid #ddd;\n    height: 75px;\n    min-width: 300px;\n    width: 90%;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n.wordmapper-error,\n.wordmapper-import-messages .error {\n    color: red;\n}\n.wordmapper-success,\n.wordmapper-import-messages .success {\n    color: green;\n}\n", ""]);
+	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper textarea {\n    padding: 0.5em;\n    background-color: rgb(255,255,224);\n    -webkit-transition: background-color 0.30s ease-in-out;\n    -moz-transition: background-color 0.30s ease-in-out;\n    -ms-transition: background-color 0.30s ease-in-out;\n    -o-transition: background-color 0.30s ease-in-out;\n    outline: none;\n}\n.wordmapper textarea:focus {\n    background-color: rgb(255,255,164);\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    background-color: rgba(0,0,0,.7);\n    z-index: 1002;\n}\n.wordmapper-panel a {\n  color: rgb(0, 192, 255);\n}\n.wordmapper-panel a:hover, .wordmapper-panel a:active {\n  color: rgb(255, 0, 0);\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.98;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n    z-index: 1001;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: inline-block;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n  display: inline-block;\n  margin: 2px 0;\n}\n.wordmapper-buttons > button {\n  margin: 4px 2px;\n}\n.wordmapper-buttons-right {\n  display: inline-block;\n  float: right;\n  margin-right: 4px;\n}\n.wordmapper-loading {\n  display: inline-block;\n  color: #fff;\n}\n.wordmapper-account-btn {\n  max-width: 270px;\n}\n.wordmapper-account {\n  position: absolute;\n  right: 0;\n  top: 45px;\n  width: 250px;\n  padding: 10px;\n  background-color: rgba(0,0,0,.7);\n  z-index: 1002;\n}\n.wordmapper-account input {\n  width: calc(100% - 10px);\n  padding: 5px;\n  margin: 0 0 5px 0;\n  font-size: 14px;\n}\n.wordmapper-logged-in {\n    display: block;\n    font-size: 14px;\n    color: #fff;\n    margin: .5em 0;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 12px;\n    background: #333;\n    background: rgba(0,0,0,.7);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(alt);\n    left: 0;\n    padding: 5px 15px;\n    position: absolute;\n    width: auto;\n    white-space: nowrap;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-table td.words,\n.wordmapper-table td.comment {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #ddd;\n}\n.wordmapper-table span.word {\n    margin-right: 0.25em;\n}\n.wordmapper-table td.comment {\n    background-color: #eee;\n}\n.wordmapper-table td.comment span.comment,\n.wordmapper-table td.comment textarea.comment\n{\n    font-size: 14px;\n    color: #666;\n}\n.wordmapper-table td.comment textarea.comment {\n    border: 1px solid #ddd;\n    height: 75px;\n    min-width: 300px;\n    width: 90%;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n.wordmapper-error,\n.wordmapper-import-messages .error {\n    color: red;\n}\n.wordmapper-success,\n.wordmapper-import-messages .success {\n    color: green;\n}\n", ""]);
 
 	// exports
 
@@ -456,7 +456,7 @@
 	  
 	  // models
 	  this.models = {};
-		this.models.user = new models.User();
+	  this.models.user = new models.User();
 	  this.models.sources = new models.Sources();
 	  this.models.alignments = new models.Alignments();
 	  this.models.siteContext = new models.SiteContext({
@@ -790,7 +790,7 @@
 	    return;
 	  }
 	  if (_this.debug) {
-	    console.log("trigger: ", event);
+	    console.log("trigger: ", event, arguments);
 	  }
 	  for(var i = 0; i < _this._events[event].length; i++) {
 	    _this._events[event][i].apply(_this, Array.prototype.slice.call(arguments, 1));
@@ -814,7 +814,8 @@
 	    CLEAR_ALIGNMENTS: 'clear_alignments',
 	    BUILD_INDEX: 'build_index',
 	    EXPORT: 'export',
-	    LOGIN: 'login'
+	    LOGIN: 'login',
+	    LOADING: 'loading'
 	  },
 	  hub: new Events({debug: true})
 	};
@@ -3350,6 +3351,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(29);
+	var events = __webpack_require__(13);
 	var StorageLocal = __webpack_require__(31);
 	var StorageRemote = __webpack_require__(33);
 
@@ -3371,6 +3373,9 @@
 	  this.onAlignmentsChange = this.onAlignmentsChange.bind(this);
 	  this.onSourcesChange = this.onSourcesChange.bind(this);
 	  this.onUserChange = this.onUserChange.bind(this);
+	  this.loadAlignments = this.loadAlignments.bind(this);
+	  this.endLoading = this.endLoading.bind(this);
+	  this.startLoading = this.startLoading.bind(this);
 
 	  this.init();
 	};
@@ -3403,11 +3408,15 @@
 	  this.load();
 	};
 	Persistence.prototype.load = function() {
-	  return this.loadSources().then(function() {
-	    return this.loadAlignments();
-	  }.bind(this), function() {
-	    return this.saveSources().then(this.loadAlignments());
-	  }.bind(this));
+	  var _this = this;
+	  this.startLoading();
+
+	  return _this.loadSources().then(_this.loadAlignments, function() {
+	    return _this.saveSources().then(_this.loadAlignments);
+	  }).then(_this.endLoading).catch(function(err) {
+	    _this.endLoading();
+	    console.error(err);
+	  });
 	};
 	Persistence.prototype.loadAlignments = function() {
 	  var _this = this, store = this.primaryStore;
@@ -3452,6 +3461,12 @@
 	    }
 	  }
 	  return results;
+	};
+	Persistence.prototype.startLoading = function() {
+	  events.hub.trigger(events.EVT.LOADING, "start", "data");
+	};
+	Persistence.prototype.endLoading = function() {
+	  events.hub.trigger(events.EVT.LOADING, "end", "data");
 	};
 
 	module.exports = Persistence;
@@ -20195,8 +20210,10 @@
 	  this.tplData = {
 	    user: this.user
 	  };
+	  this.loadCount = 0;
 	  this.onClickButton = this.onClickButton.bind(this);
 	  this.updateLoginButton = this.updateLoginButton.bind(this);
+	  this.onLoading = this.onLoading.bind(this);
 	  this.init();
 	};
 	PanelComponent.prototype.buttonEvent = {
@@ -20214,6 +20231,7 @@
 	PanelComponent.prototype.addListeners = function() {
 	  this.el.on('click', this.onClickButton);
 	  this.user.on('change', this.updateLoginButton);
+	  events.hub.on(events.EVT.LOADING, this.onLoading);
 	};
 	PanelComponent.prototype.onClickButton = function(evt) {
 	  var t = evt.target, can_trigger_event = true;
@@ -20245,6 +20263,19 @@
 	  var $btn = this.el.find('button[name=login]');
 	  $btn.find('span').text(this.user.isAuthenticated() ? this.user : 'Account');
 	};
+	PanelComponent.prototype.onLoading = function(state) {
+	  var action = false;
+	  if(state == "start") {
+	    ++this.loadCount;
+	    action = (this.loadCount === 1 ? "show" : false);
+	  } else if (state == "end") {
+	    --this.loadCount;
+	    action = (this.loadCount === 0 ? "hide" : false);
+	  }
+	  if (action !== false) {
+	    this.el.find('.wordmapper-loading')[action]();
+	  }
+	};
 
 	module.exports = PanelComponent;
 
@@ -20269,7 +20300,7 @@
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
 	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login"><i class="fa fa-user"></i> <span>';
+	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-loading" style="display:none"><i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true"></i></div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login" class="wordmapper-account-btn"><i class="fa fa-user"></i> <span>';
 	 print(user.isAuthenticated() ? user : 'Account'); 
 	__p+='</span></button>\n  </div>\n</div>\n';
 	}
@@ -20473,6 +20504,7 @@
 	  credentials.email = this.el.find('input[name=email]').val();
 	  credentials.password = this.el.find('input[name=password]').val();
 
+	  this.startLogin();
 	  this.authenticate(credentials).done(function(response, textStatus, jqXHR) {
 	    this.tplData.hidden = true;
 	    this.tplData.error = '';
@@ -20486,6 +20518,8 @@
 	    }
 	    this.tplData.error = errStr;
 	    this.render();
+	  }.bind(this)).always(function() {
+	    this.endLogin();
 	  }.bind(this));
 	  
 	  evt.stopPropagation();
@@ -20505,6 +20539,12 @@
 	    contentType: "application/json; charset=utf-8",
 	    data: JSON.stringify(credentials)
 	  });
+	};
+	LoginComponent.prototype.startLogin = function() {
+	  events.hub.trigger(events.EVT.LOADING, "start", "login");
+	};
+	LoginComponent.prototype.endLogin = function() {
+	  events.hub.trigger(events.EVT.LOADING, "end", "login");
 	};
 
 	module.exports = LoginComponent;

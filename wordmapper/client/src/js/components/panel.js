@@ -15,8 +15,10 @@ var PanelComponent = function(options) {
   this.tplData = {
     user: this.user
   };
+  this.loadCount = 0;
   this.onClickButton = this.onClickButton.bind(this);
   this.updateLoginButton = this.updateLoginButton.bind(this);
+  this.onLoading = this.onLoading.bind(this);
   this.init();
 };
 PanelComponent.prototype.buttonEvent = {
@@ -34,6 +36,7 @@ PanelComponent.prototype.init = function() {
 PanelComponent.prototype.addListeners = function() {
   this.el.on('click', this.onClickButton);
   this.user.on('change', this.updateLoginButton);
+  events.hub.on(events.EVT.LOADING, this.onLoading);
 };
 PanelComponent.prototype.onClickButton = function(evt) {
   var t = evt.target, can_trigger_event = true;
@@ -64,6 +67,19 @@ PanelComponent.prototype.getHeight = function() {
 PanelComponent.prototype.updateLoginButton = function() {
   var $btn = this.el.find('button[name=login]');
   $btn.find('span').text(this.user.isAuthenticated() ? this.user : 'Account');
+};
+PanelComponent.prototype.onLoading = function(state) {
+  var action = false;
+  if(state == "start") {
+    ++this.loadCount;
+    action = (this.loadCount === 1 ? "show" : false);
+  } else if (state == "end") {
+    --this.loadCount;
+    action = (this.loadCount === 0 ? "hide" : false);
+  }
+  if (action !== false) {
+    this.el.find('.wordmapper-loading')[action]();
+  }
 };
 
 module.exports = PanelComponent;
