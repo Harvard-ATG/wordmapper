@@ -73,21 +73,22 @@ var alignments = {
 		return db.any(query);
 	},
 	getAlignmentsByUser: function(userId, options) {
+		options = options || {};
 		if (!userId) {
 			throw "Missing userId parameter";
 		}
-		var sources = options.sources; // optional
+		var source_col = options.hasOwnProperty('sourceIds') ? 'source_id' : 'hash';
+		var source_vals = options.hasOwnProperty('sourceIds') ? options.sourceIds : options.sourceHashes;
 		var query = sql('findAlignments.sql').query;
 		var params = {userId: userId};
 		var conds = ['user_id = ${userId}'];
 
-		if(Array.isArray(sources) && sources.length > 0) {
-			conds.push('source_id in (${sources:csv})');
-			params.sources = sources;
+		if(Array.isArray(source_vals) && source_vals.length > 0) {
+			conds.push(source_col + ' in (${sources:csv})');
+			params.sources = source_vals;
 		}
 
 		query += ' WHERE ' + conds.join(" AND ") + ' ORDER BY a.id';
-
 		return db.any(query, params);
 	},
 	deleteAlignmentsByUser: function(userId, sources) {
@@ -148,15 +149,15 @@ var alignments = {
 
 var sources = {
 	getAllSources: function() {
-		return db.any('select id, hash, normalized from source');
+		return db.any('select id, hash, normalized, original from source');
 	},
 	getSourcesByHash: function(hashes) {
-		return db.any('select id, hash, normalized from source where hash in (${hashes:csv})', {hashes:hashes});
+		return db.any('select id, hash, normalized, original from source where hash in (${hashes:csv})', {hashes:hashes});
 	},
 	createSources: function(sources) {
 		return db.tx(function(t) {
 			var queries = sources.map(function(source) {
-				return t.one('insert into source (hash, normalized, original) values (${hash}, ${normalized}, ${original}) returning id', source);
+				return t.one('insert into source (hash, normalized, original) values (${hash}, ${normalized}, ${original}) returning id, hash', source);
 			});
 			return t.batch(queries);
 		});

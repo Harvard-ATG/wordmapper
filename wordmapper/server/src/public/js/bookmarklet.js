@@ -54,7 +54,7 @@
 	  console.log("WordMapper already loaded! To reload the bookmarklet,please refresh the page.");
 	} else {
 	    app = new components.Application();
-	    app.renderTo("body");
+	    app.renderTo("body").loadData();
 	    global.WordMapper = app;
 	}
 
@@ -96,7 +96,7 @@
 	exports.push([module.id, "@import url(http://fontawesome.io/assets/font-awesome/css/font-awesome.css);", ""]);
 
 	// module
-	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper textarea {\n    padding: 0.5em;\n    background-color: rgb(255,255,224);\n    -webkit-transition: background-color 0.30s ease-in-out;\n    -moz-transition: background-color 0.30s ease-in-out;\n    -ms-transition: background-color 0.30s ease-in-out;\n    -o-transition: background-color 0.30s ease-in-out;\n    outline: none;\n}\n.wordmapper textarea:focus {\n    background-color: rgb(255,255,164);\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    background-color: rgba(0,0,0,.7);\n    z-index: 1002;\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.98;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n    z-index: 1001;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: block;\n    float: left;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n    margin: 2px 0;\n}\n.wordmapper-buttons > button {\n    margin: 4px 2px;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 12px;\n    background: #333;\n    background: rgba(0,0,0,.7);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(alt);\n    left: 0;\n    padding: 5px 15px;\n    position: absolute;\n    width: auto;\n    white-space: nowrap;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-table td.words,\n.wordmapper-table td.comment {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #ddd;\n}\n.wordmapper-table span.word {\n    margin-right: 0.25em;\n}\n.wordmapper-table td.comment {\n    background-color: #eee;\n}\n.wordmapper-table td.comment span.comment,\n.wordmapper-table td.comment textarea.comment\n{\n    font-size: 14px;\n    color: #666;\n}\n.wordmapper-table td.comment textarea.comment {\n    border: 1px solid #ddd;\n    height: 75px;\n    min-width: 300px;\n    width: 90%;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n.wordmapper-import-messages .error {\n    color: red;\n}\n.wordmapper-import-messages .success {\n    color: green;\n}\n", ""]);
+	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper textarea {\n    padding: 0.5em;\n    background-color: rgb(255,255,224);\n    -webkit-transition: background-color 0.30s ease-in-out;\n    -moz-transition: background-color 0.30s ease-in-out;\n    -ms-transition: background-color 0.30s ease-in-out;\n    -o-transition: background-color 0.30s ease-in-out;\n    outline: none;\n}\n.wordmapper textarea:focus {\n    background-color: rgb(255,255,164);\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    background-color: rgba(0,0,0,.7);\n    z-index: 1002;\n}\n.wordmapper-panel a {\n  color: rgb(0, 192, 255);\n}\n.wordmapper-panel a:hover, .wordmapper-panel a:active {\n  color: rgb(255, 0, 0);\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.98;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n    z-index: 1001;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: inline-block;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n  display: inline-block;\n  margin: 2px 0;\n}\n.wordmapper-buttons > button {\n  margin: 4px 2px;\n}\n.wordmapper-buttons-right {\n  display: inline-block;\n  float: right;\n  margin-right: 4px;\n}\n.wordmapper-loading {\n  display: inline-block;\n  color: #fff;\n}\n.wordmapper-account-btn {\n  max-width: 270px;\n}\n.wordmapper-account {\n  position: absolute;\n  right: 0;\n  top: 45px;\n  width: 250px;\n  padding: 10px;\n  background-color: rgba(0,0,0,.7);\n  z-index: 1002;\n}\n.wordmapper-account input {\n  width: calc(100% - 10px);\n  padding: 5px;\n  margin: 0 0 5px 0;\n  font-size: 14px;\n}\n.wordmapper-logged-in {\n    display: block;\n    font-size: 14px;\n    color: #fff;\n    margin: .5em 0;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 12px;\n    background: #333;\n    background: rgba(0,0,0,.7);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(alt);\n    left: 0;\n    padding: 5px 15px;\n    position: absolute;\n    width: auto;\n    white-space: nowrap;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-table td.words,\n.wordmapper-table td.comment {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #ddd;\n}\n.wordmapper-table span.word {\n    margin-right: 0.25em;\n}\n.wordmapper-table td.comment {\n    background-color: #eee;\n}\n.wordmapper-table td.comment span.comment,\n.wordmapper-table td.comment textarea.comment\n{\n    font-size: 14px;\n    color: #666;\n}\n.wordmapper-table td.comment textarea.comment {\n    border: 1px solid #ddd;\n    height: 75px;\n    min-width: 300px;\n    width: 90%;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n.wordmapper-error,\n.wordmapper-import-messages .error {\n    color: red;\n}\n.wordmapper-success,\n.wordmapper-import-messages .success {\n    color: green;\n}\n", ""]);
 
 	// exports
 
@@ -433,7 +433,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	    Application: __webpack_require__(8)
+	    Application: __webpack_require__(8),
+	    Login: __webpack_require__(43),
+	    Overlay: __webpack_require__(44),
+	    Panel: __webpack_require__(36),
+	    Text: __webpack_require__(47)
 	};
 
 /***/ },
@@ -442,74 +446,82 @@
 
 	var $ = __webpack_require__(5);
 	var services = __webpack_require__(9);
-	var models = __webpack_require__(10);
-	var Panel = __webpack_require__(25);
-	var Overlay = __webpack_require__(33);
-	var TextBoxes = __webpack_require__(36);
+	var models = __webpack_require__(11);
+	var Settings = __webpack_require__(34);
+	var PanelComponent = __webpack_require__(36);
+	var OverlayComponent = __webpack_require__(44);
+	var TextComponent = __webpack_require__(47);
 
 	var Application = function() {
 	  this.init();
 	};
 	Application.prototype.init = function() {
 	  this.el = $('<div>');
-	  this.panel = new Panel();
-	  this.alignments = new models.Alignments();
-	  this.siteContext = new models.SiteContext({
+	  
+	  // models
+	  this.models = {};
+	  this.models.user = new models.User();
+	  this.models.sources = new models.Sources();
+	  this.models.alignments = new models.Alignments();
+	  this.models.siteContext = new models.SiteContext({
 	    id: window.location.hostname,
 	    url: window.location.toString()
 	  });
-	  this.settings = services.SettingsService.get(this.siteContext);
-	  this.boxes = new TextBoxes({
-	    alignments: this.alignments,
-	    selector: this.settings.sourceSelector
+	  
+	  // settings
+	  this.settings = new Settings();
+	  this.settings.load(this.models.siteContext);
+
+	  // services
+	  this.services = {};
+	  this.services.importExport = new services.ImportExportService({
+	    siteContext: this.models.siteContext,
+	    alignments: this.models.alignments,
+	    sources: this.models.sources
 	  });
-	  this.importExport = new services.ImportExportService({
-	    siteContext: this.siteContext,
-	    alignments: this.alignments,
-	    sources: this.boxes.sources
+	  this.services.persistence = new services.Persistence({
+	    models: this.models,
+	    settings: this.settings
 	  });
-	  this.overlay = new Overlay({
-	    alignments: this.alignments,
-	    importExport: this.importExport,
-	    sources: this.boxes.sources
+
+	  // components
+	  this.components = {};
+	  this.components.boxes = new TextComponent({
+	    alignments: this.models.alignments,
+	    sources: this.models.sources,
+	    selector: this.settings.getSourceSelector()
 	  });
-	  this.storage = new services.LocalStorageService({
-	    siteContext: this.siteContext,
-	    sources: this.boxes.sources
+	  this.components.panel = new PanelComponent({
+	    user: this.models.user,
+	    settings: this.settings
 	  });
-	  this.loadData();
+	  this.components.overlay = new OverlayComponent({
+	    alignments: this.models.alignments,
+	    importExport: this.services.importExport,
+	    sources: this.models.sources
+	  });
+
 	  this.addListeners();
 	};
-	Application.prototype.addListeners = function() {
-	  this.alignments.on('change', this.saveData.bind(this));
-	};
+	Application.prototype.addListeners = function() {};
 	Application.prototype.render = function() {
-	  this.el.append(this.panel.render().el);
-	  this.el.append(this.overlay.render().el);
+	  this.el.append(this.components.panel.render().el);
+	  this.el.append(this.components.overlay.render().el);
 	  return this;
 	};
 	Application.prototype.renderTo = function(selector) {
 	  $(function() {
 	    $(selector).append(this.render().el);
-	    $(selector).css('transition', 'margin 1s');
-	    $(selector).css('marginTop', this.panel.getHeight()+"px");
+	    $(selector).css({'marginTop': this.components.panel.getHeight()+"px"});
 	  }.bind(this));
 	  return this;
 	};
-	Application.prototype.saveData = function() {
-	  console.log("saving to storage");
-	  var deferred = this.storage.save(this.alignments);
-	  deferred.done(function() {
-	    console.log("save completed");
-	  });
-	};
 	Application.prototype.loadData = function() {
-	  console.log("loading from storage");
-	  var deferred = this.storage.load();
-	  deferred.done(function(batch) {
-	    this.alignments.load(batch);
-	    console.log("load completed", batch);
-	  }.bind(this));
+	  this.models.user.restoreLogin();
+	  if (!this.models.user.isAuthenticated()) {
+	    this.services.persistence.load();
+	  }
+	  return this;
 	};
 
 	module.exports = Application;
@@ -519,147 +531,29 @@
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $ = __webpack_require__(5);
-	var models = __webpack_require__(10);
-
-	//---------------------------------------------------------------------
-	var StorageService = function(options) {
-	  options = options || {};
-	  this.siteContext = options.siteContext || '';
-	  this.sources = options.sources || [];
-	};
-	StorageService.prototype.load = function() {
-	  var deferred = $.Deferred();
-	  this._load(deferred);
-	  return deferred;
-	};
-	StorageService.prototype.save = function(obj) {
-	  var deferred = $.Deferred();
-	  var serialized = this._serialize(obj);
-	  this._save(deferred, serialized);
-	  return deferred;
-	};
-	StorageService.prototype.getDataKey = function() {
-	  var sourceHashes = this.sources.map(function(source) {
-	    return source.hash;
-	  });
-	  sourceHashes.sort(function(a, b) {
-	    return (a == b ? 0 : (a < b ? -1 : 1));
-	  });
-	  return this.siteContext.id + "::" + sourceHashes.join(",");
-	};
-	StorageService.prototype.getSourceMap = function() {
-	  var dict = {};
-	  this.sources.forEach(function(source) {
-	    dict[source.hash] = source;
-	  });
-	  return dict;
-	};
-	StorageService.prototype._load = function() {
-	  throw "Subclass responsibility";
-	};
-	StorageService.prototype._save = function() {
-	  throw "Subclass responsibility";
-	};
-	StorageService.prototype._serialize = function(obj) {
-	  return obj.serialize();
-	};
-	StorageService.prototype._parse = function(jsonData) {
-	  var sourceMap = this.getSourceMap();
-	  var result = JSON.parse(jsonData);
-	  var alignments = result.data.map(function(alignment) {
-	    var words = alignment.data.filter(function(item) {
-	      return item.type == 'word';
-	    }).map(function(word) {
-	      return models.Word.create({
-	        index: word.data.index,
-	        value: word.data.value,
-	        source: sourceMap[word.data.source]
-	      });
-	    });
-	    var comment_texts = alignment.data.filter(function(item) {
-	      return item.type == 'comment';
-	    }).map(function(comment) {
-	      return comment.data.text;
-	    });
-	    var alignment_obj = models.Alignments.createAlignment(words);
-	    if (comment_texts.length > 0) {
-	      alignment_obj.setComment(comment_texts[0]);
-	    }
-	    return alignment_obj;
-	  });
-	  return alignments;
+	module.exports = {
+	  ImportExportService: __webpack_require__(10),
+	  Persistence: __webpack_require__(28),
+	  StorageLocal: __webpack_require__(31),
+	  StorageRemote: __webpack_require__(33)
 	};
 
-	//---------------------------------------------------------------------
-	var LocalStorageService = function() {
-	  if (window.Storage === undefined) {
-	    throw "LocalStorage not supported in this browser.";
-	  }
-	  StorageService.apply(this, arguments);
-	};
-	LocalStorageService.prototype = new StorageService();
-	LocalStorageService.prototype._load = function(deferred) {
-	  var jsonData = localStorage.getItem(this.getDataKey());
-	  if (jsonData === null) {
-	    deferred.resolve([]);
-	  } else {
-	    deferred.resolve(this._parse(jsonData));
-	  }
-	};
-	LocalStorageService.prototype._save = function(deferred, serialized) {
-	  localStorage.setItem(this.getDataKey(), serialized);
-	  deferred.resolve();
-	};
 
-	//---------------------------------------------------------------------
-	var SettingsService = {
-	  // Settings are keyed by domain name
-	  // If a domain name has no associated settings, use some default/fallback settings.
-	  _settings: {
-	    '*': {
-	      'sourceSelector': 'body'
-	    },
-	    'www.graeco-arabic-studies.org': {
-	      'sourceSelector': '.textboxcontent'
-	    },
-	    'sites.google.com': {
-	      'sourceSelector': '.textboxcontent'
-	    },
-	    'canvas.harvard.edu': {
-	      'sourceSelector': '.textboxcontent'
-	    }
-	  },
-	  get: function(siteContext) {
-	    var settings = false;
-	    console.log("Loading settings for site ID: ", siteContext.id);
-	    if (siteContext.id in this._settings) {
-	      settings = this._settings[siteContext.id];
-	      console.log("Site ID exists. Settings: ", settings);
-	    } else {
-	      settings = this._settings['*'];
-	      console.log("No such site ID exists. Using default settings: ", settings);
-	    }
-	    
-	    return settings;
-	  }
-	};
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var models = __webpack_require__(11);
 
 	var ImportExportService = function(options) {
-	  this.sources = options.sources || [];
+	  this.sources = options.sources;
 	  this.alignments = options.alignments;
 	  this.siteContext = options.siteContext;
 	  this.import = this.import.bind(this);
 	  this.export = this.export.bind(this);
 	};
-	ImportExportService.prototype.getSourceMap = function() {
-	  return this.sources.reduce(function(dict, source) {
-	    dict[source.hash] = source;
-	    return dict;
-	  }, {});
-	};
 	ImportExportService.prototype.import = function(jsonData) {
-	  var sourceMap = this.getSourceMap();
+	  var sourceMap = this.sources.getSourceHashMap();
 	  var retvalue = {"success": true, "message": ""};
 
 	  try {
@@ -706,7 +600,7 @@
 	    });
 
 	    // Load the batch of alignment objects
-	    this.alignments.load(batch);
+	    this.alignments.load(batch).triggerChange();
 
 	  } catch(e) {
 	    retvalue.success = false;
@@ -725,31 +619,28 @@
 	  return (serialize ? JSON.stringify(result, null, '\t') : result);
 	};
 
-	module.exports = {
-	  ImportExportService: ImportExportService,
-	  LocalStorageService: LocalStorageService,
-	  SettingsService: SettingsService
-	};
-
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  Alignments: __webpack_require__(11),
-	  Alignment: __webpack_require__(13),
-	  Word: __webpack_require__(15),
-	  Source: __webpack_require__(16),
-	  SiteContext: __webpack_require__(24)
-	};
+	module.exports = ImportExportService;
 
 /***/ },
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var events = __webpack_require__(12);
-	var Alignment = __webpack_require__(13);
+	module.exports = {
+	  Alignments: __webpack_require__(12),
+	  Alignment: __webpack_require__(14),
+	  Word: __webpack_require__(16),
+	  Sources: __webpack_require__(17),
+	  Source: __webpack_require__(18),
+	  SiteContext: __webpack_require__(26),
+	  User: __webpack_require__(27)
+	};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var events = __webpack_require__(13);
+	var Alignment = __webpack_require__(14);
 
 	var Alignments = function(options) {
 	  this.alignments = [];
@@ -769,6 +660,9 @@
 	};
 	Alignments.prototype.triggerChange = function() {
 	  this.trigger("change");
+	};
+	Alignments.prototype.triggerLoad = function() {
+	  this.trigger("load");
 	};
 	Alignments.prototype.add = function(alignment) {
 	  this._removeDuplicates(alignment);
@@ -809,7 +703,8 @@
 	Alignments.prototype.load = function(alignments) {
 	  this.alignments = Array.prototype.slice.call(alignments);
 	  this.sort();
-	  this.triggerChange();
+	  this.triggerLoad();
+	  return this;
 	};
 	Alignments.prototype.sort = function() {
 	  this.alignments.sort(function(a, b) {
@@ -858,12 +753,20 @@
 	Alignments.prototype.serialize = function() {
 	  return JSON.stringify(this.toJSON(), null, '\t');
 	};
+
+	// convenience methods to operate on the underlying objects by callers...
+	['map', 'forEach', 'reduce', 'filter'].forEach(function(method) {
+	  Alignments.prototype[method] = function() {
+	    return Array.prototype[method].apply(this.alignments, arguments);
+	  };
+	});
+
 	events.Events.mixin(Alignments.prototype);
 
 	module.exports = Alignments;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	var Events = function(options) {
@@ -891,7 +794,7 @@
 	    return;
 	  }
 	  if (_this.debug) {
-	    console.log("trigger: ", event);
+	    console.log("trigger: ", event, arguments);
 	  }
 	  for(var i = 0; i < _this._events[event].length; i++) {
 	    _this._events[event][i].apply(_this, Array.prototype.slice.call(arguments, 1));
@@ -914,17 +817,19 @@
 	    CLEAR_HIGHLIGHTS: 'clear_highlights',
 	    CLEAR_ALIGNMENTS: 'clear_alignments',
 	    BUILD_INDEX: 'build_index',
-	    EXPORT: 'export'
+	    EXPORT: 'export',
+	    LOGIN: 'login',
+	    LOADING: 'loading'
 	  },
 	  hub: new Events({debug: true})
 	};
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Comment = __webpack_require__(14);
+	var Comment = __webpack_require__(15);
 
 	var Alignment = function(options) {
 	  this.id = options.id;
@@ -1038,7 +943,7 @@
 	module.exports = Alignment;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	var Comment = function(options) {
@@ -1065,7 +970,7 @@
 	module.exports = Comment;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	var Word = function(options) {
@@ -1104,12 +1009,86 @@
 	module.exports = Word;
 
 /***/ },
-/* 16 */
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var events = __webpack_require__(13);
+	var Source = __webpack_require__(18);
+
+	var Sources = function(options) {
+	  options = options || {};
+	  this.sources = options.sources || [];
+	};
+	Sources.prototype.triggerChange = function() {
+	  this.trigger("change");
+	};
+	Sources.prototype.addSources = function(sources) {
+	  this.sources = this.sources.concat(sources || []);
+	  this.triggerChange();
+	  return this;
+	};
+	Sources.prototype.getSourceIndexMap = function() {
+	  return this.sources.reduce(function(dict, source) {
+	    dict[source.index] = source;
+	    return dict;
+	  }, {});
+	};
+	Sources.prototype.getSourceHashMap = function() {
+	  return this.sources.reduce(function(dict, source) {
+	    dict[source.hash] = source;
+	    return dict;
+	  }, {});
+	};
+	Sources.prototype.getSourceByHash = function(hash) {
+	  var sourceMap = this.getSourceMap();
+	  return sourceMap[hash];
+	};
+	Sources.prototype.getHashes = function() {
+	  var sourceHashes = this.sources.map(function(source) {
+	    return source.hash;
+	  });
+	  sourceHashes.sort(function(a, b) {
+	    return (a == b ? 0 : (a < b ? -1 : 1));
+	  });
+	  return sourceHashes;
+	};
+	Sources.prototype.getHashKey = function() {
+	  return this.getHashes().join(",");
+	};
+	Sources.prototype.toString = function() {
+	  return this.getHashKey();
+	};
+	Sources.prototype.toJSON = function() {
+	  return {
+	    "type": "sources",
+	    "data": this.sources.map(function(source) {
+	      return source.toJSON();
+	    })
+	  };
+	};
+	Sources.prototype.serialize = function() {
+	  return JSON.stringify(this.toJSON(), null, '\t');
+	};
+
+	// convenience methods to operate on the underlying objects by callers...
+	['map', 'forEach', 'reduce', 'filter'].forEach(function(method) {
+	  Sources.prototype[method] = function() {
+	    return Array.prototype[method].apply(this.sources, arguments);
+	  };
+	});
+
+	events.Events.mixin(Sources.prototype);
+
+	module.exports = Sources;
+
+
+/***/ },
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var sha1 = __webpack_require__(17);
-	var Word = __webpack_require__(15);
+	var sha1 = __webpack_require__(19);
+	var Word = __webpack_require__(16);
 
 	var Source = function(options) {
 	  this.el = options.el;
@@ -1120,6 +1099,7 @@
 	  if (this.index === "" || isNaN(Number(this.index))) {
 	    throw "Invalid Source: required 'index' attribute must be a valid number";
 	  }
+	  this.original = this.el.innerHTML;
 	  this.normalizedText = this.el.textContent.replace(/\s+/g, ' ').trim();
 	  this.hash = sha1(this.normalizedText);
 	  this.nextWordIndex = this.createWordIndexer();
@@ -1134,14 +1114,11 @@
 	  return new Source({ el: fragment, index: index });
 	};
 	Source.createWords = function(spans, sources) {
-	  var source_dict = sources.reduce(function(dict, source) {
-	    dict[source.index] = source;
-	    return dict;
-	  }, {});
+	  sourceMap = sources.getSourceIndexMap();
 	  return spans.map(function(span) {
 	    return Word.create({
 	      index: span.dataset.word,
-	      source: source_dict[span.dataset.source],
+	      source: sourceMap[span.dataset.source],
 	      value: span.textContent
 	    });
 	  });
@@ -1208,18 +1185,34 @@
 	    return index++;
 	  };
 	};
+	Source.prototype.toString = function() {
+	  return this.hash;
+	};
+	Source.prototype.toJSON = function() {
+	  return {
+	    "type": "source",
+	    "data": {
+	      "hash": this.hash,
+	      "original": this.original,
+	      "normalized": this.normalizedText
+	    }
+	  };
+	};
+	Source.prototype.serialize = function() {
+	  return JSON.stringify(this.toJSON(), null, '\t');
+	};
 
 	module.exports = Source;
 
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(22),
-	      utf8 = __webpack_require__(23).utf8,
-	      bin = __webpack_require__(23).bin,
+	  var crypt = __webpack_require__(24),
+	      utf8 = __webpack_require__(25).utf8,
+	      bin = __webpack_require__(25).bin,
 
 	  // The core
 	  sha1 = function (message) {
@@ -1299,10 +1292,10 @@
 	  module.exports = api;
 	})();
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20).Buffer))
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
@@ -1315,9 +1308,9 @@
 
 	'use strict'
 
-	var base64 = __webpack_require__(19)
-	var ieee754 = __webpack_require__(20)
-	var isArray = __webpack_require__(21)
+	var base64 = __webpack_require__(21)
+	var ieee754 = __webpack_require__(22)
+	var isArray = __webpack_require__(23)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -2854,10 +2847,10 @@
 	  return i
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -2987,7 +2980,7 @@
 
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -3077,7 +3070,7 @@
 
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -3088,7 +3081,7 @@
 
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports) {
 
 	(function() {
@@ -3190,7 +3183,7 @@
 
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports) {
 
 	var charenc = {
@@ -3229,7 +3222,7 @@
 
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports) {
 
 	var SiteContext = function(options) {
@@ -3255,84 +3248,236 @@
 	module.exports = SiteContext;
 
 /***/ },
-/* 25 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var $ = __webpack_require__(5);
-	var events = __webpack_require__(12);
-	var templates = __webpack_require__(26);
-
-	var Panel = function() {
-	  this.el = null;
-	  this.onClickButton = this.onClickButton.bind(this);
-	  this.init();
-	};
-	Panel.prototype.buttonEvent = {
-	  'align': events.EVT.ALIGN,
-	  'clear_highlights': events.EVT.CLEAR_HIGHLIGHTS,
-	  'clear_alignments': events.EVT.CLEAR_ALIGNMENTS,
-	  'build_index': events.EVT.BUILD_INDEX,
-	  'export': events.EVT.EXPORT
-	};
-	Panel.prototype.init = function() {
-	  this.el = $('<div>');
-	  this.addListeners();
-	};
-	Panel.prototype.addListeners = function() {
-	  this.el.on('click', this.onClickButton);
-	};
-	Panel.prototype.onClickButton = function(evt) {
-	  var t = evt.target;
-	  var can_trigger_event = true;
-	  if (t.nodeName == 'BUTTON' && t.name in this.buttonEvent) {
-	    if (t.dataset.confirm) {
-	      can_trigger_event = window.confirm(t.dataset.confirm);
-	    }
-	    if (can_trigger_event) {
-	      events.hub.trigger(this.buttonEvent[t.name]);
-	    }
-	  }  
-	};
-	Panel.prototype.render = function() {
-	  this.el.html(templates.panel());
-	  return this;
-	};
-	Panel.prototype.getHeight = function() {
-	  return this.el.children().outerHeight();
-	};
-
-	module.exports = Panel;
-
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  panel: __webpack_require__(27),
-	  index: __webpack_require__(30),
-	  export: __webpack_require__(31),
-	  overlay: __webpack_require__(32)
-	};
-
-/***/ },
 /* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '';
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n</div>\n';
+	var events = __webpack_require__(13);
 
-	}
-	return __p
-	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+	var User = function(options) {
+		options = options || {};
+		this.id = options.id;
+		this.email = options.email;
+		this.token = options.token;
+	};
+	User.prototype.isAuthenticated = function() {
+		return this.token ? true : false;
+	};
+	User.prototype.getToken = function() {
+		return this.token;
+	};
+	User.prototype.update = function(data) {
+		var changed = false;
+		if (!data) {
+			return this;
+		}
+		
+		['id', 'email', 'token'].forEach(function(prop) {
+			if(prop in data && data[prop] !== this[prop]) {
+				this[prop] = data[prop];
+				changed = true;
+			}
+		}, this);
+		
+		if(changed) {
+			this.triggerChange();
+		}
+		return this;
+	};
+	User.prototype.reset = function() {
+		return this.update({id:undefined,email:undefined,token:undefined});
+	};
+	User.prototype.saveLogin = function() {
+		if (!this.isAuthenticated()) {
+			localStorage.removeItem("wordmapper-user");
+			return this;
+		}
+	  if (!window.localStorage) {
+	    return this;
+	  }
+		var data = {
+			id: this.id,
+			email: this.email,
+			token: this.token
+		};
+		data.expires = new Date();
+		data.expires.setHours(data.expires.getHours() + 3);
+
+		localStorage.setItem("wordmapper-user", JSON.stringify(data));
+
+		return this;
+	};
+	User.prototype.restoreLogin = function() {
+	  var result = null;
+	  if (!window.localStorage) {
+	    return this;
+	  }
+	  result = localStorage.getItem("wordmapper-user");
+	  if (result === null) {
+	    return this;
+	  }
+		result = JSON.parse(result);
+
+		var expires = new Date(result.expires);
+		var now = new Date();
+		if (now >= expires) {
+			localStorage.removeItem("wordmapper-user");
+			return this;
+		}
+		this.update(result);
+
+	  return this;
+	};
+	User.prototype.triggerChange = function() {
+		this.trigger("change");
+	};
+	User.prototype.toString = function() {
+		return this.email || 'guest';
+	};
+	User.prototype.toJSON = function() {
+		return {
+			"type": "user",
+			"data": {
+				"id": this.id,
+				"email": this.email
+			}
+		};
+	};
+	User.prototype.serialize = function() {
+	  return JSON.stringify(this.toJSON(), null, '\t');
+	};
+	events.Events.mixin(User.prototype);
+
+	module.exports = User;
 
 
 /***/ },
 /* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(29);
+	var events = __webpack_require__(13);
+	var StorageLocal = __webpack_require__(31);
+	var StorageRemote = __webpack_require__(33);
+
+	var Persistence = function(options) {
+	  options = options || {};
+	  options = _.assign({models: {}}, options);
+
+	  this.settings = options.settings;
+	  this.models = options.models;
+	  
+	  this.stores = {};
+	  this.stores.local = new StorageLocal(this, { enabled: true });
+	  this.stores.remote = new StorageRemote(this, { enabled: false });
+	  this.primaryStore = this.stores.local;
+	  
+	  // true when then source models have been initialized 
+	  this.sourcesReady = false; 
+	  
+	  this.onAlignmentsChange = this.onAlignmentsChange.bind(this);
+	  this.onSourcesChange = this.onSourcesChange.bind(this);
+	  this.onUserChange = this.onUserChange.bind(this);
+	  this.loadAlignments = this.loadAlignments.bind(this);
+	  this.endLoading = this.endLoading.bind(this);
+	  this.startLoading = this.startLoading.bind(this);
+
+	  this.init();
+	};
+	Persistence.prototype.init = function() {
+	  this.addListeners();
+	};
+	Persistence.prototype.addListeners = function() {
+	  this.models.alignments.on('change', this.onAlignmentsChange);
+	  this.models.sources.on('change', this.onSourcesChange);
+	  this.models.user.on('change', this.onUserChange);
+	};
+	Persistence.prototype.onAlignmentsChange = function() {
+	  this.saveAlignments();
+	};
+	Persistence.prototype.onSourcesChange = function() {
+	  this.sourcesReady = true;
+	};
+	Persistence.prototype.onUserChange = function() {
+	  console.log("user change", this.models.user);
+	  if (this.models.user.isAuthenticated()) {
+	    this.stores.remote.enable();
+	    this.stores.local.disable();
+	    this.primaryStore = this.stores.remote;
+	  } else {
+	    this.stores.remote.disable();
+	    this.stores.local.enable();
+	    this.primaryStore = this.stores.local;
+	  }
+
+	  this.load();
+	};
+	Persistence.prototype.load = function() {
+	  var _this = this;
+	  this.startLoading();
+
+	  return _this.loadSources().then(_this.loadAlignments, function() {
+	    return _this.saveSources().then(_this.loadAlignments);
+	  }).then(_this.endLoading).catch(function(err) {
+	    _this.endLoading();
+	    console.error(err);
+	  });
+	};
+	Persistence.prototype.loadAlignments = function() {
+	  var _this = this, store = this.primaryStore;
+	  return new Promise(function(resolve, reject) {
+	    store.loadAlignments().then(function(data) {
+	      _this.models.alignments.load(data);
+	      resolve();
+	    }, reject);
+	  });
+	};
+	Persistence.prototype.loadSources = function() {
+	  var _this = this, store = this.primaryStore;
+	  return new Promise(function(resolve, reject) {
+	    store.loadSources().then(resolve, reject);
+	  });
+	};
+	Persistence.prototype.saveAlignments = function() {
+	  var _this = this;
+	  return new Promise(function(resolve, reject) {
+	    var promises = _this.mapEnabled(function(store) {
+	      return store.saveAlignments();
+	    });
+	    Promise.all(promises).then(resolve).catch(reject);
+	  });
+	};
+	Persistence.prototype.saveSources = function() {
+	  var _this = this;
+	  return new Promise(function(resolve, reject) {
+	    var promises = _this.mapEnabled(function(store) {
+	      return store.saveSources();
+	    });
+	    Promise.all(promises).then(resolve).catch(reject);
+	  });
+	};
+	Persistence.prototype.mapEnabled = function(callback) {
+	  var results = [];
+	  for(var k in this.stores) {
+	    if (this.stores.hasOwnProperty(k)) {
+	      if (this.stores[k].enabled()) {
+	        results.push(callback(this.stores[k], k));
+	      }
+	    }
+	  }
+	  return results;
+	};
+	Persistence.prototype.startLoading = function() {
+	  events.hub.trigger(events.EVT.LOADING, "start", "data");
+	};
+	Persistence.prototype.endLoading = function() {
+	  events.hub.trigger(events.EVT.LOADING, "end", "data");
+	};
+
+	module.exports = Persistence;
+
+
+/***/ },
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -19740,10 +19885,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30)(module), (function() { return this; }())))
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -19759,123 +19904,115 @@
 
 
 /***/ },
-/* 30 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
-	function print() { __p += __j.call(arguments, '') }
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/index.html -->\n';
-	 if (!alignments.isEmpty()) { ;
-	__p += '\n<div style="margin: 0 0 1em 0;" popout-exclude >\n  <button name="action_comment" data-toggle-text="Edit Comments,Save Comments">Edit Comments</button>\n</div>\n';
-	 } ;
-	__p += '\n\n<table class="wordmapper-table">\n  ';
-	 if (alignments.isEmpty()) { ;
-	__p += '\n    <tr><td>No words have been aligned yet</td></tr>\n  ';
-	 } ;
-	__p += '\n  ';
-	 _.forEach(indexData, function(data, index) { ;
-	__p += '\n    <tr>\n      ';
-	 _.forEach(data.buckets, function(words, index, arr) { ;
-	__p += '\n        <td class="words" ';
-	 if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') ;
-	__p += '>\n        ';
-	 _.forEach(words, function(word) { ;
-	__p += '\n          <span class="word" title="Word: ' +
-	__e( word.index ) +
-	' Source: ' +
-	__e( word.source.index ) +
-	'">' +
-	__e( word.value ) +
-	'</span>\n        ';
-	 }); ;
-	__p += '\n        </td>\n      ';
-	 }); ;
-	__p += '\n      ';
-	 if(commentsPosition == "right") { ;
-	__p += '\n      <td class="comment">\n        <span class="comment">' +
-	__e( data.alignment.comment ) +
-	'</span>\n        <textarea class="comment" name="comment' +
-	((__t = ( index )) == null ? '' : __t) +
-	'" data-alignment="' +
-	((__t = ( data.alignment.id )) == null ? '' : __t) +
-	'" placeholder="Add comment..." style="display:none">' +
-	__e( data.alignment.comment || '' ) +
-	'</textarea>\n      </td>\n      ';
-	 } ;
-	__p += '\n    </tr>\n    ';
-	 if(commentsPosition == "bottom") { ;
-	__p += '\n    <tr class="comment" ';
-	 print(data.alignment.comment?'':'style="display:none;"'); ;
-	__p += ';>\n      <td class="comment" colspan="' +
-	__e( data.buckets.length ) +
-	'">\n        <span class="comment">' +
-	__e( data.alignment.comment ) +
-	'</span>\n        <textarea class="comment" name="comment' +
-	((__t = ( index )) == null ? '' : __t) +
-	'" data-alignment="' +
-	((__t = ( data.alignment.id )) == null ? '' : __t) +
-	'" placeholder="Add comment..." style="display:none">' +
-	__e( data.alignment.comment || '' ) +
-	'</textarea>\n      </td>\n    </tr>\n    ';
-	 } ;
-	__p += '\n  ';
-	 }); ;
-	__p += '\n</table>';
-
-	}
-	return __p
-	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
-
-
-/***/ },
 /* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '';
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/export.html -->\nExport data:\n<textarea name="export" class="json">' +
-	((__t = ( importExport.export(true) )) == null ? '' : __t) +
-	'</textarea>\n\nImport data:\n<textarea name="import" class="json"></textarea>\n<button class="primary wordmapper-import">Import</button>\n<span class="wordmapper-import-messages"></span>';
+	var $ = __webpack_require__(5);
+	var parser = __webpack_require__(32);
 
-	}
-	return __p
-	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+	var AlignmentsParser = parser.AlignmentsParser;
 
+	var StorageLocal = function(parent, options) {
+	  options = options || {};
+	  this.parent = parent;
+	  this._enabled = options.enabled || false;
+	  if (window.Storage === undefined) {
+	    console.error("LocalStorage not supported in this browser.");
+	    this._enabled = false;
+	  }
+	};
+	StorageLocal.prototype.enabled = function() {
+	  return this._enabled;
+	};
+	StorageLocal.prototype.enable = function() {
+	  this._enabled = true;
+	};
+	StorageLocal.prototype.disable = function() {
+	  this._enabled = false;
+	};
+	StorageLocal.prototype.loadAlignments = function() {
+	  console.log("StorageLocal loadAlignments");
+	  var deferred = $.Deferred();
+	  var jsonData = localStorage.getItem(this._getAlignmentsKey());
+	  if (jsonData === null) {
+	    deferred.resolve([]);
+	  } else {
+	    deferred.resolve(this._parseAlignments(jsonData));
+	  }
+	  return deferred.promise();
+	};
+	StorageLocal.prototype.saveAlignments = function() {
+	  console.log("StorageLocal saveAlignments");
+	  var deferred = $.Deferred();
+	  var serialized = this.parent.models.alignments.serialize();
+	  localStorage.setItem(this._getAlignmentsKey(), serialized);
+	  deferred.resolve();
+	  return deferred.promise();
+	};
+	StorageLocal.prototype.loadSources = function() {
+	  console.log("StorageLocal loadSources");
+	  return $.Deferred().resolve().promise();
+	};
+	StorageLocal.prototype.saveSources = function() {
+	  console.log("StorageLocal saveSources");
+	  return $.Deferred().resolve().promise();
+	};
+	StorageLocal.prototype._getAlignmentsKey = function() {
+	  var hashKey = this.parent.models.sources.getHashKey();
+	  var siteId = this.parent.models.siteContext.id;
+	  return siteId + "::" + hashKey;
+	};
+	StorageLocal.prototype._parseAlignments = function(data) {
+	  var parser = new AlignmentsParser(data, this.parent.models.sources);
+	  parser.parse();
+	  return parser.output;
+	};
+
+	module.exports = StorageLocal;
 
 /***/ },
 /* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(28);
-	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj) {
-	obj || (obj = {});
-	var __t, __p = '', __j = Array.prototype.join;
-	function print() { __p += __j.call(arguments, '') }
-	with (obj) {
-	__p += '\n<!-- wordmapper/client/src/html/overlay.html -->\n<div class="wordmapper wordmapper-overlay ' +
-	((__t = ( cls )) == null ? '' : __t) +
-	'">\n  ';
-	 if(title) { ;
-	__p += '\n    <h2>' +
-	((__t = ( title )) == null ? '' : __t) +
-	'</h2>\n  ';
-	 } ;
-	__p += '\n  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-overlay-content">\n  </div>\n  ';
-	 if (canPopout) { ;
-	__p += '\n    <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>\n  ';
-	 } ;
-	__p += '\n</div>';
+	var models = __webpack_require__(11);
+	var Word = models.Word;
+	var Alignments = models.Alignments;
 
-	}
-	return __p
-	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+	var AlignmentsParser = function(data, sources) {
+	  this.input = data;
+	  this.sources = sources;
+	  this.output = null;
+	};
+	AlignmentsParser.prototype.parse = function() {
+	  if (typeof this.input === "string") {
+	    this.input = JSON.parse(this.input);
+	  }
+	  this.output = this._parse();
+	  return this;
+	};
+	AlignmentsParser.prototype._parse = function() {
+	  var sourceMap = this.sources.getSourceHashMap();
+
+	  return this.input.data.map(function(alignment) {
+	    var words = alignment.data.filter(function(item) {
+	      return item.type == 'word';
+	    }).map(function(word) {
+	      return Word.create({
+	        index: word.data.index,
+	        value: word.data.value,
+	        source: sourceMap[word.data.source]
+	      });
+	    });
+	    var comment_texts = alignment.data.filter(function(item) {
+	      return item.type == 'comment';
+	    }).map(function(comment) {
+	      return comment.data.text;
+	    });
+	    return Alignments.createAlignment(words).setComment(comment_texts.join(" "));
+	  });
+	};
+
+	module.exports.AlignmentsParser = AlignmentsParser;
 
 
 /***/ },
@@ -19883,18 +20020,559 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var events = __webpack_require__(12);
-	var templates = __webpack_require__(26);
-	var IndexView = __webpack_require__(34);
-	var ExportView = __webpack_require__(35);
+	var _ = __webpack_require__(29);
+	var parser = __webpack_require__(32);
 
-	var Overlay = function(options) {
+	var AlignmentsParser = parser.AlignmentsParser;
+
+	var StorageRemote = function(parent, options) {
+	  options = options || {};
+	  this.parent = parent;
+	  this._enabled = options.enabled || false;
+	};
+	StorageRemote.prototype.enabled = function() {
+	  return this._enabled;
+	};
+	StorageRemote.prototype.enable = function() {
+	  this._enabled = true;
+	};
+	StorageRemote.prototype.disable = function() {
+	  this._enabled = false;
+	};
+	StorageRemote.prototype.loadAlignments = function() {
+	  console.log("StorageRemote loadAlignments");
+	  var _this = this;
+	  var url = this._url("/alignments");
+	  var hashes = this.parent.models.sources.getHashes();
+	  var promise = this._ajax({
+	    method: "GET",
+	    url: url,
+	    data: {sources: hashes.join(",")}
+	  });
+	  var deferred = $.Deferred();
+
+	  promise.done(function(responseData, textStatus, jqXHR) {
+	    try {
+	      var alignment_objects = _this._parseAlignments(responseData.data);
+	      deferred.resolve(alignment_objects);
+	    } catch (e) {
+	      deferred.fail(e);
+	    }
+	  }).fail(function() {
+	    deferred.fail.apply(deferred, arguments);
+	  });
+
+	  return deferred.promise();
+	};
+	StorageRemote.prototype.saveAlignments = function() {
+	  console.log("StorageRemote saveAlignments");
+	  var url = this._url("/alignments");
+	  var serialized = this.parent.models.alignments.serialize();
+	  var promise = this._ajax({
+	    method: "POST",
+	    url: url,
+	    processData: false,
+	    data: serialized
+	  });
+	  return promise;
+	};
+	StorageRemote.prototype.loadSources = function() {
+	  console.log("StorageRemote loadSources");
+	  var url = this._url("/sources");
+	  var hashes = this.parent.models.sources.getHashes();
+	  return this._ajax({
+	    method: "GET",
+	    url: url,
+	    data: {hashes: hashes.join(",")}
+	  });
+	};
+	StorageRemote.prototype.saveSources = function() {
+	  console.log("StorageRemote saveSources");
+	  var url = this._url("/sources");
+	  var serialized = this.parent.models.sources.serialize();
+	  var promise = this._ajax({
+	    method: "POST",
+	    url: url,
+	    processData: false,
+	    data: serialized
+	  });
+	  var deferred = $.Deferred();
+
+	  promise.done(function(data, textStatus, jqXHR) {
+	    deferred.resolve(data);
+	  }).fail(function() {
+	    deferred.fail.apply(deferred, arguments);
+	  });
+
+	  return deferred.promise();
+	};
+	StorageRemote.prototype._url = function(path) {
+	  return this.parent.settings.getAPIBaseUrl() + path;
+	};
+	StorageRemote.prototype._ajax = function(options) {
+	  var user = this.parent.models.user;
+	  var defaults = {
+	    dataType: "json",
+	    contentType: "application/json; charset=utf-8",
+	    beforeSend: function(jqXHR, settings) {
+	      jqXHR.setRequestHeader('Authorization', 'JWT ' + user.getToken());
+	    }
+	  };
+	  var ajaxOptions = _.assign({}, options, defaults);
+	  return $.ajax(ajaxOptions);
+	};
+	StorageRemote.prototype._parseAlignments = function(data) {
+	  var parser = new AlignmentsParser(data, this.parent.models.sources);
+	  parser.parse();
+	  return parser.output;
+	};
+
+	module.exports = StorageRemote;
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(29);
+	var config = __webpack_require__(35);
+
+	var Settings = function(options) {
+	  options = options || {};
+	  ['apiBaseUrl', 'registerUrl'].forEach(function(key) {
+	    if (!config.hasOwnProperty(key) || !config[key]) {
+	      throw 'Error login environment configuration. Missing required key: ' + key;
+	    }
+	  });
+	  this.current = _.assign({}, config, options);
+	  console.log("settings", this, "config", config);
+	};
+	Settings.prototype.defaults = {
+	  '*': {
+	    'sourceSelector': 'body'
+	  },
+	  'www.graeco-arabic-studies.org': {
+	    'sourceSelector': '.textboxcontent'
+	  },
+	  'sites.google.com': {
+	    'sourceSelector': '.textboxcontent'
+	  },
+	  'canvas.harvard.edu': {
+	    'sourceSelector': '.textboxcontent'
+	  }
+	};
+	Settings.prototype.load = function(siteContext) {
+	  var data = false;
+	  console.log("Loading source selector for site ID: ", siteContext.id);
+	  if (siteContext.id in this.defaults) {
+	    data = this.defaults[siteContext.id];
+	    console.log("Site ID exists. Settings: ", data);
+	  } else {
+	    data = this.defaults['*'];
+	    console.log("No such site ID exists. Using base settings: ", data);
+	  }
+	  _.assign(this.current, data);
+	  return this;
+	};
+	Settings.prototype.getSourceSelector = function() {
+	  return this.current.sourceSelector;
+	};
+	Settings.prototype.getAPIBaseUrl = function() {
+	  return this.current.apiBaseUrl;
+	};
+	Settings.prototype.getRegisterUrl = function() {
+	  return this.current.registerUrl;
+	};
+	module.exports = Settings;
+
+/***/ },
+/* 35 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  apiBaseUrl: 'http://localhost:8000/api',
+	  registerUrl: 'http://localhost:8000/user/register'
+	};
+
+/***/ },
+/* 36 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $ = __webpack_require__(5);
+	var events = __webpack_require__(13);
+	var templates = __webpack_require__(37);
+	var LoginComponent = __webpack_require__(43);
+
+	var PanelComponent = function(options) {
+	  options = options || {};
+	  this.el = null;
+	  this.user = options.user;
+	  this.settings = options.settings;
+	  this.loginComponent = new LoginComponent({
+	    user: this.user,
+	    settings: this.settings
+	  });
+	  this.tplData = {
+	    user: this.user
+	  };
+	  this.loadCount = 0;
+	  this.onClickButton = this.onClickButton.bind(this);
+	  this.updateLoginButton = this.updateLoginButton.bind(this);
+	  this.onLoading = this.onLoading.bind(this);
+	  this.init();
+	};
+	PanelComponent.prototype.buttonEvent = {
+	  'align': events.EVT.ALIGN,
+	  'clear_highlights': events.EVT.CLEAR_HIGHLIGHTS,
+	  'clear_alignments': events.EVT.CLEAR_ALIGNMENTS,
+	  'build_index': events.EVT.BUILD_INDEX,
+	  'export': events.EVT.EXPORT,
+	  'login': events.EVT.LOGIN
+	};
+	PanelComponent.prototype.init = function() {
+	  this.el = $('<div>');
+	  this.addListeners();
+	};
+	PanelComponent.prototype.addListeners = function() {
+	  this.el.on('click', this.onClickButton);
+	  this.user.on('change', this.updateLoginButton);
+	  events.hub.on(events.EVT.LOADING, this.onLoading);
+	};
+	PanelComponent.prototype.onClickButton = function(evt) {
+	  var t = evt.target, can_trigger_event = true;
+	  
+	  // this handles the case where an icon is clicked (get the parent button)
+	  if (t.nodeName != 'BUTTON' && t.parentNode.nodeName == 'BUTTON') {
+	    t = t.parentNode;
+	  }
+	  
+	  // check if the node is a valid button, in which case broadcast an event
+	  if (t.nodeName == 'BUTTON' && t.name in this.buttonEvent) {
+	    if (t.dataset.confirm) {
+	      can_trigger_event = window.confirm(t.dataset.confirm);
+	    }
+	    if (can_trigger_event) {
+	      events.hub.trigger(this.buttonEvent[t.name]);
+	    }
+	  }  
+	};
+	PanelComponent.prototype.render = function() {
+	  this.el.html(templates.panel(this.tplData));
+	  this.el.find('.wordmapper-panel').append(this.loginComponent.render().el);
+	  return this;
+	};
+	PanelComponent.prototype.getHeight = function() {
+	  return this.el.children().outerHeight();
+	};
+	PanelComponent.prototype.updateLoginButton = function() {
+	  var $btn = this.el.find('button[name=login]');
+	  $btn.find('span').text(this.user.isAuthenticated() ? this.user : 'Account');
+	};
+	PanelComponent.prototype.onLoading = function(state) {
+	  var action = false;
+	  if(state == "start") {
+	    ++this.loadCount;
+	    action = (this.loadCount === 1 ? "show" : false);
+	  } else if (state == "end") {
+	    --this.loadCount;
+	    action = (this.loadCount === 0 ? "hide" : false);
+	  }
+	  if (action !== false) {
+	    this.el.find('.wordmapper-loading')[action]();
+	  }
+	};
+
+	module.exports = PanelComponent;
+
+
+/***/ },
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  'panel': __webpack_require__(38),
+	  'index': __webpack_require__(39),
+	  'export': __webpack_require__(40),
+	  'overlay': __webpack_require__(41),
+	  'login': __webpack_require__(42)
+	};
+
+/***/ },
+/* 38 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(29);
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-loading" style="display:none"><i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true"></i></div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login" class="wordmapper-account-btn"><i class="fa fa-user"></i> <span>';
+	 print(user.isAuthenticated() ? user : 'Account'); 
+	__p+='</span></button>\n  </div>\n</div>\n';
+	}
+	return __p;
+	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+
+
+/***/ },
+/* 39 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(29);
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/index.html -->\n';
+	 if (!alignments.isEmpty()) { 
+	__p+='\n<div style="margin: 0 0 1em 0;" popout-exclude >\n  <button name="action_comment" data-toggle-text="Edit Comments,Save Comments">Edit Comments</button>\n</div>\n';
+	 } 
+	__p+='\n\n<table class="wordmapper-table">\n  ';
+	 if (alignments.isEmpty()) { 
+	__p+='\n    <tr><td>No words have been aligned yet</td></tr>\n  ';
+	 } 
+	__p+='\n  ';
+	 _.forEach(indexData, function(data, index) { 
+	__p+='\n    <tr>\n      ';
+	 _.forEach(data.buckets, function(words, index, arr) { 
+	__p+='\n        <td class="words" ';
+	 if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') 
+	__p+='>\n        ';
+	 _.forEach(words, function(word) { 
+	__p+='\n          <span class="word" title="Word: '+
+	((__t=( word.index ))==null?'':_.escape(__t))+
+	' Source: '+
+	((__t=( word.source.index ))==null?'':_.escape(__t))+
+	'">'+
+	((__t=( word.value ))==null?'':_.escape(__t))+
+	'</span>\n        ';
+	 }); 
+	__p+='\n        </td>\n      ';
+	 }); 
+	__p+='\n      ';
+	 if(commentsPosition == "right") { 
+	__p+='\n      <td class="comment">\n        <span class="comment">'+
+	((__t=( data.alignment.comment ))==null?'':_.escape(__t))+
+	'</span>\n        <textarea class="comment" name="comment'+
+	((__t=( index ))==null?'':__t)+
+	'" data-alignment="'+
+	((__t=( data.alignment.id ))==null?'':__t)+
+	'" placeholder="Add comment..." style="display:none">'+
+	((__t=( data.alignment.comment || '' ))==null?'':_.escape(__t))+
+	'</textarea>\n      </td>\n      ';
+	 } 
+	__p+='\n    </tr>\n    ';
+	 if(commentsPosition == "bottom") { 
+	__p+='\n    <tr class="comment" ';
+	 print(data.alignment.comment?'':'style="display:none;"'); 
+	__p+=';>\n      <td class="comment" colspan="'+
+	((__t=( data.buckets.length ))==null?'':_.escape(__t))+
+	'">\n        <span class="comment">'+
+	((__t=( data.alignment.comment ))==null?'':_.escape(__t))+
+	'</span>\n        <textarea class="comment" name="comment'+
+	((__t=( index ))==null?'':__t)+
+	'" data-alignment="'+
+	((__t=( data.alignment.id ))==null?'':__t)+
+	'" placeholder="Add comment..." style="display:none">'+
+	((__t=( data.alignment.comment || '' ))==null?'':_.escape(__t))+
+	'</textarea>\n      </td>\n    </tr>\n    ';
+	 } 
+	__p+='\n  ';
+	 }); 
+	__p+='\n</table>';
+	}
+	return __p;
+	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+
+
+/***/ },
+/* 40 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(29);
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/export.html -->\nExport data:\n<textarea name="export" class="json">'+
+	((__t=( importExport.export(true) ))==null?'':__t)+
+	'</textarea>\n\nImport data:\n<textarea name="import" class="json"></textarea>\n<button class="primary wordmapper-import">Import</button>\n<span class="wordmapper-import-messages"></span>';
+	}
+	return __p;
+	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+
+
+/***/ },
+/* 41 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(29);
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/overlay.html -->\n<div class="wordmapper wordmapper-overlay '+
+	((__t=( cls ))==null?'':__t)+
+	'">\n  ';
+	 if(title) { 
+	__p+='\n    <h2>'+
+	((__t=( title ))==null?'':__t)+
+	'</h2>\n  ';
+	 } 
+	__p+='\n  <div class="wordmapper-dismiss" title="Dismiss" popout-exclude></div>\n  <div class="wordmapper-overlay-content">\n  </div>\n  ';
+	 if (canPopout) { 
+	__p+='\n    <button class="wordmapper-popout" style="margin: 20px 0;" popout-exclude>Pop out in a new window</button>\n  ';
+	 } 
+	__p+='\n</div>';
+	}
+	return __p;
+	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+
+
+/***/ },
+/* 42 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(29);
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/login.html -->\n<div class="wordmapper-account" style="';
+	 if(hidden) { print('display:none;'); } 
+	__p+='">\n  ';
+	 if(user.isAuthenticated()) { 
+	__p+='\n  <div class="wordmapper-logged-in">Logged in as '+
+	((__t=( user ))==null?'':__t)+
+	'.</div>\n  <button name="logout" class="primary" style="width: 100%">Sign Out</button>\n  ';
+	 } else { 
+	__p+='\n  <div class="wordmapper-login">\n    <input type="text" name="email" placeholder="enter email...">\n    <input type="password" name="password" placeholder="enter password...">\n    ';
+	 if(error) { 
+	__p+='\n      <div class="wordmapper-error">'+
+	((__t=( error ))==null?'':__t)+
+	'</div>\n    ';
+	 } 
+	__p+='\n    <button name="login" class="primary" style="width: 125px;">Sign In</button>\n    ';
+	 if(register_url) { 
+	__p+='\n      <a href="'+
+	((__t=( register_url ))==null?'':__t)+
+	'" target="_blank" style="margin-left:1em;">Register</a>\n    ';
+	 } 
+	__p+='\n  </div>\n  ';
+	 } 
+	__p+='\n</div>';
+	}
+	return __p;
+	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+
+
+/***/ },
+/* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $ = __webpack_require__(5);
+	var events = __webpack_require__(13);
+	var templates = __webpack_require__(37);
+
+	var LoginComponent = function(options) {
+	  options = options || {};
+	  this.el = null;
+	  this.user = options.user;
+	  this.settings = options.settings;
+	  this.tplData = {
+	    register_url: this.settings.getRegisterUrl(),
+	    user: this.user,
+	    hidden: true,
+	    error: ''
+	  };
+	  this.onClickLogin = this.onClickLogin.bind(this);
+	  this.onClickLogout = this.onClickLogout.bind(this);
+	  this.init();
+	};
+	LoginComponent.prototype.init = function() {
+	  this.el = $('<div>');
+	  this.addListeners();
+	};
+	LoginComponent.prototype.addListeners = function() {
+	  events.hub.on(events.EVT.LOGIN, function() {
+	    var $el = this.el.find('.wordmapper-account');
+	    var hidden = this.tplData.hidden;
+	    this.tplData.hidden = !hidden;
+	    $el[hidden?'show':'hide']();
+	  }.bind(this));
+
+	  this.el.on('click', 'button[name=login]', null, this.onClickLogin);
+	  this.el.on('click', 'button[name=logout]', null, this.onClickLogout);
+	};
+	LoginComponent.prototype.render = function() {
+	  var html = templates.login(this.tplData);
+	  this.el.html(html);
+	  return this;
+	};
+	LoginComponent.prototype.onClickLogin = function(evt) {
+	  var credentials = {};
+	  credentials.email = this.el.find('input[name=email]').val();
+	  credentials.password = this.el.find('input[name=password]').val();
+
+	  this.startLogin();
+	  this.authenticate(credentials).done(function(response, textStatus, jqXHR) {
+	    this.tplData.hidden = true;
+	    this.tplData.error = '';
+	    this.user.update(response.data);
+	    this.user.saveLogin();
+	    this.render();
+	  }.bind(this)).fail(function(jqXHR, textStatus, errorThrown) {
+	    var errStr = errorThrown;
+	    if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+	      errStr = jqXHR.responseJSON.message;
+	    }
+	    this.tplData.error = errStr;
+	    this.render();
+	  }.bind(this)).always(function() {
+	    this.endLogin();
+	  }.bind(this));
+	  
+	  evt.stopPropagation();
+	};
+	LoginComponent.prototype.onClickLogout = function(evt) {
+	  this.user.reset();
+	  this.user.saveLogin();
+	  this.render();
+	  evt.stopPropagation();
+	};
+	LoginComponent.prototype.authenticate = function(credentials) {
+	  var url = this.settings.getAPIBaseUrl() + '/auth/login';
+	  return $.ajax({
+	    dataType: "json",
+	    method: 'POST',
+	    url: url,
+	    contentType: "application/json; charset=utf-8",
+	    data: JSON.stringify(credentials)
+	  });
+	};
+	LoginComponent.prototype.startLogin = function() {
+	  events.hub.trigger(events.EVT.LOADING, "start", "login");
+	};
+	LoginComponent.prototype.endLogin = function() {
+	  events.hub.trigger(events.EVT.LOADING, "end", "login");
+	};
+
+	module.exports = LoginComponent;
+
+
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $ = __webpack_require__(5);
+	var events = __webpack_require__(13);
+	var templates = __webpack_require__(37);
+	var IndexView = __webpack_require__(45);
+	var ExportView = __webpack_require__(46);
+
+	var OverlayComponent = function(options) {
 	  this.alignments = options.alignments;
 	  this.importExport = options.importExport;
 	  this.sources = options.sources;
 	  this.hiddenCls = 'wordmapper-overlay-hidden';
+
 	  this.popout = this.popout.bind(this);
 	  this.dismiss = this.dismiss.bind(this);
+
 	  this.indexView = new IndexView({
 	    alignments: this.alignments,
 	    sources: this.sources
@@ -19903,13 +20581,14 @@
 	    importExport: this.importExport,
 	    dismiss: this.dismiss
 	  });
+
 	  this.init();
 	};
-	Overlay.prototype.init = function() {
+	OverlayComponent.prototype.init = function() {
 	  this.el = $("<div>").append('<div class="'+this.hiddenCls+'"></div>');
 	  this.addListeners();
 	};
-	Overlay.prototype.addListeners = function() {
+	OverlayComponent.prototype.addListeners = function() {
 	  events.hub.on(events.EVT.BUILD_INDEX, function() {
 	    this.setView(this.indexView).render();
 	  }.bind(this));
@@ -19921,10 +20600,10 @@
 	  this.el.on('click', '.wordmapper-popout', null, this.popout);
 	  this.el.on('click', '.wordmapper-dismiss', null, this.dismiss);
 	};
-	Overlay.prototype.visible = function() {
+	OverlayComponent.prototype.visible = function() {
 	  return this.el.andSelf().find('.' + this.hiddenCls).length === 0;
 	};
-	Overlay.prototype.render = function() {
+	OverlayComponent.prototype.render = function() {
 	  var hide = true; 
 	  if (this.visible()) {
 	    hide = (this.renderer && this.renderer === this.lastRenderer);
@@ -19949,14 +20628,14 @@
 	  this.lastRenderer = this.renderer;
 	  return this;
 	};
-	Overlay.prototype.setView = function(view) {
+	OverlayComponent.prototype.setView = function(view) {
 	  this.renderer = view;
 	  return this;
 	};
-	Overlay.prototype.dismiss = function() {
+	OverlayComponent.prototype.dismiss = function() {
 	  this.render();
 	};
-	Overlay.prototype.popout = function() {
+	OverlayComponent.prototype.popout = function() {
 	  var opts = [
 	    "toolbar=no",
 	    "location=no",
@@ -19987,14 +20666,14 @@
 	  }
 	};
 
-	module.exports = Overlay;
+	module.exports = OverlayComponent;
 
 /***/ },
-/* 34 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var templates = __webpack_require__(26);
+	var templates = __webpack_require__(37);
 
 	var IndexView = function(options) {
 	  this.alignments = options.alignments;
@@ -20048,7 +20727,7 @@
 	};
 	IndexView.prototype.getAlignmentsBySource = function() {
 	  var sources = this.sources;
-	  return this.alignments.alignments.map(function(alignment) {
+	  return this.alignments.map(function(alignment) {
 	    var words_by_source = alignment.wordsBySourceIndex();
 	    return {
 	      alignment: alignment,
@@ -20062,7 +20741,7 @@
 	  });
 	};
 	IndexView.prototype.getAlignmentsByWords = function() {
-	  return this.alignments.alignments.map(function(alignment) {
+	  return this.alignments.map(function(alignment) {
 	    return {
 	      alignment: alignment,
 	      buckets:  alignment.wordGroups()
@@ -20077,7 +20756,6 @@
 	  }, 0);
 	  var html = template({
 	    alignments: this.alignments,
-	    sources: this.sources,
 	    indexData: indexData,
 	    maxBuckets: maxBuckets,
 	    commentsPosition: "right"
@@ -20091,11 +20769,11 @@
 
 
 /***/ },
-/* 35 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var templates = __webpack_require__(26);
+	var templates = __webpack_require__(37);
 
 	var ExportView = function(options) {
 	  this.dismiss = options.dismiss;
@@ -20141,24 +20819,24 @@
 
 
 /***/ },
-/* 36 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var events = __webpack_require__(12);
-	var models = __webpack_require__(10);
+	var events = __webpack_require__(13);
+	var models = __webpack_require__(11);
 
-	var TextBoxes = function(options) {
+	var TextComponent = function(options) {
 	  this.selector = options.selector;
 	  this.alignments = options.alignments;
-	  this.sources = null;
+	  this.sources = options.sources;
 	  this.textBoxes = null;
 	  this.bindMethods.forEach(function(method) {
 	    this[method] = this[method].bind(this);
 	  }, this);
 	  this.init();
 	};
-	TextBoxes.prototype.bindMethods = [
+	TextComponent.prototype.bindMethods = [
 	  'onClickWord',
 	  'onMouseoverWord',
 	  'onMouseoutWord',
@@ -20167,37 +20845,38 @@
 	  'clearHighlighted',
 	  'align'
 	];
-	TextBoxes.prototype.init = function() {
-	  this.sources = this.loadSources();
+	TextComponent.prototype.init = function() {
+	  this.sources.addSources(this.loadSources());
 	  this.transform();
 	  this.textBoxes = this.select();
 	  this.addListeners();
 	};
-	TextBoxes.prototype.addListeners = function() {
+	TextComponent.prototype.addListeners = function() {
 	  this.textBoxes.on('click', '.wordmapper-word', null, this.onClickWord);
 	  this.textBoxes.on('mouseover', '.wordmapper-word', null, this.onMouseoverWord);
 	  this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
 	  this.alignments.on('change', this.updateAlignments);
+	  this.alignments.on('load', this.updateAlignments);
 	  events.hub.on(events.EVT.CLEAR_HIGHLIGHTS, this.clearHighlighted);
 	  events.hub.on(events.EVT.CLEAR_ALIGNMENTS, this.resetAlignments);
 	  events.hub.on(events.EVT.ALIGN, this.align);
 	};
-	TextBoxes.prototype.onClickWord = function(evt) {
+	TextComponent.prototype.onClickWord = function(evt) {
 	  //console.log("click", evt.target);
 	  this.toggleHighlight(evt.target);
 	};
-	TextBoxes.prototype.onMouseoverWord = function(evt) {
+	TextComponent.prototype.onMouseoverWord = function(evt) {
 	  //console.log("mouseover", evt.target);
 	  var spans = this.selectAlignedWith(evt.target);
 	  if (spans.length > 0) {
 	    this.addHighlight2(spans);
 	  }
 	};
-	TextBoxes.prototype.onMouseoutWord = function(evt) {
+	TextComponent.prototype.onMouseoutWord = function(evt) {
 	  //console.log("mouseout", evt.target);
 	  this.clearHighlight2();
 	};
-	TextBoxes.prototype.align = function() {
+	TextComponent.prototype.align = function() {
 	  var spans = this.selectHighlighted();
 	  if (spans.length > 0) {
 	    var words = models.Source.createWords(spans.toArray(), this.sources);
@@ -20206,16 +20885,15 @@
 	  }
 	  this.clearHighlighted();
 	};
-	TextBoxes.prototype.updateAlignments = function() {
+	TextComponent.prototype.updateAlignments = function() {
 	  var _this = this;
-	  var alignments = this.alignments.alignments;
 
 	  this.selectAlignments().each(function(index, el) {
 	    delete el.dataset.alignment;
 	    _this.removeAligned(el);
 	  });
 
-	  alignments.forEach(function(alignment, index) {
+	  this.alignments.forEach(function(alignment, index) {
 	    var spans = _this.selectWords(alignment.words);
 	    $(spans).each(function(index, el) {
 	      el.dataset.alignment = alignment.id;
@@ -20223,79 +20901,79 @@
 	    _this.addAligned(spans);
 	  });
 	};
-	TextBoxes.prototype.resetAlignments = function() {
+	TextComponent.prototype.resetAlignments = function() {
 	  this.alignments.reset();
 	};
-	TextBoxes.prototype.addAligned = function(spans) {
+	TextComponent.prototype.addAligned = function(spans) {
 	  return $(spans).addClass("aligned");
 	};
-	TextBoxes.prototype.toggleHighlight = function(spans) {
+	TextComponent.prototype.toggleHighlight = function(spans) {
 	  var has_highlight = $(spans).hasClass('highlight');
 	  var action = (has_highlight ? 'removeHighlight' : 'addHighlight');
 	  this[action](spans);
 	};
-	TextBoxes.prototype.addHighlight = function(spans) {
+	TextComponent.prototype.addHighlight = function(spans) {
 	  return $(spans).addClass("highlight");
 	};
-	TextBoxes.prototype.removeHighlight = function(spans) {
+	TextComponent.prototype.removeHighlight = function(spans) {
 	  return $(spans).removeClass("highlight");
 	};
-	TextBoxes.prototype.addHighlight2 = function(spans) {
+	TextComponent.prototype.addHighlight2 = function(spans) {
 	  return $(spans).addClass('highlight2');
 	};
-	TextBoxes.prototype.clearHighlight2 = function() {
+	TextComponent.prototype.clearHighlight2 = function() {
 	  return this.textBoxes.find('.highlight2').removeClass('highlight2');
 	};
-	TextBoxes.prototype.clearHighlighted = function() {
+	TextComponent.prototype.clearHighlighted = function() {
 	  return this.selectHighlighted().removeClass('highlight');
 	};
-	TextBoxes.prototype.clearAligned = function() {
+	TextComponent.prototype.clearAligned = function() {
 	  return this.textBoxes.find('.aligned').removeClass('aligned');
 	};
-	TextBoxes.prototype.removeAligned = function(spans) {
+	TextComponent.prototype.removeAligned = function(spans) {
 	  return $(spans).removeClass("aligned");
 	};
-	TextBoxes.prototype.selectHighlighted = function() {
+	TextComponent.prototype.selectHighlighted = function() {
 	  return this.textBoxes.find('.highlight');
 	};
-	TextBoxes.prototype.selectAlignedWith = function(el) {
+	TextComponent.prototype.selectAlignedWith = function(el) {
 	  return this.selectAlignment(el.dataset.alignment);
 	};
-	TextBoxes.prototype.selectAlignment = function(alignment_id) {
+	TextComponent.prototype.selectAlignment = function(alignment_id) {
 	  return this.textBoxes.find('[data-alignment="'+alignment_id+'"]');
 	};
-	TextBoxes.prototype.selectAlignments = function() {
+	TextComponent.prototype.selectAlignments = function() {
 	  return this.textBoxes.find('[data-alignment]');
 	};
-	TextBoxes.prototype.selectWord = function(word) {
+	TextComponent.prototype.selectWord = function(word) {
 	  return this.textBoxes.find('[data-word="'+word.index+'"][data-source="'+word.source.index+'"]');
 	};
-	TextBoxes.prototype.selectWords = function(words) {
+	TextComponent.prototype.selectWords = function(words) {
 	  var selector = words.map(function(word) {
 	    return '[data-word="'+word.index+'"][data-source="'+word.source.index+'"]';
 	  }).join(", ");
 	  return this.textBoxes.find(selector);
 	};
-	TextBoxes.prototype.loadSources = function() {
+	TextComponent.prototype.loadSources = function() {
 	  return this.select().toArray().map(this.createSource);
 	};
-	TextBoxes.prototype.createSource = function(el, index) {
+	TextComponent.prototype.createSource = function(el, index) {
 	  return new models.Source.fromDOM(el, index);
 	};
-	TextBoxes.prototype.select = function() {
+	TextComponent.prototype.select = function() {
 	  return $(this.selector);
 	};
-	TextBoxes.prototype.transform = function() {
+	TextComponent.prototype.transform = function() {
 	  var textBoxes = this.select();
 	  this.sources.forEach(function(source, index) {
 	    this.replace(textBoxes[index], source.transform().copyElement());
 	  }, this);
 	};
-	TextBoxes.prototype.replace = function(textBox, el) {
+	TextComponent.prototype.replace = function(textBox, el) {
 	  textBox.parentNode.replaceChild(el, textBox);
 	};
 
-	module.exports = TextBoxes;
+	module.exports = TextComponent;
 
 /***/ }
 /******/ ]);

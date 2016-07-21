@@ -48,6 +48,12 @@
     background-color: rgba(0,0,0,.7);
     z-index: 1002;
 }
+.wordmapper-panel a {
+  color: rgb(0, 192, 255);
+}
+.wordmapper-panel a:hover, .wordmapper-panel a:active {
+  color: rgb(255, 0, 0);
+}
 .wordmapper-panel-top {
     top: 0;
     height: 45px;
@@ -98,8 +104,7 @@
     color: rgb(0, 120, 231);
 }
 .wordmapper-logo {
-    display: block;
-    float: left;
+    display: inline-block;
     line-height: 45px;
     font-size: 22.5px;
     vertical-align: middle;
@@ -117,10 +122,44 @@
     font-size: 100%;
 }
 .wordmapper-buttons {
-    margin: 2px 0;
+  display: inline-block;
+  margin: 2px 0;
 }
 .wordmapper-buttons > button {
-    margin: 4px 2px;
+  margin: 4px 2px;
+}
+.wordmapper-buttons-right {
+  display: inline-block;
+  float: right;
+  margin-right: 4px;
+}
+.wordmapper-loading {
+  display: inline-block;
+  color: #fff;
+}
+.wordmapper-account-btn {
+  max-width: 270px;
+}
+.wordmapper-account {
+  position: absolute;
+  right: 0;
+  top: 45px;
+  width: 250px;
+  padding: 10px;
+  background-color: rgba(0,0,0,.7);
+  z-index: 1002;
+}
+.wordmapper-account input {
+  width: calc(100% - 10px);
+  padding: 5px;
+  margin: 0 0 5px 0;
+  font-size: 14px;
+}
+.wordmapper-logged-in {
+    display: block;
+    font-size: 14px;
+    color: #fff;
+    margin: .5em 0;
 }
 .wordmapper-word.highlight {
     background-color: yellow;
@@ -201,9 +240,11 @@
     font-size: 12px;
     font-family: monospace;
 }
+.wordmapper-error,
 .wordmapper-import-messages .error {
     color: red;
 }
+.wordmapper-success,
 .wordmapper-import-messages .success {
     color: green;
 }

@@ -53,7 +53,7 @@ IndexView.prototype.processComment = function(index, el) {
 };
 IndexView.prototype.getAlignmentsBySource = function() {
   var sources = this.sources;
-  return this.alignments.alignments.map(function(alignment) {
+  return this.alignments.map(function(alignment) {
     var words_by_source = alignment.wordsBySourceIndex();
     return {
       alignment: alignment,
@@ -67,7 +67,7 @@ IndexView.prototype.getAlignmentsBySource = function() {
   });
 };
 IndexView.prototype.getAlignmentsByWords = function() {
-  return this.alignments.alignments.map(function(alignment) {
+  return this.alignments.map(function(alignment) {
     return {
       alignment: alignment,
       buckets:  alignment.wordGroups()
@@ -82,7 +82,6 @@ IndexView.prototype.render = function() {
   }, 0);
   var html = template({
     alignments: this.alignments,
-    sources: this.sources,
     indexData: indexData,
     maxBuckets: maxBuckets,
     commentsPosition: "right"

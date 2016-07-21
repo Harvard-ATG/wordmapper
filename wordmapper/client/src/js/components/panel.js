@@ -1,29 +1,52 @@
 var $ = require('jquery');
 var events = require('../events.js');
 var templates = require('../templates.js');
+var LoginComponent = require('./login.js');
 
-var Panel = function() {
+var PanelComponent = function(options) {
+  options = options || {};
   this.el = null;
+  this.user = options.user;
+  this.settings = options.settings;
+  this.loginComponent = new LoginComponent({
+    user: this.user,
+    settings: this.settings
+  });
+  this.tplData = {
+    user: this.user
+  };
+  this.loadCount = 0;
   this.onClickButton = this.onClickButton.bind(this);
+  this.updateLoginButton = this.updateLoginButton.bind(this);
+  this.onLoading = this.onLoading.bind(this);
   this.init();
 };
-Panel.prototype.buttonEvent = {
+PanelComponent.prototype.buttonEvent = {
   'align': events.EVT.ALIGN,
   'clear_highlights': events.EVT.CLEAR_HIGHLIGHTS,
   'clear_alignments': events.EVT.CLEAR_ALIGNMENTS,
   'build_index': events.EVT.BUILD_INDEX,
-  'export': events.EVT.EXPORT
+  'export': events.EVT.EXPORT,
+  'login': events.EVT.LOGIN
 };
-Panel.prototype.init = function() {
+PanelComponent.prototype.init = function() {
   this.el = $('<div>');
   this.addListeners();
 };
-Panel.prototype.addListeners = function() {
+PanelComponent.prototype.addListeners = function() {
   this.el.on('click', this.onClickButton);
+  this.user.on('change', this.updateLoginButton);
+  events.hub.on(events.EVT.LOADING, this.onLoading);
 };
-Panel.prototype.onClickButton = function(evt) {
-  var t = evt.target;
-  var can_trigger_event = true;
+PanelComponent.prototype.onClickButton = function(evt) {
+  var t = evt.target, can_trigger_event = true;
+  
+  // this handles the case where an icon is clicked (get the parent button)
+  if (t.nodeName != 'BUTTON' && t.parentNode.nodeName == 'BUTTON') {
+    t = t.parentNode;
+  }
+  
+  // check if the node is a valid button, in which case broadcast an event
   if (t.nodeName == 'BUTTON' && t.name in this.buttonEvent) {
     if (t.dataset.confirm) {
       can_trigger_event = window.confirm(t.dataset.confirm);
@@ -33,12 +56,30 @@ Panel.prototype.onClickButton = function(evt) {
     }
   }  
 };
-Panel.prototype.render = function() {
-  this.el.html(templates.panel());
+PanelComponent.prototype.render = function() {
+  this.el.html(templates.panel(this.tplData));
+  this.el.find('.wordmapper-panel').append(this.loginComponent.render().el);
   return this;
 };
-Panel.prototype.getHeight = function() {
+PanelComponent.prototype.getHeight = function() {
   return this.el.children().outerHeight();
 };
+PanelComponent.prototype.updateLoginButton = function() {
+  var $btn = this.el.find('button[name=login]');
+  $btn.find('span').text(this.user.isAuthenticated() ? this.user : 'Account');
+};
+PanelComponent.prototype.onLoading = function(state) {
+  var action = false;
+  if(state == "start") {
+    ++this.loadCount;
+    action = (this.loadCount === 1 ? "show" : false);
+  } else if (state == "end") {
+    --this.loadCount;
+    action = (this.loadCount === 0 ? "hide" : false);
+  }
+  if (action !== false) {
+    this.el.find('.wordmapper-loading')[action]();
+  }
+};
 
-module.exports = Panel;
+module.exports = PanelComponent;

@@ -1,20 +1,42 @@
 var winston = require('winston');
+var _ = require('lodash');
 
-var AlignmentsSerializer = function(data) {
+/**
+ * Serializer.
+ *
+ * Takes data from the database and serializes or converts it into a standard
+ * format for output to clients.
+ */
+var Serializer = function(data, options) {
 	this.rows = data;  // expected to come from database
+	this.options = options || {};
 	this.output = null;
 };
-AlignmentsSerializer.prototype.asPromise = function() {
+Serializer.prototype.asPromise = function() {
 	var serializer = this;
 	return new Promise(function(resolve, reject) {
 		try {
-			resolve(serializer.serialize().output);
+			serializer.serialize();
+			resolve(serializer.output);
 		} catch (e) {
 			reject(e);
 		}
 	});
 };
-AlignmentsSerializer.prototype.serialize = function() {
+Serializer.prototype.serialize = function() {
+    this._serialize();
+    return this;
+};
+
+/**
+ * AlignmentsSerializer
+ */
+var AlignmentsSerializer = function(data, options) {
+  Serializer.call(this, data, options);
+};
+_.assign(AlignmentsSerializer.prototype, Serializer.prototype);
+
+AlignmentsSerializer.prototype._serialize = function() {
 	if (!Array.isArray(this.rows)) {
 		throw "Expected row data as type 'array' but got something else"
 	}
@@ -45,9 +67,9 @@ AlignmentsSerializer.prototype.serialize = function() {
 				"type": "word",
 				"id": row.word_id,
 				"data": {
-					"index": row.word_index,
-					"source": row.source_hash,
-					"value": row.word_value
+						"index": row.word_index,
+						"source": row.source_hash,
+						"value": row.word_value
 				}
 			};
 		});
@@ -55,7 +77,7 @@ AlignmentsSerializer.prototype.serialize = function() {
 			alignment.data.push({
 				"type": "comment",
 				"data": {
-					"text": dict[alignmentId][0].comment
+						"text": dict[alignmentId][0].comment
 				}
 			});
 		}
@@ -63,8 +85,44 @@ AlignmentsSerializer.prototype.serialize = function() {
 	});
 
 	this.output = output;
+	return this;
+};
 
+/**
+ * SourcesSerializer
+ */
+var SourcesSerializer = function(data, options) {
+  Serializer.call(this, data, options);
+};
+_.assign(SourcesSerializer.prototype, Serializer.prototype);
+
+SourcesSerializer.prototype._serialize = function() {
+	if (!Array.isArray(this.rows)) {
+		throw "Expected row data as type 'array' but got something else"
+	}
+	var options = this.options;
+	var output = {
+		"type": "sources",
+		"data": []
+	};
+
+	output.data = this.rows.map(function(source) {
+		var data = source;
+		if (options.fields) {
+			data = options.fields.reduce(function(data, field) {
+				data[field] = source[field];
+				return data;
+			}, {});
+		}
+		return {
+			"type": "source",
+			"data": data
+		};
+	});
+	
+	this.output = output;
 	return this;
 };
 
 module.exports.AlignmentsSerializer = AlignmentsSerializer;
+module.exports.SourcesSerializer = SourcesSerializer;

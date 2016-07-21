@@ -3,4 +3,7 @@
 /node_modules
 /wordmapper/client/dist/
 !/wordmapper/client/dist/empty
-.env*
+/wordmapper/client/config/
+!/wordmapper/client/config/development.js
+/wordmapper/server/dotenv/.env*
+!/wordmapper/server/dotenv/.env.vagrant

@@ -1,4 +1,6 @@
 var path = require('path');
+var NODE_ENV = process.env.NODE_ENV || 'development';
+
 module.exports = {
 	entry: path.resolve('wordmapper/client/src/app.js'),
 	files: [],
@@ -8,7 +10,8 @@ module.exports = {
 	},
 	resolve: {
 		alias: {
-			jquery: path.resolve('wordmapper/client/vendor/jquery-1.12.4.min.js')
+			jquery: path.resolve('wordmapper/client/vendor/jquery-1.12.4.min.js'),
+			config: path.join(__dirname, 'wordmapper/client/config', NODE_ENV)
 		}
 	},
 	module: {

@@ -27,6 +27,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(middleware.requestLogger);
 app.use(middleware.commonViewVars);
+app.use(middleware.accessControlAllow);
 
 app.use('/static', express.static(__dirname + '/public'));
 app.use('/api', apiRouter);

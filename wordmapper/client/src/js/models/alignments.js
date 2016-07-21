@@ -20,6 +20,9 @@ Alignments.createAlignment = Alignments.prototype.createAlignment = function(wor
 Alignments.prototype.triggerChange = function() {
   this.trigger("change");
 };
+Alignments.prototype.triggerLoad = function() {
+  this.trigger("load");
+};
 Alignments.prototype.add = function(alignment) {
   this._removeDuplicates(alignment);
   this._removeEmpty();
@@ -59,7 +62,8 @@ Alignments.prototype.reset = function() {
 Alignments.prototype.load = function(alignments) {
   this.alignments = Array.prototype.slice.call(alignments);
   this.sort();
-  this.triggerChange();
+  this.triggerLoad();
+  return this;
 };
 Alignments.prototype.sort = function() {
   this.alignments.sort(function(a, b) {
@@ -108,6 +112,14 @@ Alignments.prototype.toJSON = function() {
 Alignments.prototype.serialize = function() {
   return JSON.stringify(this.toJSON(), null, '\t');
 };
+
+// convenience methods to operate on the underlying objects by callers...
+['map', 'forEach', 'reduce', 'filter'].forEach(function(method) {
+  Alignments.prototype[method] = function() {
+    return Array.prototype[method].apply(this.alignments, arguments);
+  };
+});
+
 events.Events.mixin(Alignments.prototype);
 
 module.exports = Alignments;
