@@ -5,8 +5,9 @@ var passport = require('passport');
 var database = require('../database');
 var auth = require('../auth');
 var router = express.Router();
-
+var serializer = require('../serializer');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
+var AlignmentsSerializer = serializer.AlignmentsSerializer;
 
 // Index
 router.get('/', function(req, res) {
@@ -15,7 +16,15 @@ router.get('/', function(req, res) {
 
 // Profile
 router.get('/:userId(\\d+)', function(req, res) {
-	res.send("User: " + req.params.userId);
+	var userId = req.params.userId;
+	var promise = database.alignments.getAlignmentsByUser(userId);
+	promise.then(function(data) {
+		var serializer = new AlignmentsSerializer(data);
+		res.json(serializer.serialize().output);
+	}).catch(function(err) {
+		res.send(err);
+		console.error(err);
+	});
 });
 
 // Login

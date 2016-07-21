@@ -73,6 +73,7 @@ var alignments = {
 		return db.any(query);
 	},
 	getAlignmentsByUser: function(userId, options) {
+		options = options || {};
 		if (!userId) {
 			throw "Missing userId parameter";
 		}
@@ -88,7 +89,6 @@ var alignments = {
 		}
 
 		query += ' WHERE ' + conds.join(" AND ") + ' ORDER BY a.id';
-
 		return db.any(query, params);
 	},
 	deleteAlignmentsByUser: function(userId, sources) {
