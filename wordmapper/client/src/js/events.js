@@ -48,7 +48,9 @@ module.exports = {
     BUILD_INDEX: 'build_index',
     EXPORT: 'export',
     LOGIN: 'login',
-    LOADING: 'loading'
+    LOADING: 'loading',
+    ERROR: 'error',
+    NOTIFICATION: 'notification'
   },
   hub: new Events({debug: true})
 };

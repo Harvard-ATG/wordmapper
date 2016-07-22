@@ -22,9 +22,13 @@ var Persistence = function(options) {
   this.onSourcesChange = this.onSourcesChange.bind(this);
   this.onUserChange = this.onUserChange.bind(this);
   this.loadAlignments = this.loadAlignments.bind(this);
+  this.loadSources = this.loadSources.bind(this);
+  this.saveAlignments = this.saveAlignments.bind(this);
+  this.saveSources = this.saveSources.bind(this);
   this.endLoading = this.endLoading.bind(this);
   this.startLoading = this.startLoading.bind(this);
-
+  this.notifySave = this.notifySave.bind(this);
+  
   this.init();
 };
 Persistence.prototype.init = function() {
@@ -36,7 +40,15 @@ Persistence.prototype.addListeners = function() {
   this.models.user.on('change', this.onUserChange);
 };
 Persistence.prototype.onAlignmentsChange = function() {
-  this.saveAlignments();
+  var _this = this;
+  this.startLoading()
+    .then(this.saveAlignments)
+    .then(this.endLoading)
+    .then(this.notifySave)
+    .catch(function(err) {
+      _this.endLoading();
+      _this.handleError(err);
+    });
 };
 Persistence.prototype.onSourcesChange = function() {
   this.sourcesReady = true;
@@ -57,14 +69,18 @@ Persistence.prototype.onUserChange = function() {
 };
 Persistence.prototype.load = function() {
   var _this = this;
-  this.startLoading();
-
-  return _this.loadSources().then(_this.loadAlignments, function() {
+  var saveSources = function() {
     return _this.saveSources().then(_this.loadAlignments);
-  }).then(_this.endLoading).catch(function(err) {
-    _this.endLoading();
-    console.error(err);
-  });
+  };
+
+  return _this.startLoading()
+    .then(_this.loadSources)
+    .then(_this.loadAlignments, saveSources)
+    .then(_this.endLoading)
+    .catch(function(err) {
+      _this.endLoading();
+      _this.handleError(err);
+    });
 };
 Persistence.prototype.loadAlignments = function() {
   var _this = this, store = this.primaryStore;
@@ -76,45 +92,40 @@ Persistence.prototype.loadAlignments = function() {
   });
 };
 Persistence.prototype.loadSources = function() {
-  var _this = this, store = this.primaryStore;
-  return new Promise(function(resolve, reject) {
-    store.loadSources().then(resolve, reject);
-  });
+  var store = this.primaryStore;
+  return store.loadSources();
 };
 Persistence.prototype.saveAlignments = function() {
-  var _this = this;
-  return new Promise(function(resolve, reject) {
-    var promises = _this.mapEnabled(function(store) {
-      return store.saveAlignments();
-    });
-    Promise.all(promises).then(resolve).catch(reject);
-  });
+  var store = this.primaryStore;
+  return store.saveAlignments();
 };
 Persistence.prototype.saveSources = function() {
-  var _this = this;
-  return new Promise(function(resolve, reject) {
-    var promises = _this.mapEnabled(function(store) {
-      return store.saveSources();
-    });
-    Promise.all(promises).then(resolve).catch(reject);
-  });
+  var store = this.primaryStore;
+  return store.saveSources();
 };
-Persistence.prototype.mapEnabled = function(callback) {
-  var results = [];
-  for(var k in this.stores) {
-    if (this.stores.hasOwnProperty(k)) {
-      if (this.stores[k].enabled()) {
-        results.push(callback(this.stores[k], k));
-      }
-    }
-  }
-  return results;
+Persistence.prototype.handleError = function(err) {
+  this.notifyError(err);
+  console.error(err);
 };
 Persistence.prototype.startLoading = function() {
   events.hub.trigger(events.EVT.LOADING, "start", "data");
+  return Promise.resolve();
 };
 Persistence.prototype.endLoading = function() {
   events.hub.trigger(events.EVT.LOADING, "end", "data");
+  return Promise.resolve();
+};
+Persistence.prototype.notifySave = function() {
+  var d = new Date();
+  var msg = "Saved @ " + [d.getHours(), d.getMinutes(), d.getSeconds()].join(":");
+  this.notifyMessage("success", msg);
+  return Promise.resolve();
+};
+Persistence.prototype.notifyMessage = function(messageType, message) {
+  events.hub.trigger(events.EVT.NOTIFICATION, messageType, message);
+};
+Persistence.prototype.notifyError = function(error) {
+  events.hub.trigger(events.EVT.ERROR, error);
 };
 
 module.exports = Persistence;

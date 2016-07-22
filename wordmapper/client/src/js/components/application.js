@@ -1,4 +1,5 @@
 var $ = require('jquery');
+var events = require('../events.js');
 var services = require('../services.js');
 var models = require('../models.js');
 var Settings = require('../settings.js');
@@ -55,9 +56,13 @@ Application.prototype.init = function() {
     sources: this.models.sources
   });
 
+  this.onError = this.onError.bind(this);
+  
   this.addListeners();
 };
-Application.prototype.addListeners = function() {};
+Application.prototype.addListeners = function() {
+  events.hub.on(events.EVT.ERROR, this.onError);
+};
 Application.prototype.render = function() {
   this.el.append(this.components.panel.render().el);
   this.el.append(this.components.overlay.render().el);
@@ -76,6 +81,9 @@ Application.prototype.loadData = function() {
     this.services.persistence.load();
   }
   return this;
+};
+Application.prototype.onError = function(message) {
+  window.alert("Word Mapper Error: " + message);
 };
 
 module.exports = Application;

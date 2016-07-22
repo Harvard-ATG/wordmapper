@@ -23,30 +23,29 @@ StorageLocal.prototype.disable = function() {
 };
 StorageLocal.prototype.loadAlignments = function() {
   console.log("StorageLocal loadAlignments");
-  var deferred = $.Deferred();
   var jsonData = localStorage.getItem(this._getAlignmentsKey());
   if (jsonData === null) {
-    deferred.resolve([]);
-  } else {
-    deferred.resolve(this._parseAlignments(jsonData));
+    return Promise.resolve([]);
   }
-  return deferred.promise();
+  try {
+    return Promise.resolve(this._parseAlignments(jsonData));
+  } catch (e) {
+    return Promise.reject(e);
+  }
 };
 StorageLocal.prototype.saveAlignments = function() {
   console.log("StorageLocal saveAlignments");
-  var deferred = $.Deferred();
   var serialized = this.parent.models.alignments.serialize();
   localStorage.setItem(this._getAlignmentsKey(), serialized);
-  deferred.resolve();
-  return deferred.promise();
+  return Promise.resolve();
 };
 StorageLocal.prototype.loadSources = function() {
   console.log("StorageLocal loadSources");
-  return $.Deferred().resolve().promise();
+  return Promise.resolve();
 };
 StorageLocal.prototype.saveSources = function() {
   console.log("StorageLocal saveSources");
-  return $.Deferred().resolve().promise();
+  return Promise.resolve();
 };
 StorageLocal.prototype._getAlignmentsKey = function() {
   var hashKey = this.parent.models.sources.getHashKey();

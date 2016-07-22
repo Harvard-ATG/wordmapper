@@ -19,6 +19,7 @@ var PanelComponent = function(options) {
   this.onClickButton = this.onClickButton.bind(this);
   this.updateLoginButton = this.updateLoginButton.bind(this);
   this.onLoading = this.onLoading.bind(this);
+  this.notify = this.notify.bind(this);
   this.init();
 };
 PanelComponent.prototype.buttonEvent = {
@@ -37,6 +38,7 @@ PanelComponent.prototype.addListeners = function() {
   this.el.on('click', this.onClickButton);
   this.user.on('change', this.updateLoginButton);
   events.hub.on(events.EVT.LOADING, this.onLoading);
+  events.hub.on(events.EVT.NOTIFICATION, this.notify);
 };
 PanelComponent.prototype.onClickButton = function(evt) {
   var t = evt.target, can_trigger_event = true;
@@ -80,6 +82,23 @@ PanelComponent.prototype.onLoading = function(state) {
   if (action !== false) {
     this.el.find('.wordmapper-loading')[action]();
   }
+};
+PanelComponent.prototype.notify = function(messageType, message) {
+  state = messageType || "success";
+  var _this = this;
+  var html = templates.notification({
+    state: state,
+    message: message
+  });
+  if (this.notifyTimeoutID) {
+    window.clearTimeout(this.notifyTimeoutID);
+  }
+  var $el = this.el.find('.wordmapper-notification');
+  $el.html(html).css({opacity: 1});
+
+  this.notifyTimeoutID = setTimeout(function() {
+    $el.css({opacity: 0 }); // fade-out
+  }, 5000);
 };
 
 module.exports = PanelComponent;

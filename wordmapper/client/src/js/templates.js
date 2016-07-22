@@ -3,5 +3,6 @@ module.exports = {
   'index': require('../html/index.html'),
   'export': require('../html/export.html'),
   'overlay': require('../html/overlay.html'),
-  'login': require('../html/login.html')
+  'login': require('../html/login.html'),
+  'notification': require('../html/notification.html')
 };

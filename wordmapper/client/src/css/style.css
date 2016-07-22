@@ -164,6 +164,27 @@
     color: #fff;
     margin: .5em 0;
 }
+.wordmapper-notification {
+  display: inline-block;
+  color: #fff;
+  -webkit-transition: opacity 250ms ease-in-out;
+  -moz-transition: opacity 250ms ease-in-out;
+  -o-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+.wordmapper-notification .message {
+  max-width: 100px;
+  margin-left: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wordmapper-notification .error {
+  color: red;
+}
+.wordmapper-notification .success {
+  color: white;
+}
 .wordmapper-word.highlight {
     background-color: yellow;
 }

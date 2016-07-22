@@ -96,7 +96,7 @@
 	exports.push([module.id, "@import url(http://fontawesome.io/assets/font-awesome/css/font-awesome.css);", ""]);
 
 	// module
-	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper .pull-right {\n  float: right;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper textarea {\n    padding: 0.5em;\n    background-color: rgb(255,255,224);\n    -webkit-transition: background-color 0.30s ease-in-out;\n    -moz-transition: background-color 0.30s ease-in-out;\n    -ms-transition: background-color 0.30s ease-in-out;\n    -o-transition: background-color 0.30s ease-in-out;\n    outline: none;\n}\n.wordmapper textarea:focus {\n    background-color: rgb(255,255,164);\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    background-color: rgba(0,0,0,.7);\n    z-index: 1002;\n}\n.wordmapper-panel a {\n  color: rgb(0, 192, 255);\n}\n.wordmapper-panel a:hover, .wordmapper-panel a:active {\n  color: rgb(255, 0, 0);\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.98;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n    z-index: 1001;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: inline-block;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n  display: inline-block;\n  margin: 2px 0;\n}\n.wordmapper-buttons > button {\n  margin: 4px 2px;\n}\n.wordmapper-buttons-right {\n  display: inline-block;\n  float: right;\n  margin-right: 4px;\n}\n.wordmapper-loading {\n  display: inline-block;\n  color: #fff;\n}\n.wordmapper-account-btn {\n  max-width: 270px;\n}\n.wordmapper-account {\n  position: absolute;\n  right: 0;\n  top: 45px;\n  width: 250px;\n  padding: 10px;\n  background-color: rgba(0,0,0,.7);\n  z-index: 1002;\n}\n.wordmapper-account input {\n  width: calc(100% - 10px);\n  padding: 5px;\n  margin: 0 0 5px 0;\n  font-size: 14px;\n}\n.wordmapper-logged-in {\n    display: block;\n    font-size: 14px;\n    color: #fff;\n    margin: .5em 0;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 12px;\n    background: #333;\n    background: rgba(0,0,0,.7);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(alt);\n    left: 0;\n    padding: 5px 15px;\n    position: absolute;\n    width: auto;\n    white-space: nowrap;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-table td.words,\n.wordmapper-table td.comment {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #ddd;\n}\n.wordmapper-table span.word {\n    margin-right: 0.25em;\n}\n.wordmapper-table td.comment {\n  background-color: rgba(238,238,238,0.5);\n    font-size: 14px;\n    color: #666;\n}\n.wordmapper-table td.comment textarea.comment {\n    border: 1px solid #ddd;\n    height: 75px;\n    min-width: 300px;\n    width: 90%;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n.wordmapper-error,\n.wordmapper-import-messages .error {\n    color: red;\n}\n.wordmapper-success,\n.wordmapper-import-messages .success {\n    color: green;\n}\n", ""]);
+	exports.push([module.id, ".wordmapper {\n    font-size: 14px;\n    font-family: Arial,Helvetica,sans-serif;\n    z-index: 1000;\n}\n.wordmapper .pull-right {\n  float: right;\n}\n.wordmapper h2 {\n    margin: 0 0 10px 0;\n}\n.wordmapper button {\n    font-family: inherit;\n    font-size: 100%;\n    padding: 0.5em 1em;\n    color: rgba(0, 0, 0, 0.80); \n    border: none rgba(0, 0, 0, 0);\n    background-color: #E6E6E6;\n    text-decoration: none;\n    border-radius: 2px;\n    height: 32px;\n}\n.wordmapper textarea {\n    padding: 0.5em;\n    background-color: rgb(255,255,224);\n    -webkit-transition: background-color 0.30s ease-in-out;\n    -moz-transition: background-color 0.30s ease-in-out;\n    -ms-transition: background-color 0.30s ease-in-out;\n    -o-transition: background-color 0.30s ease-in-out;\n    outline: none;\n}\n.wordmapper textarea:focus {\n    background-color: rgb(255,255,164);\n}\n.wordmapper button.primary {\n    background-color: rgb(0, 120, 231);\n    color: #fff;\n}\n.wordmapper button:hover,\n.wordmapper button:focus {\n    background-image: linear-gradient(transparent, rgba(0,0,0, 0.10) 40%, rgba(0,0,0, 0.20));\n}\n.wordmapper button:active {\n    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 0 6px rgba(0,0,0, 0.30) inset;\n    border-color: #000;\n}\n.wordmapper-panel {\n    position: fixed;\n    background-color: rgba(0,0,0,.7);\n    z-index: 1002;\n}\n.wordmapper-panel a {\n  color: rgb(0, 192, 255);\n}\n.wordmapper-panel a:hover, .wordmapper-panel a:active {\n  color: rgb(255, 0, 0);\n}\n.wordmapper-panel-top {\n    top: 0;\n    height: 45px;\n    width: 100%;\n}\n.wordmapper-panel-right {\n    top: 0;\n    right: 0;\n    bottom: 0;\n    height: 100%;\n    width: 130px;\n}\n.wordmapper-overlay {\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    opacity: 0.98;\n    background-color: #fff;\n    color: #000;\n    padding: 1em;\n    top: 45px;\n    overflow: scroll;\n    z-index: 1001;\n}\n.wordmapper-overlay-hidden {\n    z-index: -1;\n    display: none;\n}\n.wordmapper-dismiss {\n    position: absolute;\n    top: 0;\n    right: 0;\n    width: 30px;\n    height: 30px;\n    padding: 10px;\n    line-height: 30px;\n    font-weight: bold;\n    text-align: center;\n    color: rgb(160,160,160);\n}\n.wordmapper-dismiss:before {\n    content: \"X\";\n}\n.wordmapper-dismiss:hover {\n    cursor: pointer;\n    color: rgb(0, 120, 231);\n}\n.wordmapper-logo {\n    display: inline-block;\n    line-height: 45px;\n    font-size: 22.5px;\n    vertical-align: middle;\n    margin: 0 5px;\n    color: #fff;\n}\n.wordmapper-logo > small {\n    font-size: 16px;\n    color: #ccc;\n}\n.wordmapper-panel-right button {\n    font-size: 85%;\n}\n.wordmapper-panel-right .wordmapper-logo {\n    font-size: 100%;\n}\n.wordmapper-buttons {\n  display: inline-block;\n  margin: 2px 0;\n}\n.wordmapper-buttons > button {\n  margin: 4px 2px;\n}\n.wordmapper-buttons-right {\n  display: inline-block;\n  float: right;\n  margin-right: 4px;\n}\n.wordmapper-loading {\n  display: inline-block;\n  color: #fff;\n}\n.wordmapper-account-btn {\n  max-width: 270px;\n}\n.wordmapper-account {\n  position: absolute;\n  right: 0;\n  top: 45px;\n  width: 250px;\n  padding: 10px;\n  background-color: rgba(0,0,0,.7);\n  z-index: 1002;\n}\n.wordmapper-account input {\n  width: calc(100% - 10px);\n  padding: 5px;\n  margin: 0 0 5px 0;\n  font-size: 14px;\n}\n.wordmapper-logged-in {\n    display: block;\n    font-size: 14px;\n    color: #fff;\n    margin: .5em 0;\n}\n.wordmapper-notification {\n  display: inline-block;\n  color: #fff;\n  -webkit-transition: opacity 250ms ease-in-out;\n  -moz-transition: opacity 250ms ease-in-out;\n  -o-transition: opacity 250ms ease-in-out;\n  transition: opacity 250ms ease-in-out;\n}\n.wordmapper-notification .message {\n  max-width: 100px;\n  margin-left: 4px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.wordmapper-notification .error {\n  color: red;\n}\n.wordmapper-notification .success {\n  color: white;\n}\n.wordmapper-word.highlight {\n    background-color: yellow;\n}\n.wordmapper-word.highlight2 {\n    background-color: lightblue;\n}\n.wordmapper-word.aligned {\n    color: red;\n}\n.wordmapper-tooltip {\n    display: inline;\n    position: relative;\n}\n.wordmapper-tooltip:hover:after{\n    font-size: 12px;\n    background: #333;\n    background: rgba(0,0,0,.7);\n    border-radius: 5px;\n    top: 38px;\n    color: #fff;\n    content: attr(alt);\n    left: 0;\n    padding: 5px 15px;\n    position: absolute;\n    width: auto;\n    white-space: nowrap;\n}\n.wordmapper-tooltip:hover:before{\n    border: solid;\n    border-color: #333 transparent;\n    border-width: 6px 6px 0 6px;\n    top: 32px;\n    content: \"\";\n    left: 50%;\n    position: absolute;\n}\n\n.wordmapper-overlay-content {\n    width: calc(100% - 50px);\n}\n.wordmapper-table {\n    font-size: 16px;\n    border-collapse: collapse;\n}\n.wordmapper-table td.words,\n.wordmapper-table td.comment {\n    min-width: 150px;\n    padding: .5em 1em;\n    border: 1px solid #ddd;\n}\n.wordmapper-table span.word {\n    margin-right: 0.25em;\n}\n.wordmapper-table td.comment {\n  background-color: rgba(238,238,238,0.5);\n    font-size: 14px;\n    color: #666;\n}\n.wordmapper-table td.comment textarea.comment {\n    border: 1px solid #ddd;\n    height: 75px;\n    min-width: 300px;\n    width: 90%;\n}\n.wordmapper-overlay-content textarea.json {\n    display: block;\n    min-height: 25%;\n    min-height: 150px;\n    width: 85%;\n    outline: none;\n    color: #000;\n    border: 1px solid #000;\n    font-size: 12px;\n    font-family: monospace;\n}\n.wordmapper-error,\n.wordmapper-import-messages .error {\n    color: red;\n}\n.wordmapper-success,\n.wordmapper-import-messages .success {\n    color: green;\n}\n", ""]);
 
 	// exports
 
@@ -434,10 +434,10 @@
 
 	module.exports = {
 	    Application: __webpack_require__(8),
-	    Login: __webpack_require__(43),
-	    Overlay: __webpack_require__(44),
+	    Login: __webpack_require__(44),
+	    Overlay: __webpack_require__(45),
 	    Panel: __webpack_require__(36),
-	    Text: __webpack_require__(47)
+	    Text: __webpack_require__(48)
 	};
 
 /***/ },
@@ -445,12 +445,13 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var services = __webpack_require__(9);
-	var models = __webpack_require__(11);
+	var events = __webpack_require__(9);
+	var services = __webpack_require__(10);
+	var models = __webpack_require__(12);
 	var Settings = __webpack_require__(34);
 	var PanelComponent = __webpack_require__(36);
-	var OverlayComponent = __webpack_require__(44);
-	var TextComponent = __webpack_require__(47);
+	var OverlayComponent = __webpack_require__(45);
+	var TextComponent = __webpack_require__(48);
 
 	var Application = function() {
 	  this.init();
@@ -501,9 +502,13 @@
 	    sources: this.models.sources
 	  });
 
+	  this.onError = this.onError.bind(this);
+	  
 	  this.addListeners();
 	};
-	Application.prototype.addListeners = function() {};
+	Application.prototype.addListeners = function() {
+	  events.hub.on(events.EVT.ERROR, this.onError);
+	};
 	Application.prototype.render = function() {
 	  this.el.append(this.components.panel.render().el);
 	  this.el.append(this.components.overlay.render().el);
@@ -523,19 +528,72 @@
 	  }
 	  return this;
 	};
+	Application.prototype.onError = function(message) {
+	  window.alert("Word Mapper Error: " + message);
+	};
 
 	module.exports = Application;
 
 
 /***/ },
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
+
+	var Events = function(options) {
+	  options = options || {};
+	  this.debug = options.debug || false;
+	};
+	Events.prototype.on = function(event, fn) {
+	  var _this = this;
+	  _this._events = _this._events || {};
+	  _this._events[event] = this._events[event] || [];
+	  _this._events[event].push(fn);
+	};
+	Events.prototype.off = function(event, fn) {
+	  var _this = this;
+	  _this._events = _this._events || {};
+	  if (event in _this._events === false) {
+	    return;
+	  }
+	  _this._events[event].splice(_this._events[event].indexOf(fn), 1);
+	};
+	Events.prototype.trigger = function(event) {
+	  var _this = this;
+	  _this._events = _this._events || {};
+	  if (event in _this._events === false) {
+	    return;
+	  }
+	  if (_this.debug) {
+	    console.log("trigger: ", event, arguments);
+	  }
+	  for(var i = 0; i < _this._events[event].length; i++) {
+	    _this._events[event][i].apply(_this, Array.prototype.slice.call(arguments, 1));
+	  }
+	};
+	Events.mixin = function(dest) {
+	  ['on','off','trigger'].forEach(function(method) {
+	    if (typeof dest === 'function') {
+	      dest.prototype[method] = Events.prototype[method]; 
+	    } else {
+	      dest[method] = Events.prototype[method];
+	    }
+	  });
+	};
 
 	module.exports = {
-	  ImportExportService: __webpack_require__(10),
-	  Persistence: __webpack_require__(28),
-	  StorageLocal: __webpack_require__(31),
-	  StorageRemote: __webpack_require__(33)
+	  Events: Events,
+	  EVT: {
+	    ALIGN: 'align',
+	    CLEAR_HIGHLIGHTS: 'clear_highlights',
+	    CLEAR_ALIGNMENTS: 'clear_alignments',
+	    BUILD_INDEX: 'build_index',
+	    EXPORT: 'export',
+	    LOGIN: 'login',
+	    LOADING: 'loading',
+	    ERROR: 'error',
+	    NOTIFICATION: 'notification'
+	  },
+	  hub: new Events({debug: true})
 	};
 
 
@@ -543,7 +601,19 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var models = __webpack_require__(11);
+	module.exports = {
+	  ImportExportService: __webpack_require__(11),
+	  Persistence: __webpack_require__(28),
+	  StorageLocal: __webpack_require__(31),
+	  StorageRemote: __webpack_require__(33)
+	};
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var models = __webpack_require__(12);
 
 	var ImportExportService = function(options) {
 	  this.sources = options.sources;
@@ -622,11 +692,11 @@
 	module.exports = ImportExportService;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  Alignments: __webpack_require__(12),
+	  Alignments: __webpack_require__(13),
 	  Alignment: __webpack_require__(14),
 	  Word: __webpack_require__(16),
 	  Sources: __webpack_require__(17),
@@ -636,10 +706,10 @@
 	};
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var events = __webpack_require__(13);
+	var events = __webpack_require__(9);
 	var Alignment = __webpack_require__(14);
 
 	var Alignments = function(options) {
@@ -764,66 +834,6 @@
 	events.Events.mixin(Alignments.prototype);
 
 	module.exports = Alignments;
-
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-	var Events = function(options) {
-	  options = options || {};
-	  this.debug = options.debug || false;
-	};
-	Events.prototype.on = function(event, fn) {
-	  var _this = this;
-	  _this._events = _this._events || {};
-	  _this._events[event] = this._events[event] || [];
-	  _this._events[event].push(fn);
-	};
-	Events.prototype.off = function(event, fn) {
-	  var _this = this;
-	  _this._events = _this._events || {};
-	  if (event in _this._events === false) {
-	    return;
-	  }
-	  _this._events[event].splice(_this._events[event].indexOf(fn), 1);
-	};
-	Events.prototype.trigger = function(event) {
-	  var _this = this;
-	  _this._events = _this._events || {};
-	  if (event in _this._events === false) {
-	    return;
-	  }
-	  if (_this.debug) {
-	    console.log("trigger: ", event, arguments);
-	  }
-	  for(var i = 0; i < _this._events[event].length; i++) {
-	    _this._events[event][i].apply(_this, Array.prototype.slice.call(arguments, 1));
-	  }
-	};
-	Events.mixin = function(dest) {
-	  ['on','off','trigger'].forEach(function(method) {
-	    if (typeof dest === 'function') {
-	      dest.prototype[method] = Events.prototype[method]; 
-	    } else {
-	      dest[method] = Events.prototype[method];
-	    }
-	  });
-	};
-
-	module.exports = {
-	  Events: Events,
-	  EVT: {
-	    ALIGN: 'align',
-	    CLEAR_HIGHLIGHTS: 'clear_highlights',
-	    CLEAR_ALIGNMENTS: 'clear_alignments',
-	    BUILD_INDEX: 'build_index',
-	    EXPORT: 'export',
-	    LOGIN: 'login',
-	    LOADING: 'loading'
-	  },
-	  hub: new Events({debug: true})
-	};
-
 
 /***/ },
 /* 14 */
@@ -1012,7 +1022,7 @@
 /* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var events = __webpack_require__(13);
+	var events = __webpack_require__(9);
 	var Source = __webpack_require__(18);
 
 	var Sources = function(options) {
@@ -3251,7 +3261,7 @@
 /* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var events = __webpack_require__(13);
+	var events = __webpack_require__(9);
 
 	var User = function(options) {
 		options = options || {};
@@ -3355,7 +3365,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(29);
-	var events = __webpack_require__(13);
+	var events = __webpack_require__(9);
 	var StorageLocal = __webpack_require__(31);
 	var StorageRemote = __webpack_require__(33);
 
@@ -3378,9 +3388,13 @@
 	  this.onSourcesChange = this.onSourcesChange.bind(this);
 	  this.onUserChange = this.onUserChange.bind(this);
 	  this.loadAlignments = this.loadAlignments.bind(this);
+	  this.loadSources = this.loadSources.bind(this);
+	  this.saveAlignments = this.saveAlignments.bind(this);
+	  this.saveSources = this.saveSources.bind(this);
 	  this.endLoading = this.endLoading.bind(this);
 	  this.startLoading = this.startLoading.bind(this);
-
+	  this.notifySave = this.notifySave.bind(this);
+	  
 	  this.init();
 	};
 	Persistence.prototype.init = function() {
@@ -3392,7 +3406,15 @@
 	  this.models.user.on('change', this.onUserChange);
 	};
 	Persistence.prototype.onAlignmentsChange = function() {
-	  this.saveAlignments();
+	  var _this = this;
+	  this.startLoading()
+	    .then(this.saveAlignments)
+	    .then(this.endLoading)
+	    .then(this.notifySave)
+	    .catch(function(err) {
+	      _this.endLoading();
+	      _this.handleError(err);
+	    });
 	};
 	Persistence.prototype.onSourcesChange = function() {
 	  this.sourcesReady = true;
@@ -3413,14 +3435,18 @@
 	};
 	Persistence.prototype.load = function() {
 	  var _this = this;
-	  this.startLoading();
-
-	  return _this.loadSources().then(_this.loadAlignments, function() {
+	  var saveSources = function() {
 	    return _this.saveSources().then(_this.loadAlignments);
-	  }).then(_this.endLoading).catch(function(err) {
-	    _this.endLoading();
-	    console.error(err);
-	  });
+	  };
+
+	  return _this.startLoading()
+	    .then(_this.loadSources)
+	    .then(_this.loadAlignments, saveSources)
+	    .then(_this.endLoading)
+	    .catch(function(err) {
+	      _this.endLoading();
+	      _this.handleError(err);
+	    });
 	};
 	Persistence.prototype.loadAlignments = function() {
 	  var _this = this, store = this.primaryStore;
@@ -3432,45 +3458,40 @@
 	  });
 	};
 	Persistence.prototype.loadSources = function() {
-	  var _this = this, store = this.primaryStore;
-	  return new Promise(function(resolve, reject) {
-	    store.loadSources().then(resolve, reject);
-	  });
+	  var store = this.primaryStore;
+	  return store.loadSources();
 	};
 	Persistence.prototype.saveAlignments = function() {
-	  var _this = this;
-	  return new Promise(function(resolve, reject) {
-	    var promises = _this.mapEnabled(function(store) {
-	      return store.saveAlignments();
-	    });
-	    Promise.all(promises).then(resolve).catch(reject);
-	  });
+	  var store = this.primaryStore;
+	  return store.saveAlignments();
 	};
 	Persistence.prototype.saveSources = function() {
-	  var _this = this;
-	  return new Promise(function(resolve, reject) {
-	    var promises = _this.mapEnabled(function(store) {
-	      return store.saveSources();
-	    });
-	    Promise.all(promises).then(resolve).catch(reject);
-	  });
+	  var store = this.primaryStore;
+	  return store.saveSources();
 	};
-	Persistence.prototype.mapEnabled = function(callback) {
-	  var results = [];
-	  for(var k in this.stores) {
-	    if (this.stores.hasOwnProperty(k)) {
-	      if (this.stores[k].enabled()) {
-	        results.push(callback(this.stores[k], k));
-	      }
-	    }
-	  }
-	  return results;
+	Persistence.prototype.handleError = function(err) {
+	  this.notifyError(err);
+	  console.error(err);
 	};
 	Persistence.prototype.startLoading = function() {
 	  events.hub.trigger(events.EVT.LOADING, "start", "data");
+	  return Promise.resolve();
 	};
 	Persistence.prototype.endLoading = function() {
 	  events.hub.trigger(events.EVT.LOADING, "end", "data");
+	  return Promise.resolve();
+	};
+	Persistence.prototype.notifySave = function() {
+	  var d = new Date();
+	  var msg = "Saved @ " + [d.getHours(), d.getMinutes(), d.getSeconds()].join(":");
+	  this.notifyMessage("success", msg);
+	  return Promise.resolve();
+	};
+	Persistence.prototype.notifyMessage = function(messageType, message) {
+	  events.hub.trigger(events.EVT.NOTIFICATION, messageType, message);
+	};
+	Persistence.prototype.notifyError = function(error) {
+	  events.hub.trigger(events.EVT.ERROR, error);
 	};
 
 	module.exports = Persistence;
@@ -19932,30 +19953,29 @@
 	};
 	StorageLocal.prototype.loadAlignments = function() {
 	  console.log("StorageLocal loadAlignments");
-	  var deferred = $.Deferred();
 	  var jsonData = localStorage.getItem(this._getAlignmentsKey());
 	  if (jsonData === null) {
-	    deferred.resolve([]);
-	  } else {
-	    deferred.resolve(this._parseAlignments(jsonData));
+	    return Promise.resolve([]);
 	  }
-	  return deferred.promise();
+	  try {
+	    return Promise.resolve(this._parseAlignments(jsonData));
+	  } catch (e) {
+	    return Promise.reject(e);
+	  }
 	};
 	StorageLocal.prototype.saveAlignments = function() {
 	  console.log("StorageLocal saveAlignments");
-	  var deferred = $.Deferred();
 	  var serialized = this.parent.models.alignments.serialize();
 	  localStorage.setItem(this._getAlignmentsKey(), serialized);
-	  deferred.resolve();
-	  return deferred.promise();
+	  return Promise.resolve();
 	};
 	StorageLocal.prototype.loadSources = function() {
 	  console.log("StorageLocal loadSources");
-	  return $.Deferred().resolve().promise();
+	  return Promise.resolve();
 	};
 	StorageLocal.prototype.saveSources = function() {
 	  console.log("StorageLocal saveSources");
-	  return $.Deferred().resolve().promise();
+	  return Promise.resolve();
 	};
 	StorageLocal.prototype._getAlignmentsKey = function() {
 	  var hashKey = this.parent.models.sources.getHashKey();
@@ -19974,7 +19994,7 @@
 /* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var models = __webpack_require__(11);
+	var models = __webpack_require__(12);
 	var Word = models.Word;
 	var Alignments = models.Alignments;
 
@@ -20049,32 +20069,27 @@
 	    url: url,
 	    data: {sources: hashes.join(",")}
 	  });
-	  var deferred = $.Deferred();
 
-	  promise.done(function(responseData, textStatus, jqXHR) {
-	    try {
-	      var alignment_objects = _this._parseAlignments(responseData.data);
-	      deferred.resolve(alignment_objects);
-	    } catch (e) {
-	      deferred.fail(e);
-	    }
-	  }).fail(function() {
-	    deferred.fail.apply(deferred, arguments);
+	  return new Promise(function(resolve, reject) {
+	    promise.then(function(responseData) {
+	      try {
+	        resolve(_this._parseAlignments(responseData.data));
+	      } catch (e) {
+	        reject(e);
+	      }
+	    }, reject);
 	  });
-
-	  return deferred.promise();
 	};
 	StorageRemote.prototype.saveAlignments = function() {
 	  console.log("StorageRemote saveAlignments");
 	  var url = this._url("/alignments");
 	  var serialized = this.parent.models.alignments.serialize();
-	  var promise = this._ajax({
+	  return this._ajax({
 	    method: "POST",
 	    url: url,
 	    processData: false,
 	    data: serialized
 	  });
-	  return promise;
 	};
 	StorageRemote.prototype.loadSources = function() {
 	  console.log("StorageRemote loadSources");
@@ -20090,21 +20105,12 @@
 	  console.log("StorageRemote saveSources");
 	  var url = this._url("/sources");
 	  var serialized = this.parent.models.sources.serialize();
-	  var promise = this._ajax({
+	  return this._ajax({
 	    method: "POST",
 	    url: url,
 	    processData: false,
 	    data: serialized
 	  });
-	  var deferred = $.Deferred();
-
-	  promise.done(function(data, textStatus, jqXHR) {
-	    deferred.resolve(data);
-	  }).fail(function() {
-	    deferred.fail.apply(deferred, arguments);
-	  });
-
-	  return deferred.promise();
 	};
 	StorageRemote.prototype._url = function(path) {
 	  return this.parent.settings.getAPIBaseUrl() + path;
@@ -20119,7 +20125,20 @@
 	    }
 	  };
 	  var ajaxOptions = _.assign({}, options, defaults);
-	  return $.ajax(ajaxOptions);
+	  var result = $.ajax(ajaxOptions);
+
+	  return new Promise(function(resolve, reject) {
+	    result.done(function(responseData, textStatus, jqXHR) {
+	      resolve(responseData);
+	    }).fail(function(jqXHR, textStatus, errorThrown) {
+	      if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty("message")) {
+	        console.error(jqXHR.responseJSON);
+	        reject(jqXHR.responseJSON.message + ' ('+errorThrown+')');
+	      } else {
+	        reject(errorThrown);
+	      }
+	    });
+	  });
 	};
 	StorageRemote.prototype._parseAlignments = function(data) {
 	  var parser = new AlignmentsParser(data, this.parent.models.sources);
@@ -20198,9 +20217,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var events = __webpack_require__(13);
+	var events = __webpack_require__(9);
 	var templates = __webpack_require__(37);
-	var LoginComponent = __webpack_require__(43);
+	var LoginComponent = __webpack_require__(44);
 
 	var PanelComponent = function(options) {
 	  options = options || {};
@@ -20218,6 +20237,7 @@
 	  this.onClickButton = this.onClickButton.bind(this);
 	  this.updateLoginButton = this.updateLoginButton.bind(this);
 	  this.onLoading = this.onLoading.bind(this);
+	  this.notify = this.notify.bind(this);
 	  this.init();
 	};
 	PanelComponent.prototype.buttonEvent = {
@@ -20236,6 +20256,7 @@
 	  this.el.on('click', this.onClickButton);
 	  this.user.on('change', this.updateLoginButton);
 	  events.hub.on(events.EVT.LOADING, this.onLoading);
+	  events.hub.on(events.EVT.NOTIFICATION, this.notify);
 	};
 	PanelComponent.prototype.onClickButton = function(evt) {
 	  var t = evt.target, can_trigger_event = true;
@@ -20280,6 +20301,23 @@
 	    this.el.find('.wordmapper-loading')[action]();
 	  }
 	};
+	PanelComponent.prototype.notify = function(messageType, message) {
+	  state = messageType || "success";
+	  var _this = this;
+	  var html = templates.notification({
+	    state: state,
+	    message: message
+	  });
+	  if (this.notifyTimeoutID) {
+	    window.clearTimeout(this.notifyTimeoutID);
+	  }
+	  var $el = this.el.find('.wordmapper-notification');
+	  $el.html(html).css({opacity: 1});
+
+	  this.notifyTimeoutID = setTimeout(function() {
+	    $el.css({opacity: 0 }); // fade-out
+	  }, 5000);
+	};
 
 	module.exports = PanelComponent;
 
@@ -20293,7 +20331,8 @@
 	  'index': __webpack_require__(39),
 	  'export': __webpack_require__(40),
 	  'overlay': __webpack_require__(41),
-	  'login': __webpack_require__(42)
+	  'login': __webpack_require__(42),
+	  'notification': __webpack_require__(43)
 	};
 
 /***/ },
@@ -20304,7 +20343,7 @@
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
 	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-loading" style="display:none"><i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true"></i></div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login" class="wordmapper-account-btn"><i class="fa fa-user"></i> <span>';
+	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-notification"></div>\n  <div class="wordmapper-loading" style="display:none"><i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true"></i></div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login" class="wordmapper-account-btn"><i class="fa fa-user"></i> <span>';
 	 print(user.isAuthenticated() ? user : 'Account'); 
 	__p+='</span></button>\n  </div>\n</div>\n';
 	}
@@ -20324,7 +20363,7 @@
 	 if (alignments.isEmpty()) { 
 	__p+='\n    <tr><td>No words have been aligned yet</td></tr>\n  ';
 	 } else { 
-	__p+='\n    <tr>\n      <td colspan="';
+	__p+='\n    <tr popout-exclude>\n      <td colspan="';
 	 print(1+maxBuckets); 
 	__p+='">\n        <span class="word pull-right" style="margin: 0em 1em .5em 0em">\n          <a href="javascript:void(0);" data-name="action_edit_all"><i class="fa fa-pencil" style="margin-right: 5px"></i>Edit All</a>\n        </span>\n      </td>\n    </tr>\n    ';
 	 _.forEach(indexData, function(data, index) { 
@@ -20446,8 +20485,30 @@
 /* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var _ = __webpack_require__(29);
+	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
+	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+	with(obj||{}){
+	__p+='\n<!-- wordmapper/client/src/html/notification.html -->\n<span class="'+
+	((__t=( state ))==null?'':__t)+
+	'">\n';
+	 if(message) { 
+	__p+='<span class="message">'+
+	((__t=( message ))==null?'':__t)+
+	'</span>';
+	 } 
+	__p+='\n</span>';
+	}
+	return __p;
+	}.toString()).apply(undefined, _.values(_.templateSettings.imports));
+
+
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var $ = __webpack_require__(5);
-	var events = __webpack_require__(13);
+	var events = __webpack_require__(9);
 	var templates = __webpack_require__(37);
 
 	var LoginComponent = function(options) {
@@ -20557,14 +20618,14 @@
 
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var events = __webpack_require__(13);
+	var events = __webpack_require__(9);
 	var templates = __webpack_require__(37);
-	var IndexView = __webpack_require__(45);
-	var ExportView = __webpack_require__(46);
+	var IndexView = __webpack_require__(46);
+	var ExportView = __webpack_require__(47);
 
 	var OverlayComponent = function(options) {
 	  this.alignments = options.alignments;
@@ -20671,7 +20732,7 @@
 	module.exports = OverlayComponent;
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
@@ -20806,7 +20867,7 @@
 
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
@@ -20856,12 +20917,12 @@
 
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var events = __webpack_require__(13);
-	var models = __webpack_require__(11);
+	var events = __webpack_require__(9);
+	var models = __webpack_require__(12);
 
 	var TextComponent = function(options) {
 	  this.selector = options.selector;
