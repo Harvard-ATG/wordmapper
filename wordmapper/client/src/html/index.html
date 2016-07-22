@@ -2,7 +2,7 @@
   <% if (alignments.isEmpty()) { %>
     <tr><td>No words have been aligned yet</td></tr>
   <% } else { %>
-    <tr>
+    <tr popout-exclude>
       <td colspan="<% print(1+maxBuckets); %>">
         <span class="word pull-right" style="margin: 0em 1em .5em 0em">
           <a href="javascript:void(0);" data-name="action_edit_all"><i class="fa fa-pencil" style="margin-right: 5px"></i>Edit All</a>
