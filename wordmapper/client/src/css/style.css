@@ -5,6 +5,9 @@
     font-family: Arial,Helvetica,sans-serif;
     z-index: 1000;
 }
+.wordmapper .pull-right {
+  float: right;
+}
 .wordmapper h2 {
     margin: 0 0 10px 0;
 }
@@ -215,11 +218,7 @@
     margin-right: 0.25em;
 }
 .wordmapper-table td.comment {
-    background-color: #eee;
-}
-.wordmapper-table td.comment span.comment,
-.wordmapper-table td.comment textarea.comment
-{
+  background-color: rgba(238,238,238,0.5);
     font-size: 14px;
     color: #666;
 }

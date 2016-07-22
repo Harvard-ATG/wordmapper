@@ -1,36 +1,37 @@
-<% if (!alignments.isEmpty()) { %>
-<div style="margin: 0 0 1em 0;" popout-exclude >
-  <button name="action_comment" data-toggle-text="Edit Comments,Save Comments">Edit Comments</button>
-</div>
-<% } %>
-
-<table class="wordmapper-table">
+<table class="wordmapper-table" width="50%">
   <% if (alignments.isEmpty()) { %>
     <tr><td>No words have been aligned yet</td></tr>
-  <% } %>
-  <% _.forEach(indexData, function(data, index) { %>
+  <% } else { %>
     <tr>
-      <% _.forEach(data.buckets, function(words, index, arr) { %>
-        <td class="words" <% if(commentsPosition == "right" && index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') %>>
-        <% _.forEach(words, function(word) { %>
-          <span class="word" title="Word: <%- word.index %> Source: <%- word.source.index %>"><%- word.value %></span>
+      <td colspan="<% print(1+maxBuckets); %>">
+        <span class="word pull-right" style="margin: 0em 1em .5em 0em">
+          <a href="javascript:void(0);" data-name="action_edit_all"><i class="fa fa-pencil" style="margin-right: 5px"></i>Edit All</a>
+        </span>
+      </td>
+    </tr>
+    <% _.forEach(indexData, function(data, index) { %>
+      <tr>
+        <% _.forEach(data.buckets, function(words, index, arr) { %>
+          <td class="words" <% if(index == arr.length-1 && index < maxBuckets-1) print('colspan="'+(maxBuckets-index)+'"') %>>
+          <% _.forEach(words, function(word) { %>
+            <span class="word" title="Word: <%- word.index %> Source: <%- word.source.index %>"><%- word.value %></span>
+          <% }); %>
+          </td>
         <% }); %>
+        <td class="comment">
+          <span class="comment" style="padding-right: 20px;" data-name="action_edit_single"><%- data.alignment.comment %></span>
+          <span class="comment-edit pull-right"><a href="javascript:void(0);" data-name="action_edit_single"><i class="fa fa-pencil"></i></a></span>
+          <textarea style="display: none;" class="comment" name="comment<%= index %>" data-alignment="<%= data.alignment.id %>" placeholder="Add comment..." style="display:none"><%- data.alignment.comment || '' %></textarea>
         </td>
-      <% }); %>
-      <% if(commentsPosition == "right") { %>
-      <td class="comment">
-        <span class="comment"><%- data.alignment.comment %></span>
-        <textarea class="comment" name="comment<%= index %>" data-alignment="<%= data.alignment.id %>" placeholder="Add comment..." style="display:none"><%- data.alignment.comment || '' %></textarea>
-      </td>
-      <% } %>
-    </tr>
-    <% if(commentsPosition == "bottom") { %>
-    <tr class="comment" <% print(data.alignment.comment?'':'style="display:none;"'); %>;>
-      <td class="comment" colspan="<%- data.buckets.length %>">
-        <span class="comment"><%- data.alignment.comment %></span>
-        <textarea class="comment" name="comment<%= index %>" data-alignment="<%= data.alignment.id %>" placeholder="Add comment..." style="display:none"><%- data.alignment.comment || '' %></textarea>
+      </tr>
+    <% }); %>
+    <tr data-name="action_buttons" style="display:none;">
+      <td colspan="<% print(1+maxBuckets); %>">
+        <div style="margin-top: 1em">
+          <button class="default" name="cancel">Cancel</button>
+          <button class="primary pull-right" name="save">Save</button>
+      </div>
       </td>
     </tr>
-    <% } %>
-  <% }); %>
+  <% } %>
 </table>

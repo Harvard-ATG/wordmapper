@@ -5,8 +5,11 @@ var IndexView = function(options) {
   this.alignments = options.alignments;
   this.sources = options.sources;
   this.render = this.render.bind(this);
-  this.onClickComment = this.onClickComment.bind(this);
+  this.onClickEditAll = this.onClickEditAll.bind(this);
+  this.onClickCancel = this.onClickCancel.bind(this);
+  this.onClickSave = this.onClickSave.bind(this);
   this.processComment = this.processComment.bind(this);
+  this.onClickEditSingle = this.onClickEditSingle.bind(this);
   this.title = "Index";
   this.canPopout = true;
   this.init();
@@ -17,31 +20,64 @@ IndexView.prototype.init = function() {
   this.addListeners();
 };
 IndexView.prototype.addListeners = function() {
-  this.el.on('click', 'button[name=action_comment]', null, this.onClickComment);
+  this.el.on('click', '[data-name=action_edit_all]', null, this.onClickEditAll);
+  this.el.on('click', '[data-name=action_edit_single]', null, this.onClickEditSingle);
+  this.el.on('click', 'button[name=cancel]', null, this.onClickCancel);
+  this.el.on('click', 'button[name=save]', null, this.onClickSave);
 };
-IndexView.prototype.onClickComment = function(evt) {
-  var btnEl = evt.target;
-  this.toggleComments(btnEl);
+IndexView.prototype.getActionButtons = function(selector) {
+  return $(selector || this.el).find('[data-name=action_buttons]');
 };
-IndexView.prototype.toggleComments = function(btnEl) {
-  var $rows = this.el.find('tr.comment');
-  var $textareas = this.el.find('textarea.comment');
-  var $spans = this.el.find('span.comment');
-  var $btnEl = $(btnEl);
-  var btnText = $btnEl.text();
-  var texts = $btnEl.data("toggle-text").split(",");
+IndexView.prototype.getActionEditAll = function(selector) {
+  return $(selector || this.el).find('[data-name=action_edit_all]');
+};
+IndexView.prototype.getTextareas = function(selector) {
+  return $(selector || this.el).find('textarea.comment');
+};
+IndexView.prototype.onClickEditAll = function(evt) {
+  this.editComments(true);
+  evt.stopPropagation();
+};
+IndexView.prototype.onClickEditSingle = function(evt) {
+  var $comment = $(evt.target).closest('td.comment');
+  this.editComment($comment);
+  evt.stopPropagation();
+};
+IndexView.prototype.onClickCancel = function(evt) {
+  this.cancelEdits();
+  evt.stopPropagation();
+};
+IndexView.prototype.onClickSave = function(evt) {
+  var $comments = this.getTextareas();
+  this.saveComments($comments);
+  evt.stopPropagation();
+};
+IndexView.prototype.editComments = function() {
+  var $spans = this.el.find('span.comment, span.comment-edit');
+  var $textareas = this.getTextareas();
+  var $actionButtons = this.getActionButtons();
+  var $actionEditAll = this.getActionEditAll();
 
-  if (btnText === texts[0]) {
-    $btnEl.text(texts[1]);
-    $spans.hide();
-    $textareas.show();
-    $rows.show();
-  } else {
-    $btnEl.text(texts[1]);
-    $textareas.each(this.processComment);
-    this.alignments.triggerChange();
-    this.render();
-  }
+  $spans.hide();
+  $actionEditAll.hide();
+  $textareas.show();
+  $actionButtons.show();
+};
+IndexView.prototype.editComment = function($comment) {
+  var $spans = $comment.find('span.comment, span.comment-edit');
+  var $textarea = this.getTextareas($comment);
+  var $actionButtons = this.getActionButtons();
+  $spans.hide();
+  $textarea.show();
+  $actionButtons.show();
+};
+IndexView.prototype.saveComments = function($textareas) {
+  $textareas.each(this.processComment);
+  this.alignments.triggerChange();
+  this.render();
+};
+IndexView.prototype.cancelEdits = function() {
+  this.render();
 };
 IndexView.prototype.processComment = function(index, el) {
   var alignment_id = $(el).data("alignment");
@@ -83,8 +119,7 @@ IndexView.prototype.render = function() {
   var html = template({
     alignments: this.alignments,
     indexData: indexData,
-    maxBuckets: maxBuckets,
-    commentsPosition: "right"
+    maxBuckets: maxBuckets
   });
   this.el.html(html);
   return this;
