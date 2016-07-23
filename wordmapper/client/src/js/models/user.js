@@ -32,13 +32,14 @@ User.prototype.reset = function() {
   return this.update({id:undefined,email:undefined,token:undefined});
 };
 User.prototype.saveLogin = function() {
+  if (!window.localStorage) {
+    return this;
+  }
   if (!this.isAuthenticated()) {
     localStorage.removeItem("wordmapper-user");
     return this;
   }
-  if (!window.localStorage) {
-    return this;
-  }
+
   var data = {id: this.id, email: this.email, token: this.token};
   data.expires = new Date();
   data.expires.setHours(data.expires.getHours() + 3);
