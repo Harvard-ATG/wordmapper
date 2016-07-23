@@ -6,10 +6,10 @@ var IndexView = function(options) {
   this.sources = options.sources;
   this.render = this.render.bind(this);
   this.onClickEditAll = this.onClickEditAll.bind(this);
+  this.onClickEditSingle = this.onClickEditSingle.bind(this);
   this.onClickCancel = this.onClickCancel.bind(this);
   this.onClickSave = this.onClickSave.bind(this);
   this.processComment = this.processComment.bind(this);
-  this.onClickEditSingle = this.onClickEditSingle.bind(this);
   this.title = "Index";
   this.canPopout = true;
   this.init();
@@ -35,7 +35,7 @@ IndexView.prototype.getTextareas = function(selector) {
   return $(selector || this.el).find('textarea.comment');
 };
 IndexView.prototype.onClickEditAll = function(evt) {
-  this.editComments(true);
+  this.editComments();
   evt.stopPropagation();
 };
 IndexView.prototype.onClickEditSingle = function(evt) {
@@ -126,4 +126,3 @@ IndexView.prototype.render = function() {
 };
 
 module.exports = IndexView;
-
