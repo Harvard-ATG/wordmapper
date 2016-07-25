@@ -17,12 +17,16 @@ router.get('/', function(req, res) {
 // Profile
 router.get('/:userId(\\d+)', function(req, res) {
 	var user = null;
+	var userId = req.params.userId;
 	database.users.getUserById(req.params.userId).then(function(data) {
 		user = data;
-		return database.alignments.getUserAlignmentCountPerPage(user.id);
+		return database.alignments.getUserAlignmentCountPerPage(userId);
 	}, function() {
-		res.status(404).send("User Not Found");
+		var reason = "User not found";
+		res.status(404).send(reason);
+		return Promise.reject(reason);
 	}).then(function(rows) {
+		rows = rows || [];
 		rows.sort(function(a, b) {
 			return b.alignment_count - a.alignment_count;
 		});

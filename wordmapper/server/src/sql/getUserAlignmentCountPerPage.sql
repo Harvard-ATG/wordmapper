@@ -7,5 +7,5 @@ join page_source ps on (p.id = ps.page_id)
 join source s on (s.id = ps.source_id)
 join word w on (w.source_id = s.id)
 join alignment a on (w.alignment_id = a.id)
-where a.user_id = 1
+where a.user_id = ${userId}
 group by p.id, p.url
