@@ -16,14 +16,20 @@ router.get('/', function(req, res) {
 
 // Profile
 router.get('/:userId(\\d+)', function(req, res) {
-	var userId = req.params.userId;
-	var promise = database.alignments.getAlignmentsByUser(userId);
-	promise.then(function(data) {
-		var serializer = new AlignmentsSerializer(data);
-		res.json(serializer.serialize().output);
+	var user = null;
+	database.users.getUserById(req.params.userId).then(function(data) {
+		user = data;
+		return database.alignments.getUserAlignmentCountPerPage(user.id);
+	}, function() {
+		res.status(404).send("User Not Found");
+	}).then(function(rows) {
+		rows.sort(function(a, b) {
+			return b.alignment_count - a.alignment_count;
+		});
+		res.render('user', {user:user, rows:rows});
 	}).catch(function(err) {
-		res.send(err);
 		console.error(err);
+		res.status(500).send("Error");
 	});
 });
 

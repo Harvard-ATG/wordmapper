@@ -75,6 +75,10 @@ var alignments = {
 		var query = sql('findAlignments.sql').query + ' ORDER BY a.id';
 		return db.any(query);
 	},
+	getUserAlignmentCountPerPage: function(userId) {
+		var query = sql('getUserAlignmentCountPerPage.sql').query;
+		return db.any(query, {userId:userId});
+	},
 	getAlignmentsByUser: function(userId, options) {
 		options = options || {};
 		if (!userId) {

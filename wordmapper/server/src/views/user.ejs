@@ -1,0 +1,22 @@
+<% include _header %>
+<% include _navbar %>
+<div class="container">
+	<div class="row">
+    <h3><%= user.email %></h3>
+    <table class="table table-hover">
+    <thead>
+      <tr style="font-weight: bold">
+        <td># Alignments</td>
+        <td>URL</td>
+      </tr> 
+    </thead>
+    <% rows.forEach(function(row) { %>
+      <tr>
+        <td><%= row.alignment_count %></td>
+        <td><a href="<%= row.url %>" target="_blank"><%= row.url %></a></td>
+      </tr>
+    <% }); %> 
+    </table>
+  </div>
+</div>
+<% include _footer %>
