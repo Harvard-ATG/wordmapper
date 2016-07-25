@@ -4,6 +4,6 @@ module.exports = {
   Word: require('./models/word.js'),
   Sources: require('./models/sources.js'),
   Source: require('./models/source.js'),
-  SiteContext: require('./models/site_context.js'),
+  Page: require('./models/page.js'),
   User: require('./models/user.js')
 };

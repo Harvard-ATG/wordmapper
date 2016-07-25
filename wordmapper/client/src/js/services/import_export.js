@@ -3,7 +3,7 @@ var models = require('../models.js');
 var ImportExportService = function(options) {
   this.sources = options.sources;
   this.alignments = options.alignments;
-  this.siteContext = options.siteContext;
+  this.page = options.page;
   this.import = this.import.bind(this);
   this.export = this.export.bind(this);
 };
@@ -15,10 +15,10 @@ ImportExportService.prototype.import = function(jsonData) {
     var result = JSON.parse(jsonData);
     
     // Preliminary error checking
-    if (result.type != "site" || !result.hasOwnProperty("data")) { 
-      throw "Invalid import data. Top-level object must be of type 'site' with a 'data' attribute.";
+    if (result.type != "export" || !result.hasOwnProperty("data")) { 
+      throw "Invalid import data. Top-level object must be of type 'export' with a 'data' attribute.";
     } else if(result.data.type != "alignments" || !result.data.hasOwnProperty("data")) {
-      throw "Invalid import data. Object contained by 'site' must be of type 'alignments' with a 'data' attribute.";
+      throw "Invalid import data. Object contained by 'export' must be of type 'alignments' with a 'data' attribute.";
     }
 
     // Attempt to create an array of alignment objects, each of which contains an array of word objects
@@ -66,9 +66,8 @@ ImportExportService.prototype.import = function(jsonData) {
 };
 ImportExportService.prototype.export = function(serialize) {
   var result = {
-    'type': 'site',
-    'id': this.siteContext.id,
-    'url': this.siteContext.url,
+    'type': 'export',
+    'url': this.page.getUrl(),
     'data': this.alignments.toJSON()
   };
   return (serialize ? JSON.stringify(result, null, '\t') : result);

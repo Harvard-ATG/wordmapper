@@ -1,4 +1,5 @@
 var $ = require('jquery');
+var logging = require('logging');
 var templates = require('../../templates.js');
 
 var ExportView = function(options) {
@@ -28,9 +29,9 @@ ExportView.prototype.render = function() {
 ExportView.prototype.import = function(evt) {
   var textarea = this.el.find('textarea[name="import"]');
   var jsonData = textarea.val();
-  console.log("import data", jsonData);
+  logging.log("import data", jsonData);
   var result = this.importExport.import(jsonData);
-  console.log("import result", result);
+  logging.log("import result", result);
   var $el = this.el.find('.wordmapper-import-messages');
   if (result.success) {
     $el.html('<span class="success">Import completed successfully</span>');

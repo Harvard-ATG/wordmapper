@@ -11,6 +11,7 @@ module.exports = {
 	resolve: {
 		alias: {
 			jquery: path.resolve('wordmapper/client/vendor/jquery-1.12.4.min.js'),
+			logging: path.resolve(__dirname, 'wordmapper/client/src/js/logging'),
 			config: path.join(__dirname, 'wordmapper/client/config', NODE_ENV)
 		}
 	},

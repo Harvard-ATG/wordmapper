@@ -1,5 +1,6 @@
 var $ = require('jquery');
 var _ = require('lodash');
+var logging = require('logging');
 var parser = require('./parser.js');
 
 var AlignmentsParser = parser.AlignmentsParser;
@@ -19,7 +20,7 @@ StorageRemote.prototype.disable = function() {
   this._enabled = false;
 };
 StorageRemote.prototype.loadAlignments = function() {
-  console.log("StorageRemote loadAlignments");
+  logging.debug("StorageRemote loadAlignments");
   var _this = this;
   var url = this._url("/alignments");
   var hashes = this.parent.models.sources.getHashes();
@@ -40,7 +41,7 @@ StorageRemote.prototype.loadAlignments = function() {
   });
 };
 StorageRemote.prototype.saveAlignments = function() {
-  console.log("StorageRemote saveAlignments");
+  logging.debug("StorageRemote saveAlignments");
   var url = this._url("/alignments");
   var serialized = this.parent.models.alignments.serialize();
   return this._ajax({
@@ -50,8 +51,17 @@ StorageRemote.prototype.saveAlignments = function() {
     data: serialized
   });
 };
+StorageRemote.prototype.resetAlignments = function() {
+  logging.debug("StorageRemote resetAlignments");
+  var hashes = this.parent.models.sources.getHashes();
+  var url = this._url("/alignments?sources="+hashes.join(","));
+  return this._ajax({
+    method: "DELETE",
+    url: url
+  });
+};
 StorageRemote.prototype.loadSources = function() {
-  console.log("StorageRemote loadSources");
+  logging.debug("StorageRemote loadSources");
   var url = this._url("/sources");
   var hashes = this.parent.models.sources.getHashes();
   return this._ajax({
@@ -61,7 +71,7 @@ StorageRemote.prototype.loadSources = function() {
   });
 };
 StorageRemote.prototype.saveSources = function() {
-  console.log("StorageRemote saveSources");
+  logging.debug("StorageRemote saveSources");
   var url = this._url("/sources");
   var serialized = this.parent.models.sources.serialize();
   return this._ajax({
@@ -91,7 +101,7 @@ StorageRemote.prototype._ajax = function(options) {
       resolve(responseData);
     }).fail(function(jqXHR, textStatus, errorThrown) {
       if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty("message")) {
-        console.error(jqXHR.responseJSON);
+        logging.error(jqXHR.responseJSON);
         reject(jqXHR.responseJSON.message + ' ('+errorThrown+')');
       } else {
         reject(errorThrown);

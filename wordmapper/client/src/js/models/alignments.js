@@ -23,6 +23,9 @@ Alignments.prototype.triggerChange = function() {
 Alignments.prototype.triggerLoad = function() {
   this.trigger("load");
 };
+Alignments.prototype.triggerReset = function() {
+  this.trigger("reset");
+};
 Alignments.prototype.add = function(alignment) {
   this._removeDuplicates(alignment);
   this._removeEmpty();
@@ -57,7 +60,7 @@ Alignments.prototype.remove = function(alignment) {
 };
 Alignments.prototype.reset = function() {
   this.alignments = [];
-  this.triggerChange();
+  this.triggerReset();
 };
 Alignments.prototype.load = function(alignments) {
   this.alignments = Array.prototype.slice.call(alignments);

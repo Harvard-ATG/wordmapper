@@ -186,6 +186,8 @@ SourcesParser.prototype._parse = function() {
   if (!this.valid) {
     return this;
   }
+	
+	this.url = (this.input.url || '').trim();
 
   this.sources = this.input.data.map(function(source) {
     return source.data;

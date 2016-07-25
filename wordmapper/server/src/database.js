@@ -3,7 +3,10 @@ var config = require('./config');
 var auth = require('./auth');
 var pgp = require('pg-promise')({
 	error: function(err, e) {
-		winston.error("database error", err);
+		winston.error("ERROR: ", err);
+	},
+	query: function(e) {
+		winston.debug("QUERY: " + e.query);
 	}
 });
 var db = pgp(config.database);
@@ -167,6 +170,27 @@ var sources = {
 var pages = {
 	getAllPages: function() {
 		return db.any('select * from page');
+	},
+	getPageByUrl: function(url) {
+		return db.one('select id, url from page where url = ${url}', {url:url});
+	},
+	getPageSourcesByUrl: function(url) {
+		var query = sql('findPageSources.sql').query;
+		return db.many(query, {url:url});
+	},
+	createPage: function(url) {
+		return db.one('insert into page (url) values (${url}) returning id', {url:url});
+	},
+	createPageSources: function(pageId, sourceIds) {
+		return db.tx(function(t) {
+			var queries = sourceIds.map(function(sourceId) {
+				return t.one('insert into page_source (page_id, source_id) values(${pageId}, ${sourceId}) returning id', {
+					pageId: pageId,
+					sourceId: sourceId
+				});
+			});
+			return t.batch(queries);
+		});
 	}
 };
 

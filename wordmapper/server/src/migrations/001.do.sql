@@ -15,7 +15,7 @@ CREATE TABLE user_admin (
 
 CREATE TABLE page (
 	id serial PRIMARY KEY,
-	url text not null,
+	url text not null UNIQUE,
 	created timestamp default current_timestamp
 );
 

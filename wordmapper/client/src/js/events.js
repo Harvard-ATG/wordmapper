@@ -1,6 +1,7 @@
+var logging = require('logging');
+
 var Events = function(options) {
   options = options || {};
-  this.debug = options.debug || false;
 };
 Events.prototype.on = function(event, fn) {
   var _this = this;
@@ -22,9 +23,7 @@ Events.prototype.trigger = function(event) {
   if (event in _this._events === false) {
     return;
   }
-  if (_this.debug) {
-    console.log("trigger: ", event, arguments);
-  }
+  logging.debug("Events.trigger()", event, arguments);
   for(var i = 0; i < _this._events[event].length; i++) {
     _this._events[event][i].apply(_this, Array.prototype.slice.call(arguments, 1));
   }
@@ -39,18 +38,20 @@ Events.mixin = function(dest) {
   });
 };
 
-module.exports = {
-  Events: Events,
-  EVT: {
-    ALIGN: 'align',
-    CLEAR_HIGHLIGHTS: 'clear_highlights',
-    CLEAR_ALIGNMENTS: 'clear_alignments',
-    BUILD_INDEX: 'build_index',
-    EXPORT: 'export',
-    LOGIN: 'login',
-    LOADING: 'loading',
-    ERROR: 'error',
-    NOTIFICATION: 'notification'
-  },
-  hub: new Events({debug: true})
+module.exports.Events = Events;
+
+module.exports.hub = new Events();
+
+// This defines the list of events intended to be used with the
+// global event "hub".
+module.exports.EVT = {
+  ALIGN: 'align',
+  CLEAR_HIGHLIGHTS: 'clear_highlights',
+  CLEAR_ALIGNMENTS: 'clear_alignments',
+  BUILD_INDEX: 'build_index',
+  EXPORT: 'export',
+  LOGIN: 'login',
+  LOADING: 'loading',
+  ERROR: 'error',
+  NOTIFICATION: 'notification'
 };

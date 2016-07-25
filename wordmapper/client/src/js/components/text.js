@@ -1,4 +1,5 @@
 var $ = require('jquery');
+var logging = require('logging');
 var events = require('../events.js');
 var models = require('../models.js');
 
@@ -33,23 +34,24 @@ TextComponent.prototype.addListeners = function() {
   this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
   this.alignments.on('change', this.updateAlignments);
   this.alignments.on('load', this.updateAlignments);
+  this.alignments.on('reset', this.updateAlignments);
   events.hub.on(events.EVT.CLEAR_HIGHLIGHTS, this.clearHighlighted);
   events.hub.on(events.EVT.CLEAR_ALIGNMENTS, this.resetAlignments);
   events.hub.on(events.EVT.ALIGN, this.align);
 };
 TextComponent.prototype.onClickWord = function(evt) {
-  //console.log("click", evt.target);
+  //loggin.log("click", evt.target);
   this.toggleHighlight(evt.target);
 };
 TextComponent.prototype.onMouseoverWord = function(evt) {
-  //console.log("mouseover", evt.target);
+  //loggin.log("mouseover", evt.target);
   var spans = this.selectAlignedWith(evt.target);
   if (spans.length > 0) {
     this.addHighlight2(spans);
   }
 };
 TextComponent.prototype.onMouseoutWord = function(evt) {
-  //console.log("mouseout", evt.target);
+  //logging.log("mouseout", evt.target);
   this.clearHighlight2();
 };
 TextComponent.prototype.align = function() {

@@ -7,12 +7,9 @@ var auth = require('../auth');
 var repository = require('../repository');
 var router = express.Router();
 
-var getQuerySources = function(req) {
-	return ('sources' in req.query ? req.query.sources : '').split(',').filter(Boolean);
-};
 var sourcesRequired  = function(req, res, next) {
-	var sources = getQuerySources(req);
-	winston.debug("text sources:", {sources: sources});
+	var sources = ('sources' in req.query ? req.query.sources : '').split(',').filter(Boolean);
+	winston.debug("sources required:", {sources: sources});
 	if(sources.length > 0) {
 		next();
 	} else {
@@ -98,7 +95,9 @@ router.route('/sources')
 	if ('fields' in req.query && req.query.fields) {
 		options.fields = req.query.fields.split(',');
 	}
+
 	repository.fetchSources(hashes, options).then(function(sources) {
+		winston.debug("fetchSources", hashes, options, sources);
 		if (sources.data.length == 0) {
 			res.status(404).json({ code: 404, message: "Sources not found" });
 		} else {

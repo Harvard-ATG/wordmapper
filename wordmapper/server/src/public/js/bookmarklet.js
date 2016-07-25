@@ -434,10 +434,10 @@
 
 	module.exports = {
 	    Application: __webpack_require__(8),
-	    Login: __webpack_require__(44),
-	    Overlay: __webpack_require__(45),
-	    Panel: __webpack_require__(36),
-	    Text: __webpack_require__(48)
+	    Login: __webpack_require__(45),
+	    Overlay: __webpack_require__(46),
+	    Panel: __webpack_require__(37),
+	    Text: __webpack_require__(49)
 	};
 
 /***/ },
@@ -446,12 +446,12 @@
 
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(9);
-	var services = __webpack_require__(10);
-	var models = __webpack_require__(12);
-	var Settings = __webpack_require__(34);
-	var PanelComponent = __webpack_require__(36);
-	var OverlayComponent = __webpack_require__(45);
-	var TextComponent = __webpack_require__(48);
+	var services = __webpack_require__(12);
+	var models = __webpack_require__(14);
+	var Settings = __webpack_require__(36);
+	var PanelComponent = __webpack_require__(37);
+	var OverlayComponent = __webpack_require__(46);
+	var TextComponent = __webpack_require__(49);
 
 	var Application = function() {
 	  this.init();
@@ -462,21 +462,22 @@
 	  // models
 	  this.models = {};
 	  this.models.user = new models.User();
-	  this.models.sources = new models.Sources();
-	  this.models.alignments = new models.Alignments();
-	  this.models.siteContext = new models.SiteContext({
-	    id: window.location.hostname,
+	  this.models.page = new models.Page({
+	    hostname: window.location.hostname,
 	    url: window.location.toString()
 	  });
-	  
+	  this.models.sources = new models.Sources({
+	    pageUrl: window.location.toString()
+	  });
+	  this.models.alignments = new models.Alignments();
 	  // settings
 	  this.settings = new Settings();
-	  this.settings.load(this.models.siteContext);
+	  this.settings.load(this.models.page);
 
 	  // services
 	  this.services = {};
 	  this.services.importExport = new services.ImportExportService({
-	    siteContext: this.models.siteContext,
+	    page: this.models.page,
 	    alignments: this.models.alignments,
 	    sources: this.models.sources
 	  });
@@ -537,11 +538,12 @@
 
 /***/ },
 /* 9 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	var logging = __webpack_require__(10);
 
 	var Events = function(options) {
 	  options = options || {};
-	  this.debug = options.debug || false;
 	};
 	Events.prototype.on = function(event, fn) {
 	  var _this = this;
@@ -563,9 +565,7 @@
 	  if (event in _this._events === false) {
 	    return;
 	  }
-	  if (_this.debug) {
-	    console.log("trigger: ", event, arguments);
-	  }
+	  logging.debug("Events.trigger()", event, arguments);
 	  for(var i = 0; i < _this._events[event].length; i++) {
 	    _this._events[event][i].apply(_this, Array.prototype.slice.call(arguments, 1));
 	  }
@@ -580,45 +580,78 @@
 	  });
 	};
 
-	module.exports = {
-	  Events: Events,
-	  EVT: {
-	    ALIGN: 'align',
-	    CLEAR_HIGHLIGHTS: 'clear_highlights',
-	    CLEAR_ALIGNMENTS: 'clear_alignments',
-	    BUILD_INDEX: 'build_index',
-	    EXPORT: 'export',
-	    LOGIN: 'login',
-	    LOADING: 'loading',
-	    ERROR: 'error',
-	    NOTIFICATION: 'notification'
-	  },
-	  hub: new Events({debug: true})
-	};
+	module.exports.Events = Events;
 
+	module.exports.hub = new Events();
+
+	// This defines the list of events intended to be used with the
+	// global event "hub".
+	module.exports.EVT = {
+	  ALIGN: 'align',
+	  CLEAR_HIGHLIGHTS: 'clear_highlights',
+	  CLEAR_ALIGNMENTS: 'clear_alignments',
+	  BUILD_INDEX: 'build_index',
+	  EXPORT: 'export',
+	  LOGIN: 'login',
+	  LOADING: 'loading',
+	  ERROR: 'error',
+	  NOTIFICATION: 'notification'
+	};
 
 /***/ },
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var config = __webpack_require__(11);
+
+	var debug = function() {
+	  if (config.DEBUG) {
+	    console.debug.apply(console, arguments);
+	  }
+	};
+	var log = function() {
+	  console.log.apply(console, arguments);
+	};
+	var error = function() {
+	  console.error.apply(console, arguments);
+	};
+
+	module.exports.debug = debug;
+	module.exports.log = log;
+	module.exports.error = error;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
 	module.exports = {
-	  ImportExportService: __webpack_require__(11),
-	  Persistence: __webpack_require__(28),
-	  StorageLocal: __webpack_require__(31),
-	  StorageRemote: __webpack_require__(33)
+	  DEBUG: true,
+	  apiBaseUrl: 'http://localhost:8000/api',
+	  registerUrl: 'http://localhost:8000/user/register'
+	};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  ImportExportService: __webpack_require__(13),
+	  Persistence: __webpack_require__(30),
+	  StorageLocal: __webpack_require__(33),
+	  StorageRemote: __webpack_require__(35)
 	};
 
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var models = __webpack_require__(12);
+	var models = __webpack_require__(14);
 
 	var ImportExportService = function(options) {
 	  this.sources = options.sources;
 	  this.alignments = options.alignments;
-	  this.siteContext = options.siteContext;
+	  this.page = options.page;
 	  this.import = this.import.bind(this);
 	  this.export = this.export.bind(this);
 	};
@@ -630,10 +663,10 @@
 	    var result = JSON.parse(jsonData);
 	    
 	    // Preliminary error checking
-	    if (result.type != "site" || !result.hasOwnProperty("data")) { 
-	      throw "Invalid import data. Top-level object must be of type 'site' with a 'data' attribute.";
+	    if (result.type != "export" || !result.hasOwnProperty("data")) { 
+	      throw "Invalid import data. Top-level object must be of type 'export' with a 'data' attribute.";
 	    } else if(result.data.type != "alignments" || !result.data.hasOwnProperty("data")) {
-	      throw "Invalid import data. Object contained by 'site' must be of type 'alignments' with a 'data' attribute.";
+	      throw "Invalid import data. Object contained by 'export' must be of type 'alignments' with a 'data' attribute.";
 	    }
 
 	    // Attempt to create an array of alignment objects, each of which contains an array of word objects
@@ -681,9 +714,8 @@
 	};
 	ImportExportService.prototype.export = function(serialize) {
 	  var result = {
-	    'type': 'site',
-	    'id': this.siteContext.id,
-	    'url': this.siteContext.url,
+	    'type': 'export',
+	    'url': this.page.getUrl(),
 	    'data': this.alignments.toJSON()
 	  };
 	  return (serialize ? JSON.stringify(result, null, '\t') : result);
@@ -692,25 +724,25 @@
 	module.exports = ImportExportService;
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  Alignments: __webpack_require__(13),
-	  Alignment: __webpack_require__(14),
-	  Word: __webpack_require__(16),
-	  Sources: __webpack_require__(17),
-	  Source: __webpack_require__(18),
-	  SiteContext: __webpack_require__(26),
-	  User: __webpack_require__(27)
+	  Alignments: __webpack_require__(15),
+	  Alignment: __webpack_require__(16),
+	  Word: __webpack_require__(18),
+	  Sources: __webpack_require__(19),
+	  Source: __webpack_require__(20),
+	  Page: __webpack_require__(28),
+	  User: __webpack_require__(29)
 	};
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var events = __webpack_require__(9);
-	var Alignment = __webpack_require__(14);
+	var Alignment = __webpack_require__(16);
 
 	var Alignments = function(options) {
 	  this.alignments = [];
@@ -733,6 +765,9 @@
 	};
 	Alignments.prototype.triggerLoad = function() {
 	  this.trigger("load");
+	};
+	Alignments.prototype.triggerReset = function() {
+	  this.trigger("reset");
 	};
 	Alignments.prototype.add = function(alignment) {
 	  this._removeDuplicates(alignment);
@@ -768,7 +803,7 @@
 	};
 	Alignments.prototype.reset = function() {
 	  this.alignments = [];
-	  this.triggerChange();
+	  this.triggerReset();
 	};
 	Alignments.prototype.load = function(alignments) {
 	  this.alignments = Array.prototype.slice.call(alignments);
@@ -836,10 +871,10 @@
 	module.exports = Alignments;
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Comment = __webpack_require__(15);
+	var Comment = __webpack_require__(17);
 
 	var Alignment = function(options) {
 	  this.id = options.id;
@@ -953,7 +988,7 @@
 	module.exports = Alignment;
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports) {
 
 	var Comment = function(options) {
@@ -980,7 +1015,7 @@
 	module.exports = Comment;
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports) {
 
 	var Word = function(options) {
@@ -1019,14 +1054,15 @@
 	module.exports = Word;
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var events = __webpack_require__(9);
-	var Source = __webpack_require__(18);
+	var Source = __webpack_require__(20);
 
 	var Sources = function(options) {
 	  options = options || {};
+	  this.pageUrl = options.pageUrl;
 	  this.sources = options.sources || [];
 	};
 	Sources.prototype.triggerChange = function() {
@@ -1071,6 +1107,7 @@
 	Sources.prototype.toJSON = function() {
 	  return {
 	    "type": "sources",
+	    "url": this.pageUrl,
 	    "data": this.sources.map(function(source) {
 	      return source.toJSON();
 	    })
@@ -1093,12 +1130,12 @@
 
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var sha1 = __webpack_require__(19);
-	var Word = __webpack_require__(16);
+	var sha1 = __webpack_require__(21);
+	var Word = __webpack_require__(18);
 
 	var Source = function(options) {
 	  this.el = options.el;
@@ -1216,13 +1253,13 @@
 
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(24),
-	      utf8 = __webpack_require__(25).utf8,
-	      bin = __webpack_require__(25).bin,
+	  var crypt = __webpack_require__(26),
+	      utf8 = __webpack_require__(27).utf8,
+	      bin = __webpack_require__(27).bin,
 
 	  // The core
 	  sha1 = function (message) {
@@ -1302,10 +1339,10 @@
 	  module.exports = api;
 	})();
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22).Buffer))
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
@@ -1318,9 +1355,9 @@
 
 	'use strict'
 
-	var base64 = __webpack_require__(21)
-	var ieee754 = __webpack_require__(22)
-	var isArray = __webpack_require__(23)
+	var base64 = __webpack_require__(23)
+	var ieee754 = __webpack_require__(24)
+	var isArray = __webpack_require__(25)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -2857,10 +2894,10 @@
 	  return i
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -2990,7 +3027,7 @@
 
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -3080,7 +3117,7 @@
 
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -3091,7 +3128,7 @@
 
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports) {
 
 	(function() {
@@ -3193,7 +3230,7 @@
 
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports) {
 
 	var charenc = {
@@ -3232,89 +3269,90 @@
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports) {
 
-	var SiteContext = function(options) {
-	  this.id = options.id || '';
+	var Page = function(options) {
+	  this.hostname = options.hostname || '';
 	  this.url = options.url || '';
 	};
-	SiteContext.prototype.toString = function() {
+	Page.prototype.getHostname = function() {
+	    return this.hostname;
+	};
+	Page.prototype.getUrl = function() {
+	    return this.url;
+	};
+	Page.prototype.toString = function() {
 	  return this.url;
 	};
-	SiteContext.prototype.toJSON = function() {
+	Page.prototype.toJSON = function() {
 	  return {
-	    "type": "siteContext",
+	    "type": "page",
 	    "data": {
-	      "id": this.id,
+	      "hostname": this.hostname,
 	      "url": this.url
 	    }
 	  };
 	};
-	SiteContext.prototype.serialize = function() {
+	Page.prototype.serialize = function() {
 	  return JSON.stringify(this.toJSON(), null, '\t');
 	};
 
-	module.exports = SiteContext;
+	module.exports = Page;
+
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var events = __webpack_require__(9);
 
 	var User = function(options) {
-		options = options || {};
-		this.id = options.id;
-		this.email = options.email;
-		this.token = options.token;
+	  options = options || {};
+	  this.id = options.id;
+	  this.email = options.email;
+	  this.token = options.token;
 	};
 	User.prototype.isAuthenticated = function() {
-		return this.token ? true : false;
+	  return this.token ? true : false;
 	};
 	User.prototype.getToken = function() {
-		return this.token;
+	  return this.token;
 	};
 	User.prototype.update = function(data) {
-		var changed = false;
-		if (!data) {
-			return this;
-		}
+	  var changed = false;
+	  if (!data) { return this; }
 		
-		['id', 'email', 'token'].forEach(function(prop) {
-			if(prop in data && data[prop] !== this[prop]) {
-				this[prop] = data[prop];
-				changed = true;
-			}
-		}, this);
+	  ['id', 'email', 'token'].forEach(function(prop) {
+	    if(prop in data && data[prop] !== this[prop]) {
+	      this[prop] = data[prop];
+	      changed = true;
+	    }
+	  }, this);
 		
-		if(changed) {
-			this.triggerChange();
-		}
-		return this;
+	  if(changed) {
+	    this.triggerChange();
+	  }
+	  return this;
 	};
 	User.prototype.reset = function() {
-		return this.update({id:undefined,email:undefined,token:undefined});
+	  return this.update({id:undefined,email:undefined,token:undefined});
 	};
 	User.prototype.saveLogin = function() {
-		if (!this.isAuthenticated()) {
-			localStorage.removeItem("wordmapper-user");
-			return this;
-		}
 	  if (!window.localStorage) {
 	    return this;
 	  }
-		var data = {
-			id: this.id,
-			email: this.email,
-			token: this.token
-		};
-		data.expires = new Date();
-		data.expires.setHours(data.expires.getHours() + 3);
+	  if (!this.isAuthenticated()) {
+	    localStorage.removeItem("wordmapper-user");
+	    return this;
+	  }
 
-		localStorage.setItem("wordmapper-user", JSON.stringify(data));
+	  var data = {id: this.id, email: this.email, token: this.token};
+	  data.expires = new Date();
+	  data.expires.setHours(data.expires.getHours() + 3);
 
-		return this;
+	  localStorage.setItem("wordmapper-user", JSON.stringify(data));
+	  return this;
 	};
 	User.prototype.restoreLogin = function() {
 	  var result = null;
@@ -3325,32 +3363,31 @@
 	  if (result === null) {
 	    return this;
 	  }
-		result = JSON.parse(result);
+	  result = JSON.parse(result);
 
-		var expires = new Date(result.expires);
-		var now = new Date();
-		if (now >= expires) {
-			localStorage.removeItem("wordmapper-user");
-			return this;
-		}
-		this.update(result);
+	  var expires = new Date(result.expires);
+	  var now = new Date();
+	  if (now >= expires) {
+	    localStorage.removeItem("wordmapper-user");
+	    return this;
+	  }
 
-	  return this;
+	  return this.update(result);
 	};
 	User.prototype.triggerChange = function() {
-		this.trigger("change");
+	  this.trigger("change");
 	};
 	User.prototype.toString = function() {
-		return this.email || 'guest';
+	  return this.email || 'guest';
 	};
 	User.prototype.toJSON = function() {
-		return {
-			"type": "user",
-			"data": {
-				"id": this.id,
-				"email": this.email
-			}
-		};
+	  return {
+	    "type": "user",
+	    "data": {
+	      "id": this.id,
+	      "email": this.email
+	    }
+	  };
 	};
 	User.prototype.serialize = function() {
 	  return JSON.stringify(this.toJSON(), null, '\t');
@@ -3361,13 +3398,14 @@
 
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(29);
+	var _ = __webpack_require__(31);
+	var logging = __webpack_require__(10);
 	var events = __webpack_require__(9);
-	var StorageLocal = __webpack_require__(31);
-	var StorageRemote = __webpack_require__(33);
+	var StorageLocal = __webpack_require__(33);
+	var StorageRemote = __webpack_require__(35);
 
 	var Persistence = function(options) {
 	  options = options || {};
@@ -3375,33 +3413,40 @@
 
 	  this.settings = options.settings;
 	  this.models = options.models;
-	  
+
 	  this.stores = {};
 	  this.stores.local = new StorageLocal(this, { enabled: true });
 	  this.stores.remote = new StorageRemote(this, { enabled: false });
 	  this.primaryStore = this.stores.local;
-	  
-	  // true when then source models have been initialized 
+
 	  this.sourcesReady = false; 
-	  
-	  this.onAlignmentsChange = this.onAlignmentsChange.bind(this);
-	  this.onSourcesChange = this.onSourcesChange.bind(this);
-	  this.onUserChange = this.onUserChange.bind(this);
-	  this.loadAlignments = this.loadAlignments.bind(this);
-	  this.loadSources = this.loadSources.bind(this);
-	  this.saveAlignments = this.saveAlignments.bind(this);
-	  this.saveSources = this.saveSources.bind(this);
-	  this.endLoading = this.endLoading.bind(this);
-	  this.startLoading = this.startLoading.bind(this);
-	  this.notifySave = this.notifySave.bind(this);
 	  
 	  this.init();
 	};
 	Persistence.prototype.init = function() {
+	  this.bindMethods();
 	  this.addListeners();
+	};
+	Persistence.prototype.bindMethods = function() {
+	  _.bindAll(this, [
+	    'onAlignmentsChange',
+	    'onAlignmentsReset',
+	    'onSourcesChange',
+	    'onUserChange',
+	    'loadAlignments',
+	    'loadSources',
+	    'saveAlignments',
+	    'resetAlignments',
+	    'saveSources',
+	    'endLoading',
+	    'startLoading',
+	    'notifySave',
+	    'notifyReset'
+	  ]);
 	};
 	Persistence.prototype.addListeners = function() {
 	  this.models.alignments.on('change', this.onAlignmentsChange);
+	  this.models.alignments.on('reset', this.onAlignmentsReset);
 	  this.models.sources.on('change', this.onSourcesChange);
 	  this.models.user.on('change', this.onUserChange);
 	};
@@ -3416,11 +3461,22 @@
 	      _this.handleError(err);
 	    });
 	};
+	Persistence.prototype.onAlignmentsReset = function() {
+	  var _this = this;
+	  this.startLoading()
+	    .then(this.resetAlignments)
+	    .then(this.endLoading)
+	    .then(this.notifyReset)
+	    .catch(function(err) {
+	      _this.endLoading();
+	      _this.handleError(err);
+	    });
+	};
 	Persistence.prototype.onSourcesChange = function() {
 	  this.sourcesReady = true;
 	};
 	Persistence.prototype.onUserChange = function() {
-	  console.log("user change", this.models.user);
+	  logging.log("user change", this.models.user);
 	  if (this.models.user.isAuthenticated()) {
 	    this.stores.remote.enable();
 	    this.stores.local.disable();
@@ -3465,13 +3521,17 @@
 	  var store = this.primaryStore;
 	  return store.saveAlignments();
 	};
+	Persistence.prototype.resetAlignments = function() {
+	  var store = this.primaryStore;
+	  return store.resetAlignments();
+	};
 	Persistence.prototype.saveSources = function() {
 	  var store = this.primaryStore;
 	  return store.saveSources();
 	};
 	Persistence.prototype.handleError = function(err) {
 	  this.notifyError(err);
-	  console.error(err);
+	  logging.error(err);
 	};
 	Persistence.prototype.startLoading = function() {
 	  events.hub.trigger(events.EVT.LOADING, "start", "data");
@@ -3482,9 +3542,11 @@
 	  return Promise.resolve();
 	};
 	Persistence.prototype.notifySave = function() {
-	  var d = new Date();
-	  var msg = "Saved @ " + [d.getHours(), d.getMinutes(), d.getSeconds()].join(":");
-	  this.notifyMessage("success", msg);
+	  this.notifyMessage("success", "Saved @ " + this.getTimestamp());
+	  return Promise.resolve();
+	};
+	Persistence.prototype.notifyReset = function() {
+	  this.notifyMessage("success", "Deleted @ " + this.getTimestamp());
 	  return Promise.resolve();
 	};
 	Persistence.prototype.notifyMessage = function(messageType, message) {
@@ -3493,12 +3555,16 @@
 	Persistence.prototype.notifyError = function(error) {
 	  events.hub.trigger(events.EVT.ERROR, error);
 	};
+	Persistence.prototype.getTimestamp = function() {
+	  var d = new Date();
+	  return [d.getHours(), d.getMinutes(), d.getSeconds()].join(":");
+	};
 
 	module.exports = Persistence;
 
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -19906,10 +19972,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)(module), (function() { return this; }())))
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -19925,11 +19991,11 @@
 
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $ = __webpack_require__(5);
-	var parser = __webpack_require__(32);
+	var logging = __webpack_require__(10);
+	var parser = __webpack_require__(34);
 
 	var AlignmentsParser = parser.AlignmentsParser;
 
@@ -19938,7 +20004,7 @@
 	  this.parent = parent;
 	  this._enabled = options.enabled || false;
 	  if (window.Storage === undefined) {
-	    console.error("LocalStorage not supported in this browser.");
+	    logging.error("LocalStorage not supported in this browser.");
 	    this._enabled = false;
 	  }
 	};
@@ -19952,7 +20018,7 @@
 	  this._enabled = false;
 	};
 	StorageLocal.prototype.loadAlignments = function() {
-	  console.log("StorageLocal loadAlignments");
+	  logging.debug("StorageLocal loadAlignments");
 	  var jsonData = localStorage.getItem(this._getAlignmentsKey());
 	  if (jsonData === null) {
 	    return Promise.resolve([]);
@@ -19963,24 +20029,29 @@
 	    return Promise.reject(e);
 	  }
 	};
+	StorageLocal.prototype.resetAlignments = function() {
+	  logging.debug("StorageLocal resetAlignments");
+	  localStorage.removeItem(this._getAlignmentsKey());
+	  return Promise.resolve();
+	};
 	StorageLocal.prototype.saveAlignments = function() {
-	  console.log("StorageLocal saveAlignments");
+	  logging.debug("StorageLocal saveAlignments");
 	  var serialized = this.parent.models.alignments.serialize();
 	  localStorage.setItem(this._getAlignmentsKey(), serialized);
 	  return Promise.resolve();
 	};
 	StorageLocal.prototype.loadSources = function() {
-	  console.log("StorageLocal loadSources");
+	  logging.debug("StorageLocal loadSources");
 	  return Promise.resolve();
 	};
 	StorageLocal.prototype.saveSources = function() {
-	  console.log("StorageLocal saveSources");
+	  logging.debug("StorageLocal saveSources");
 	  return Promise.resolve();
 	};
 	StorageLocal.prototype._getAlignmentsKey = function() {
 	  var hashKey = this.parent.models.sources.getHashKey();
-	  var siteId = this.parent.models.siteContext.id;
-	  return siteId + "::" + hashKey;
+	  var hostname = this.parent.models.page.getHostname();
+	  return hostname + "::" + hashKey;
 	};
 	StorageLocal.prototype._parseAlignments = function(data) {
 	  var parser = new AlignmentsParser(data, this.parent.models.sources);
@@ -19991,10 +20062,10 @@
 	module.exports = StorageLocal;
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var models = __webpack_require__(12);
+	var models = __webpack_require__(14);
 	var Word = models.Word;
 	var Alignments = models.Alignments;
 
@@ -20036,12 +20107,13 @@
 
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var _ = __webpack_require__(29);
-	var parser = __webpack_require__(32);
+	var _ = __webpack_require__(31);
+	var logging = __webpack_require__(10);
+	var parser = __webpack_require__(34);
 
 	var AlignmentsParser = parser.AlignmentsParser;
 
@@ -20060,7 +20132,7 @@
 	  this._enabled = false;
 	};
 	StorageRemote.prototype.loadAlignments = function() {
-	  console.log("StorageRemote loadAlignments");
+	  logging.debug("StorageRemote loadAlignments");
 	  var _this = this;
 	  var url = this._url("/alignments");
 	  var hashes = this.parent.models.sources.getHashes();
@@ -20081,7 +20153,7 @@
 	  });
 	};
 	StorageRemote.prototype.saveAlignments = function() {
-	  console.log("StorageRemote saveAlignments");
+	  logging.debug("StorageRemote saveAlignments");
 	  var url = this._url("/alignments");
 	  var serialized = this.parent.models.alignments.serialize();
 	  return this._ajax({
@@ -20091,8 +20163,17 @@
 	    data: serialized
 	  });
 	};
+	StorageRemote.prototype.resetAlignments = function() {
+	  logging.debug("StorageRemote resetAlignments");
+	  var hashes = this.parent.models.sources.getHashes();
+	  var url = this._url("/alignments?sources="+hashes.join(","));
+	  return this._ajax({
+	    method: "DELETE",
+	    url: url
+	  });
+	};
 	StorageRemote.prototype.loadSources = function() {
-	  console.log("StorageRemote loadSources");
+	  logging.debug("StorageRemote loadSources");
 	  var url = this._url("/sources");
 	  var hashes = this.parent.models.sources.getHashes();
 	  return this._ajax({
@@ -20102,7 +20183,7 @@
 	  });
 	};
 	StorageRemote.prototype.saveSources = function() {
-	  console.log("StorageRemote saveSources");
+	  logging.debug("StorageRemote saveSources");
 	  var url = this._url("/sources");
 	  var serialized = this.parent.models.sources.serialize();
 	  return this._ajax({
@@ -20132,7 +20213,7 @@
 	      resolve(responseData);
 	    }).fail(function(jqXHR, textStatus, errorThrown) {
 	      if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty("message")) {
-	        console.error(jqXHR.responseJSON);
+	        logging.error(jqXHR.responseJSON);
 	        reject(jqXHR.responseJSON.message + ' ('+errorThrown+')');
 	      } else {
 	        reject(errorThrown);
@@ -20149,23 +20230,27 @@
 	module.exports = StorageRemote;
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(29);
-	var config = __webpack_require__(35);
+	var _ = __webpack_require__(31);
+	var config = __webpack_require__(11);
+	var logging = __webpack_require__(10);
 
 	var Settings = function(options) {
 	  options = options || {};
-	  ['apiBaseUrl', 'registerUrl'].forEach(function(key) {
-	    if (!config.hasOwnProperty(key) || !config[key]) {
-	      throw 'Error login environment configuration. Missing required key: ' + key;
+	  this.assertConfig(config);
+	  this.current = _.assign({}, config, options);
+	};
+	Settings.prototype.assertConfig = function(givenConfig) {
+	  var required = ['apiBaseUrl', 'registerUrl'];
+	  required.forEach(function(key) {
+	    if (!givenConfig.hasOwnProperty(key) || !givenConfig[key]) {
+	      throw 'Invalid "config" for environment. Missing required key: ' + key;
 	    }
 	  });
-	  this.current = _.assign({}, config, options);
-	  console.log("settings", this, "config", config);
 	};
-	Settings.prototype.defaults = {
+	Settings.prototype.hostConfig = {
 	  '*': {
 	    'sourceSelector': 'body'
 	  },
@@ -20179,17 +20264,21 @@
 	    'sourceSelector': '.textboxcontent'
 	  }
 	};
-	Settings.prototype.load = function(siteContext) {
+	Settings.prototype.load = function(page) {
 	  var data = false;
-	  console.log("Loading source selector for site ID: ", siteContext.id);
-	  if (siteContext.id in this.defaults) {
-	    data = this.defaults[siteContext.id];
-	    console.log("Site ID exists. Settings: ", data);
+	  var base = '*';
+	  var msg = '';
+	  var hostname = page.getHostname();
+	  
+	  if (hostname in this.hostConfig) {
+	    data = this.hostConfig[hostname];
+	    msg = "Settings loaded for '"+hostname+"'.";
 	  } else {
-	    data = this.defaults['*'];
-	    console.log("No such site ID exists. Using base settings: ", data);
+	    data = this.hostConfig[base];
+	    msg = "Settings _NOT_ found for '"+hostname+"'. Loaded base settings '"+base+"'. ";
 	  }
 	  _.assign(this.current, data);
+	  logging.log(msg, this.current);
 	  return this;
 	};
 	Settings.prototype.getSourceSelector = function() {
@@ -20204,22 +20293,13 @@
 	module.exports = Settings;
 
 /***/ },
-/* 35 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  apiBaseUrl: 'http://localhost:8000/api',
-	  registerUrl: 'http://localhost:8000/user/register'
-	};
-
-/***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(9);
-	var templates = __webpack_require__(37);
-	var LoginComponent = __webpack_require__(44);
+	var templates = __webpack_require__(38);
+	var LoginComponent = __webpack_require__(45);
 
 	var PanelComponent = function(options) {
 	  options = options || {};
@@ -20323,23 +20403,23 @@
 
 
 /***/ },
-/* 37 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  'panel': __webpack_require__(38),
-	  'index': __webpack_require__(39),
-	  'export': __webpack_require__(40),
-	  'overlay': __webpack_require__(41),
-	  'login': __webpack_require__(42),
-	  'notification': __webpack_require__(43)
-	};
-
-/***/ },
 /* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(29);
+	module.exports = {
+	  'panel': __webpack_require__(39),
+	  'index': __webpack_require__(40),
+	  'export': __webpack_require__(41),
+	  'overlay': __webpack_require__(42),
+	  'login': __webpack_require__(43),
+	  'notification': __webpack_require__(44)
+	};
+
+/***/ },
+/* 39 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(31);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
 	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 	with(obj||{}){
@@ -20352,10 +20432,10 @@
 
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(29);
+	var _ = __webpack_require__(31);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
 	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 	with(obj||{}){
@@ -20404,10 +20484,10 @@
 
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(29);
+	var _ = __webpack_require__(31);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
 	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 	with(obj||{}){
@@ -20420,10 +20500,10 @@
 
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(29);
+	var _ = __webpack_require__(31);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
 	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 	with(obj||{}){
@@ -20446,10 +20526,10 @@
 
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(29);
+	var _ = __webpack_require__(31);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
 	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 	with(obj||{}){
@@ -20482,10 +20562,10 @@
 
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(29);
+	var _ = __webpack_require__(31);
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
 	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 	with(obj||{}){
@@ -20504,12 +20584,12 @@
 
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(9);
-	var templates = __webpack_require__(37);
+	var templates = __webpack_require__(38);
 
 	var LoginComponent = function(options) {
 	  options = options || {};
@@ -20618,14 +20698,14 @@
 
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
 	var events = __webpack_require__(9);
-	var templates = __webpack_require__(37);
-	var IndexView = __webpack_require__(46);
-	var ExportView = __webpack_require__(47);
+	var templates = __webpack_require__(38);
+	var IndexView = __webpack_require__(47);
+	var ExportView = __webpack_require__(48);
 
 	var OverlayComponent = function(options) {
 	  this.alignments = options.alignments;
@@ -20732,21 +20812,21 @@
 	module.exports = OverlayComponent;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var templates = __webpack_require__(37);
+	var templates = __webpack_require__(38);
 
 	var IndexView = function(options) {
 	  this.alignments = options.alignments;
 	  this.sources = options.sources;
 	  this.render = this.render.bind(this);
 	  this.onClickEditAll = this.onClickEditAll.bind(this);
+	  this.onClickEditSingle = this.onClickEditSingle.bind(this);
 	  this.onClickCancel = this.onClickCancel.bind(this);
 	  this.onClickSave = this.onClickSave.bind(this);
 	  this.processComment = this.processComment.bind(this);
-	  this.onClickEditSingle = this.onClickEditSingle.bind(this);
 	  this.title = "Index";
 	  this.canPopout = true;
 	  this.init();
@@ -20772,7 +20852,7 @@
 	  return $(selector || this.el).find('textarea.comment');
 	};
 	IndexView.prototype.onClickEditAll = function(evt) {
-	  this.editComments(true);
+	  this.editComments();
 	  evt.stopPropagation();
 	};
 	IndexView.prototype.onClickEditSingle = function(evt) {
@@ -20865,13 +20945,13 @@
 	module.exports = IndexView;
 
 
-
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
-	var templates = __webpack_require__(37);
+	var logging = __webpack_require__(10);
+	var templates = __webpack_require__(38);
 
 	var ExportView = function(options) {
 	  this.dismiss = options.dismiss;
@@ -20900,9 +20980,9 @@
 	ExportView.prototype.import = function(evt) {
 	  var textarea = this.el.find('textarea[name="import"]');
 	  var jsonData = textarea.val();
-	  console.log("import data", jsonData);
+	  logging.log("import data", jsonData);
 	  var result = this.importExport.import(jsonData);
-	  console.log("import result", result);
+	  logging.log("import result", result);
 	  var $el = this.el.find('.wordmapper-import-messages');
 	  if (result.success) {
 	    $el.html('<span class="success">Import completed successfully</span>');
@@ -20917,12 +20997,13 @@
 
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(5);
+	var logging = __webpack_require__(10);
 	var events = __webpack_require__(9);
-	var models = __webpack_require__(12);
+	var models = __webpack_require__(14);
 
 	var TextComponent = function(options) {
 	  this.selector = options.selector;
@@ -20955,23 +21036,24 @@
 	  this.textBoxes.on('mouseout', '.wordmapper-word', null, this.onMouseoutWord);
 	  this.alignments.on('change', this.updateAlignments);
 	  this.alignments.on('load', this.updateAlignments);
+	  this.alignments.on('reset', this.updateAlignments);
 	  events.hub.on(events.EVT.CLEAR_HIGHLIGHTS, this.clearHighlighted);
 	  events.hub.on(events.EVT.CLEAR_ALIGNMENTS, this.resetAlignments);
 	  events.hub.on(events.EVT.ALIGN, this.align);
 	};
 	TextComponent.prototype.onClickWord = function(evt) {
-	  //console.log("click", evt.target);
+	  //loggin.log("click", evt.target);
 	  this.toggleHighlight(evt.target);
 	};
 	TextComponent.prototype.onMouseoverWord = function(evt) {
-	  //console.log("mouseover", evt.target);
+	  //loggin.log("mouseover", evt.target);
 	  var spans = this.selectAlignedWith(evt.target);
 	  if (spans.length > 0) {
 	    this.addHighlight2(spans);
 	  }
 	};
 	TextComponent.prototype.onMouseoutWord = function(evt) {
-	  //console.log("mouseout", evt.target);
+	  //logging.log("mouseout", evt.target);
 	  this.clearHighlight2();
 	};
 	TextComponent.prototype.align = function() {

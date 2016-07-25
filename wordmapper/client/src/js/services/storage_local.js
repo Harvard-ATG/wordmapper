@@ -1,4 +1,4 @@
-var $ = require('jquery');
+var logging = require('logging');
 var parser = require('./parser.js');
 
 var AlignmentsParser = parser.AlignmentsParser;
@@ -8,7 +8,7 @@ var StorageLocal = function(parent, options) {
   this.parent = parent;
   this._enabled = options.enabled || false;
   if (window.Storage === undefined) {
-    console.error("LocalStorage not supported in this browser.");
+    logging.error("LocalStorage not supported in this browser.");
     this._enabled = false;
   }
 };
@@ -22,7 +22,7 @@ StorageLocal.prototype.disable = function() {
   this._enabled = false;
 };
 StorageLocal.prototype.loadAlignments = function() {
-  console.log("StorageLocal loadAlignments");
+  logging.debug("StorageLocal loadAlignments");
   var jsonData = localStorage.getItem(this._getAlignmentsKey());
   if (jsonData === null) {
     return Promise.resolve([]);
@@ -33,24 +33,29 @@ StorageLocal.prototype.loadAlignments = function() {
     return Promise.reject(e);
   }
 };
+StorageLocal.prototype.resetAlignments = function() {
+  logging.debug("StorageLocal resetAlignments");
+  localStorage.removeItem(this._getAlignmentsKey());
+  return Promise.resolve();
+};
 StorageLocal.prototype.saveAlignments = function() {
-  console.log("StorageLocal saveAlignments");
+  logging.debug("StorageLocal saveAlignments");
   var serialized = this.parent.models.alignments.serialize();
   localStorage.setItem(this._getAlignmentsKey(), serialized);
   return Promise.resolve();
 };
 StorageLocal.prototype.loadSources = function() {
-  console.log("StorageLocal loadSources");
+  logging.debug("StorageLocal loadSources");
   return Promise.resolve();
 };
 StorageLocal.prototype.saveSources = function() {
-  console.log("StorageLocal saveSources");
+  logging.debug("StorageLocal saveSources");
   return Promise.resolve();
 };
 StorageLocal.prototype._getAlignmentsKey = function() {
   var hashKey = this.parent.models.sources.getHashKey();
-  var siteId = this.parent.models.siteContext.id;
-  return siteId + "::" + hashKey;
+  var hostname = this.parent.models.page.getHostname();
+  return hostname + "::" + hashKey;
 };
 StorageLocal.prototype._parseAlignments = function(data) {
   var parser = new AlignmentsParser(data, this.parent.models.sources);

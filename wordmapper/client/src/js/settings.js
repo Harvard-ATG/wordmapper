@@ -1,17 +1,21 @@
 var _ = require('lodash');
 var config = require('config');
+var logging = require('logging');
 
 var Settings = function(options) {
   options = options || {};
-  ['apiBaseUrl', 'registerUrl'].forEach(function(key) {
-    if (!config.hasOwnProperty(key) || !config[key]) {
-      throw 'Error login environment configuration. Missing required key: ' + key;
+  this.assertConfig(config);
+  this.current = _.assign({}, config, options);
+};
+Settings.prototype.assertConfig = function(givenConfig) {
+  var required = ['apiBaseUrl', 'registerUrl'];
+  required.forEach(function(key) {
+    if (!givenConfig.hasOwnProperty(key) || !givenConfig[key]) {
+      throw 'Invalid "config" for environment. Missing required key: ' + key;
     }
   });
-  this.current = _.assign({}, config, options);
-  console.log("settings", this, "config", config);
 };
-Settings.prototype.defaults = {
+Settings.prototype.hostConfig = {
   '*': {
     'sourceSelector': 'body'
   },
@@ -25,17 +29,21 @@ Settings.prototype.defaults = {
     'sourceSelector': '.textboxcontent'
   }
 };
-Settings.prototype.load = function(siteContext) {
+Settings.prototype.load = function(page) {
   var data = false;
-  console.log("Loading source selector for site ID: ", siteContext.id);
-  if (siteContext.id in this.defaults) {
-    data = this.defaults[siteContext.id];
-    console.log("Site ID exists. Settings: ", data);
+  var base = '*';
+  var msg = '';
+  var hostname = page.getHostname();
+  
+  if (hostname in this.hostConfig) {
+    data = this.hostConfig[hostname];
+    msg = "Settings loaded for '"+hostname+"'.";
   } else {
-    data = this.defaults['*'];
-    console.log("No such site ID exists. Using base settings: ", data);
+    data = this.hostConfig[base];
+    msg = "Settings _NOT_ found for '"+hostname+"'. Loaded base settings '"+base+"'. ";
   }
   _.assign(this.current, data);
+  logging.log(msg, this.current);
   return this;
 };
 Settings.prototype.getSourceSelector = function() {

@@ -16,21 +16,22 @@ Application.prototype.init = function() {
   // models
   this.models = {};
   this.models.user = new models.User();
-  this.models.sources = new models.Sources();
-  this.models.alignments = new models.Alignments();
-  this.models.siteContext = new models.SiteContext({
-    id: window.location.hostname,
+  this.models.page = new models.Page({
+    hostname: window.location.hostname,
     url: window.location.toString()
   });
-  
+  this.models.sources = new models.Sources({
+    pageUrl: window.location.toString()
+  });
+  this.models.alignments = new models.Alignments();
   // settings
   this.settings = new Settings();
-  this.settings.load(this.models.siteContext);
+  this.settings.load(this.models.page);
 
   // services
   this.services = {};
   this.services.importExport = new services.ImportExportService({
-    siteContext: this.models.siteContext,
+    page: this.models.page,
     alignments: this.models.alignments,
     sources: this.models.sources
   });

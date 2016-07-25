@@ -3,6 +3,7 @@ var Source = require('./source.js');
 
 var Sources = function(options) {
   options = options || {};
+  this.pageUrl = options.pageUrl;
   this.sources = options.sources || [];
 };
 Sources.prototype.triggerChange = function() {
@@ -47,6 +48,7 @@ Sources.prototype.toString = function() {
 Sources.prototype.toJSON = function() {
   return {
     "type": "sources",
+    "url": this.pageUrl,
     "data": this.sources.map(function(source) {
       return source.toJSON();
     })

@@ -8,7 +8,7 @@ var AlignmentsSerializer = serializer.AlignmentsSerializer;
 var SourcesParser = parser.SourcesParser;
 var SourcesSerializer = serializer.SourcesSerializer;
 
-module.exports = {
+var repository = {
 	fetchAlignments: function(userId, sources) {
 		var is_list_of_ids = sources.filter(function(source) {
 			return /^\d+$/.test(source);
@@ -35,16 +35,27 @@ module.exports = {
 		return parser.asPromise().then(function() {
 			return database.sources.getSourcesByHash(parser.source_hashes);
 		}).then(function(rows) {
-			var sources = rows.map(function(row) { return row.id; });
+			var sources = rows.map(function(row) { return row.hash; });
 			return database.alignments.deleteAlignmentsByUser(userId, sources);
 		}).then(function() {
 			return database.alignments.createAlignments(userId, parser.alignments);
 		});
 	},
 	saveSources: function(data) {
-		var parser = new SourcesParser(data);
-		return parser.asPromise().then(function() {
-			return database.sources.createSources(parser.sources);
+		var result = null;
+		return new Promise(function(resolve, reject) {
+			var parser = new SourcesParser(data);
+			parser.asPromise().then(function() {
+				return database.sources.createSources(parser.sources);
+			}).then(function(data) {
+				result = data;
+				var sourceIds = data.map(function(source) {
+					return source.id;
+				});
+				return repository.savePage(parser.url, sourceIds);
+			}).then(function() {
+				resolve(result);
+			}).catch(reject);
 		});
 	},
 	fetchSources: function(hashes, options) {
@@ -54,5 +65,26 @@ module.exports = {
 			var serializer = new SourcesSerializer(data, options);
 			return serializer.asPromise();
 		});
+	},
+	savePage: function(url, sourceIds) {
+		var pageId = null;
+		return new Promise(function(resolve, reject) {
+			database.pages.getPageByUrl(url).then(function(data) {
+				return Promise.resolve(data);
+			}, function() {
+				return database.pages.createPage(url);
+			}).then(function(data) {
+				pageId = data.id;
+				return database.pages.getPageSourcesByUrl(url);
+			}).then(function() {
+				resolve(pageId);
+			}, function() {
+				return database.pages.createPageSources(pageId, sourceIds);
+			}).then(function() {
+				resolve(pageId);
+			}).catch(reject);
+		});
 	}
 };
+
+module.exports = repository;
