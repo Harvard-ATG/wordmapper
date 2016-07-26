@@ -36,6 +36,9 @@ Settings.prototype.hostConfig = {
   },
   'blogs.harvard.edu': {
     'sourceSelector': '.textboxcontent'
+  },
+  'beta.blogs.harvard.edu': {
+    'sourceSelector': '.textboxcontent'
   }
 };
 Settings.prototype.load = function(page) {
