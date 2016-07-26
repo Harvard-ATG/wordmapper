@@ -18,7 +18,7 @@ TextComponent.prototype.bindMethods = [
   'onMouseoverWord',
   'onMouseoutWord',
   'updateAlignments',
-  'resetAlignments',
+  'deleteAlignments',
   'clearHighlighted',
   'align'
 ];
@@ -36,7 +36,7 @@ TextComponent.prototype.addListeners = function() {
   this.alignments.on('load', this.updateAlignments);
   this.alignments.on('reset', this.updateAlignments);
   events.hub.on(events.EVT.CLEAR_HIGHLIGHTS, this.clearHighlighted);
-  events.hub.on(events.EVT.CLEAR_ALIGNMENTS, this.resetAlignments);
+  events.hub.on(events.EVT.DELETE_ALIGNMENTS, this.deleteAlignments);
   events.hub.on(events.EVT.ALIGN, this.align);
 };
 TextComponent.prototype.onClickWord = function(evt) {
@@ -79,8 +79,22 @@ TextComponent.prototype.updateAlignments = function() {
     _this.addAligned(spans);
   });
 };
-TextComponent.prototype.resetAlignments = function() {
-  this.alignments.reset();
+TextComponent.prototype.deleteAlignments = function() {
+  var highlighted = this.selectHighlighted();
+  var aligned = $(highlighted).filter('[data-alignment]');
+
+  // Delete *all* alignments when nothing is highlighted, otherwise
+  // delete any aligned words that are highlighted.
+  if (highlighted.length === 0) {
+    this.alignments.reset();
+  } else if(aligned.length > 0) {
+    $(aligned).each(function(idx, span) {
+      this.alignments.removeWord(span.dataset.alignment, this.sources.createWord(span));
+    }.bind(this));
+    this.alignments.removeEmpty();
+    this.alignments.triggerChange();
+  }
+  this.clearHighlighted();
 };
 TextComponent.prototype.addAligned = function(spans) {
   return $(spans).addClass("aligned");

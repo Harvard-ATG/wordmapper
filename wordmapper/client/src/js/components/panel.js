@@ -25,7 +25,7 @@ var PanelComponent = function(options) {
 PanelComponent.prototype.buttonEvent = {
   'align': events.EVT.ALIGN,
   'clear_highlights': events.EVT.CLEAR_HIGHLIGHTS,
-  'clear_alignments': events.EVT.CLEAR_ALIGNMENTS,
+  'delete_alignments': events.EVT.DELETE_ALIGNMENTS,
   'build_index': events.EVT.BUILD_INDEX,
   'export': events.EVT.EXPORT,
   'login': events.EVT.LOGIN

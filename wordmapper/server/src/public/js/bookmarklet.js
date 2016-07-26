@@ -589,7 +589,7 @@
 	module.exports.EVT = {
 	  ALIGN: 'align',
 	  CLEAR_HIGHLIGHTS: 'clear_highlights',
-	  CLEAR_ALIGNMENTS: 'clear_alignments',
+	  DELETE_ALIGNMENTS: 'delete_alignments',
 	  BUILD_INDEX: 'build_index',
 	  EXPORT: 'export',
 	  LOGIN: 'login',
@@ -770,29 +770,41 @@
 	  this.trigger("reset");
 	};
 	Alignments.prototype.add = function(alignment) {
-	  this._removeDuplicates(alignment);
-	  this._removeEmpty();
+	  this.removeDuplicates(alignment);
+	  this.removeEmpty();
 	  this.alignments.push(alignment);
 	  this.sort();
 	  this.triggerChange();
 	};
-	// If the given alignment contains a word that has already been used in an alignment,
-	// that should take precedence over any previous usage of that word. So this function
-	// removes any duplicates in existing alignments.
-	Alignments.prototype._removeDuplicates = function(given_alignment) {
+	// This function ensures that a word belongs to a *single* alignment. So given an alignment,
+	// ensure that its words have not already been used in other alignments. If they have been used,
+	// remove them, otherwise no action is required. 
+	Alignments.prototype.removeDuplicates = function(given_alignment) {
+	  var num_words_removed = 0;
 	  this.alignments.forEach(function(alignment) {
-	    for(var i = 0, words = alignment.words, word; i < words.length; i++) {
+	    for(var i = 0, words = alignment.words, word, removed; i < words.length; i++) {
 	      word = words[i];
 	      if (given_alignment.containsWord(word)) {
-	        alignment.removeWord(word);
+	        removed = alignment.removeWord(word);
+	        if (removed) {
+	          ++num_words_removed;
+	        }
 	      }
 	    }
 	  });
+	  return num_words_removed;
 	};
-	Alignments.prototype._removeEmpty = function() {
+	Alignments.prototype.removeEmpty = function() {
 	  this.alignments = this.alignments.filter(function(alignment) {
 	    return !alignment.isEmpty();
 	  });
+	};
+	Alignments.prototype.removeWord = function(id, word) {
+	  var alignment = this.findById(id);  
+	  if (alignment !== false) {
+	    return alignment.removeWord(word);
+	  }
+	  return false;
 	};
 	Alignments.prototype.remove = function(alignment) {
 	  var idx = this.alignments.indexOf(alignment);
@@ -1100,6 +1112,13 @@
 	};
 	Sources.prototype.getHashKey = function() {
 	  return this.getHashes().join(",");
+	};
+	Sources.prototype.createWords = function(spans) {
+	  return Source.createWords(spans, this);
+	};
+	Sources.prototype.createWord = function(span) {
+	  var words = this.createWords([span]);
+	  return words[0];
 	};
 	Sources.prototype.toString = function() {
 	  return this.getHashKey();
@@ -20329,7 +20348,7 @@
 	PanelComponent.prototype.buttonEvent = {
 	  'align': events.EVT.ALIGN,
 	  'clear_highlights': events.EVT.CLEAR_HIGHLIGHTS,
-	  'clear_alignments': events.EVT.CLEAR_ALIGNMENTS,
+	  'delete_alignments': events.EVT.DELETE_ALIGNMENTS,
 	  'build_index': events.EVT.BUILD_INDEX,
 	  'export': events.EVT.EXPORT,
 	  'login': events.EVT.LOGIN
@@ -20429,7 +20448,7 @@
 	module.exports = Function(_.keys(_.templateSettings.imports), 'return ' + function(obj){
 	var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 	with(obj||{}){
-	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="clear_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete *ALL* alignments on this page?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-notification"></div>\n  <div class="wordmapper-loading" style="display:none"><i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true"></i></div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login" class="wordmapper-account-btn"><i class="fa fa-user"></i> <span>';
+	__p+='\n<!-- wordmapper/client/src/html/panel.html -->\n<div class="wordmapper wordmapper-panel wordmapper-panel-top">\n  <div class="wordmapper-logo">\n    Word Mapper <small>v1.0</small>\n  </div>\n  <div class="wordmapper-buttons">\n    <button name="align" class="primary wordmapper-tooltip" alt="Align highlighted words"><i class="fa fa-link"></i> Align</button>\n    <button name="clear_highlights" class="wordmapper-tooltip" alt="Clear highlighted words"><i class="fa fa-unlink"></i> Clear</button>\n    <button name="delete_alignments" class="wordmapper-tooltip" alt="Delete alignments" data-confirm="Are you sure you want to delete alignments?"><i class="fa fa-trash-o"></i> Delete</button>\n    <button name="build_index" class="wordmapper-tooltip" alt="Build index of alignments"><i class="fa fa-list"></i> Index</button>\n    <button name="export" class="wordmapper-tooltip" alt="Export the alignments"><i class="fa fa-download"></i> Export</button>\n  </div>\n  <div class="wordmapper-notification"></div>\n  <div class="wordmapper-loading" style="display:none"><i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true"></i></div>\n  <div class="wordmapper-buttons wordmapper-buttons-right">\n    <button name="login" class="wordmapper-account-btn"><i class="fa fa-user"></i> <span>';
 	 print(user.isAuthenticated() ? user : 'Account'); 
 	__p+='</span></button>\n  </div>\n</div>\n';
 	}
@@ -21026,7 +21045,7 @@
 	  'onMouseoverWord',
 	  'onMouseoutWord',
 	  'updateAlignments',
-	  'resetAlignments',
+	  'deleteAlignments',
 	  'clearHighlighted',
 	  'align'
 	];
@@ -21044,7 +21063,7 @@
 	  this.alignments.on('load', this.updateAlignments);
 	  this.alignments.on('reset', this.updateAlignments);
 	  events.hub.on(events.EVT.CLEAR_HIGHLIGHTS, this.clearHighlighted);
-	  events.hub.on(events.EVT.CLEAR_ALIGNMENTS, this.resetAlignments);
+	  events.hub.on(events.EVT.DELETE_ALIGNMENTS, this.deleteAlignments);
 	  events.hub.on(events.EVT.ALIGN, this.align);
 	};
 	TextComponent.prototype.onClickWord = function(evt) {
@@ -21087,8 +21106,22 @@
 	    _this.addAligned(spans);
 	  });
 	};
-	TextComponent.prototype.resetAlignments = function() {
-	  this.alignments.reset();
+	TextComponent.prototype.deleteAlignments = function() {
+	  var highlighted = this.selectHighlighted();
+	  var aligned = $(highlighted).filter('[data-alignment]');
+
+	  // Delete *all* alignments when nothing is highlighted, otherwise
+	  // delete any aligned words that are highlighted.
+	  if (highlighted.length === 0) {
+	    this.alignments.reset();
+	  } else if(aligned.length > 0) {
+	    $(aligned).each(function(idx, span) {
+	      this.alignments.removeWord(span.dataset.alignment, this.sources.createWord(span));
+	    }.bind(this));
+	    this.alignments.removeEmpty();
+	    this.alignments.triggerChange();
+	  }
+	  this.clearHighlighted();
 	};
 	TextComponent.prototype.addAligned = function(spans) {
 	  return $(spans).addClass("aligned");

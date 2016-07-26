@@ -47,7 +47,7 @@ module.exports.hub = new Events();
 module.exports.EVT = {
   ALIGN: 'align',
   CLEAR_HIGHLIGHTS: 'clear_highlights',
-  CLEAR_ALIGNMENTS: 'clear_alignments',
+  DELETE_ALIGNMENTS: 'delete_alignments',
   BUILD_INDEX: 'build_index',
   EXPORT: 'export',
   LOGIN: 'login',

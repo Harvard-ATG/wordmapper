@@ -42,6 +42,13 @@ Sources.prototype.getHashes = function() {
 Sources.prototype.getHashKey = function() {
   return this.getHashes().join(",");
 };
+Sources.prototype.createWords = function(spans) {
+  return Source.createWords(spans, this);
+};
+Sources.prototype.createWord = function(span) {
+  var words = this.createWords([span]);
+  return words[0];
+};
 Sources.prototype.toString = function() {
   return this.getHashKey();
 };

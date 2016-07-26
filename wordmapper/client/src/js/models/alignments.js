@@ -27,29 +27,41 @@ Alignments.prototype.triggerReset = function() {
   this.trigger("reset");
 };
 Alignments.prototype.add = function(alignment) {
-  this._removeDuplicates(alignment);
-  this._removeEmpty();
+  this.removeDuplicates(alignment);
+  this.removeEmpty();
   this.alignments.push(alignment);
   this.sort();
   this.triggerChange();
 };
-// If the given alignment contains a word that has already been used in an alignment,
-// that should take precedence over any previous usage of that word. So this function
-// removes any duplicates in existing alignments.
-Alignments.prototype._removeDuplicates = function(given_alignment) {
+// This function ensures that a word belongs to a *single* alignment. So given an alignment,
+// ensure that its words have not already been used in other alignments. If they have been used,
+// remove them, otherwise no action is required. 
+Alignments.prototype.removeDuplicates = function(given_alignment) {
+  var num_words_removed = 0;
   this.alignments.forEach(function(alignment) {
-    for(var i = 0, words = alignment.words, word; i < words.length; i++) {
+    for(var i = 0, words = alignment.words, word, removed; i < words.length; i++) {
       word = words[i];
       if (given_alignment.containsWord(word)) {
-        alignment.removeWord(word);
+        removed = alignment.removeWord(word);
+        if (removed) {
+          ++num_words_removed;
+        }
       }
     }
   });
+  return num_words_removed;
 };
-Alignments.prototype._removeEmpty = function() {
+Alignments.prototype.removeEmpty = function() {
   this.alignments = this.alignments.filter(function(alignment) {
     return !alignment.isEmpty();
   });
+};
+Alignments.prototype.removeWord = function(id, word) {
+  var alignment = this.findById(id);  
+  if (alignment !== false) {
+    return alignment.removeWord(word);
+  }
+  return false;
 };
 Alignments.prototype.remove = function(alignment) {
   var idx = this.alignments.indexOf(alignment);
