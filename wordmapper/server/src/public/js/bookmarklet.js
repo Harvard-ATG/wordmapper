@@ -20257,8 +20257,14 @@
 	  'www.graeco-arabic-studies.org': {
 	    'sourceSelector': '.textboxcontent'
 	  },
+	  /*
+	   * NOTE: Google Sites seems to scrub HTML so it is not possible
+	   * to manually add a custom class name to identify source texts.
+	   * The selector below assumes that the source texts are placed in
+	   * a single table on the page, one text per cell.
+	   */
 	  'sites.google.com': {
-	    'sourceSelector': '.textboxcontent'
+	    'sourceSelector': '.sites-layout-tile table td' 
 	  },
 	  'canvas.harvard.edu': {
 	    'sourceSelector': '.textboxcontent'
