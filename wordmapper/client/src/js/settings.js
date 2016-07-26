@@ -33,6 +33,9 @@ Settings.prototype.hostConfig = {
   },
   'canvas.harvard.edu': {
     'sourceSelector': '.textboxcontent'
+  },
+  'blogs.harvard.edu': {
+    'sourceSelector': '.textboxcontent'
   }
 };
 Settings.prototype.load = function(page) {
