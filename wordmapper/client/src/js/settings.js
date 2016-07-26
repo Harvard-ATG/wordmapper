@@ -61,7 +61,7 @@ Settings.prototype.getAPIBaseUrl = function() {
 Settings.prototype.getRegisterUrl = function() {
   return this.current.baseUrl + '/user/register';
 };
-Settings.prototype.getHomeUrl = function() {
-  return this.current.baseUrl + '/';
+Settings.prototype.getBaseUrl = function() {
+  return this.current.baseUrl;
 };
 module.exports = Settings;

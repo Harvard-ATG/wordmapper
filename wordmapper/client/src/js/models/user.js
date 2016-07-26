@@ -9,6 +9,12 @@ var User = function(options) {
 User.prototype.isAuthenticated = function() {
   return this.token ? true : false;
 };
+User.prototype.getId = function() {
+	return this.id;
+};
+User.prototype.getEmail = function() {
+	return this.email;
+};
 User.prototype.getToken = function() {
   return this.token;
 };

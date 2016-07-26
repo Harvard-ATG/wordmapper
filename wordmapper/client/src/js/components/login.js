@@ -9,7 +9,7 @@ var LoginComponent = function(options) {
   this.settings = options.settings;
   this.tplData = {
     register_url: this.settings.getRegisterUrl(),
-    home_url: this.settings.getHomeUrl(),
+    base_url: this.settings.getBaseUrl(),
     user: this.user,
     hidden: true,
     error: ''
@@ -62,10 +62,10 @@ LoginComponent.prototype.onKeyDown = function(evt) {
 LoginComponent.prototype.login = function(credentials) {
   this.startLogin();
   return this.authenticate(credentials).done(function(response, textStatus, jqXHR) {
-    this.tplData.hidden = true;
-    this.tplData.error = '';
     this.user.update(response.data);
     this.user.saveLogin();
+    this.tplData.hidden = true;
+    this.tplData.error = '';
     this.render();
   }.bind(this)).fail(function(jqXHR, textStatus, errorThrown) {
     var errStr = errorThrown;
@@ -105,5 +105,6 @@ LoginComponent.prototype.startLogin = function() {
 LoginComponent.prototype.endLogin = function() {
   events.hub.trigger(events.EVT.LOADING, "end", "login");
 };
+
 
 module.exports = LoginComponent;
