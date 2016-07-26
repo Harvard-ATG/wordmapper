@@ -56,6 +56,8 @@ PanelComponent.prototype.onClickButton = function(evt) {
     if (can_trigger_event) {
       events.hub.trigger(this.buttonEvent[t.name]);
     }
+    evt.preventDefault();
+    evt.stopPropagation();
   }  
 };
 PanelComponent.prototype.render = function() {

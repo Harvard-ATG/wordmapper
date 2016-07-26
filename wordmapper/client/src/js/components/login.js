@@ -9,6 +9,7 @@ var LoginComponent = function(options) {
   this.settings = options.settings;
   this.tplData = {
     register_url: this.settings.getRegisterUrl(),
+    home_url: this.settings.getHomeUrl(),
     user: this.user,
     hidden: true,
     error: ''

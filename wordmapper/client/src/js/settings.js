@@ -8,7 +8,7 @@ var Settings = function(options) {
   this.current = _.assign({}, config, options);
 };
 Settings.prototype.assertConfig = function(givenConfig) {
-  var required = ['apiBaseUrl', 'registerUrl'];
+  var required = ['apiBaseUrl', 'baseUrl'];
   required.forEach(function(key) {
     if (!givenConfig.hasOwnProperty(key) || !givenConfig[key]) {
       throw 'Invalid "config" for environment. Missing required key: ' + key;
@@ -59,6 +59,9 @@ Settings.prototype.getAPIBaseUrl = function() {
   return this.current.apiBaseUrl;
 };
 Settings.prototype.getRegisterUrl = function() {
-  return this.current.registerUrl;
+  return this.current.baseUrl + '/user/register';
+};
+Settings.prototype.getHomeUrl = function() {
+  return this.current.baseUrl + '/';
 };
 module.exports = Settings;

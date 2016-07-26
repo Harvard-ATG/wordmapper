@@ -1,6 +1,8 @@
 <div class="wordmapper-account" style="<% if(hidden) { print('display:none;'); } %>">
   <% if(user.isAuthenticated()) { %>
-  <div class="wordmapper-logged-in">Logged in as <%= user %>.</div>
+  <div class="wordmapper-logged-in">
+    Word alignments will be saved to your online account while you are signed in to <a href="<%= home_url %>" target="_blank">Word Mapper</a>.
+  </div>
   <button name="logout" class="primary" style="width: 100%">Sign Out</button>
   <% } else { %>
   <div class="wordmapper-login">
