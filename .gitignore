@@ -7,3 +7,4 @@
 !/wordmapper/client/config/development.js
 /wordmapper/server/dotenv/.env*
 !/wordmapper/server/dotenv/.env.vagrant
+/wordmapper/server/src/public/js/bookmarklet.js
