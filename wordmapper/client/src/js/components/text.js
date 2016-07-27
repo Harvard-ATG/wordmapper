@@ -80,21 +80,41 @@ TextComponent.prototype.updateAlignments = function() {
   });
 };
 TextComponent.prototype.deleteAlignments = function() {
+  var _this = this;
   var highlighted = this.selectHighlighted();
   var aligned = $(highlighted).filter('[data-alignment]');
+  var scope = null;
+  var actions = {
+    "all": {
+      "warning": "Are you sure you want to delete *ALL* alignments?",
+      "delete": function() {
+        _this.alignments.reset();
+      },
+    },
+    "selected": {
+      "warning": "Are you sure you want to delete the selected alignments?",
+      "delete": function() {
+        $(aligned).each(function(idx, span) {
+          _this.alignments.removeWord(span.dataset.alignment, _this.sources.createWord(span));
+        });
+        _this.alignments.removeEmpty();
+        _this.alignments.triggerChange();
+      }
+    }
+  };
 
   // Delete *all* alignments when nothing is highlighted, otherwise
   // delete any aligned words that are highlighted.
   if (highlighted.length === 0) {
-    this.alignments.reset();
+    scope = 'all';
   } else if(aligned.length > 0) {
-    $(aligned).each(function(idx, span) {
-      this.alignments.removeWord(span.dataset.alignment, this.sources.createWord(span));
-    }.bind(this));
-    this.alignments.removeEmpty();
-    this.alignments.triggerChange();
+    scope = 'selected';
   }
-  this.clearHighlighted();
+
+  if (scope !== null && window.confirm(actions[scope].warning)) {
+    actions[scope].delete();
+    this.clearHighlighted();
+  }
 };
 TextComponent.prototype.addAligned = function(spans) {
   return $(spans).addClass("aligned");
