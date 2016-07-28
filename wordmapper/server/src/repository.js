@@ -76,8 +76,14 @@ var repository = {
 			}).then(function(data) {
 				pageId = data.id;
 				return database.pages.getPageSourcesByUrl(url);
-			}).then(function() {
-				resolve(pageId);
+			}).then(function(rows) {
+				for(var i = 0, row; i < rows.length; i++) {
+					row = rows[i];
+					if (sourceIds.indexOf(row.source_id) === -1) {
+						return database.pages.createPageSources(pageId, sourceIds);
+					}
+				}
+				return Promise.resolve();
 			}, function() {
 				return database.pages.createPageSources(pageId, sourceIds);
 			}).then(function() {

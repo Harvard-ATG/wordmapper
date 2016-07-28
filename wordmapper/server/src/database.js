@@ -186,14 +186,23 @@ var pages = {
 		return db.one('insert into page (url) values (${url}) returning id', {url:url});
 	},
 	createPageSources: function(pageId, sourceIds) {
-		return db.tx(function(t) {
-			var queries = sourceIds.map(function(sourceId) {
-				return t.one('insert into page_source (page_id, source_id) values(${pageId}, ${sourceId}) returning id', {
-					pageId: pageId,
-					sourceId: sourceId
+		var do_inserts = function(version) {
+			db.tx(function(t) {
+				var queries = sourceIds.map(function(sourceId) {
+					return t.one('insert into page_source (page_id, source_id, version) values(${pageId}, ${sourceId}, ${version}) returning id', {
+						pageId: pageId,
+						sourceId: sourceId,
+						version: version
+					});
 				});
+				return t.batch(queries);
 			});
-			return t.batch(queries);
+		};
+		db.one('select max(version) as max_version from page_source where page_id = ${pageId}', {pageId:pageId}).then(function(data) {
+			var version = data.max_version + 1;
+			do_inserts(version)
+		}, function() {
+			do_inserts(1);
 		});
 	}
 };
