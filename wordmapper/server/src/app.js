@@ -2,6 +2,10 @@ var express = require('express');
 var session = require('express-session');
 var winston = require('winston');
 var passport = require('passport');
+var path = require('path');
+var http = require('http');
+var https = require('https');
+var fs = require('fs');
 
 var apiRouter = require('./routes/api');
 var adminRouter = require('./routes/admin');
@@ -11,6 +15,36 @@ var middleware = require('./middleware');
 var utils = require('./utils');
 var auth = require('./auth');
 var app = express();
+
+// This function starts the app listening on the configured HTTP port.
+// If an SSL key and certificate are present, it will also start listening on the
+// configured port for HTTPS.
+var startServer = function(app) {
+	var options = {ssl: false};
+	var callback = function(port) {
+		return function() {
+			winston.info('Listening on port ' + port + '...');
+		};
+	};
+
+	try {
+		options.ssl = {
+			key  : fs.readFileSync(path.resolve(__dirname + '/../ssl/server.key')),
+			cert : fs.readFileSync(path.resolve(__dirname + '/../ssl/server.crt'))
+		};
+		winston.info("SSL server key and certificate loaded");
+	} catch (e) {
+		winston.error("SSL server key and certificate file NOT found!");
+		winston.error(e);
+	}
+
+  winston.info("Starting server...");
+	http.createServer(app).listen(config.port, callback(config.port));
+	
+	if (options.ssl) {
+		https.createServer(options, app).listen(config.portSSL, callback(config.portSSL));
+	}
+};
 
 utils.configureLogging(winston);
 auth.configurePassport(passport);
@@ -39,6 +73,4 @@ app.get('/', function (req, res) {
     res.render('index', {baseUrl: baseUrl});
 });
 
-app.listen(config.port, function () {
-  winston.log(config.appName + ' listening on port ' + config.port + '!');
-});
+startServer(app);
