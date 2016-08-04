@@ -8,3 +8,5 @@
 /wordmapper/server/dotenv/.env*
 !/wordmapper/server/dotenv/.env.vagrant
 /wordmapper/server/src/public/js/bookmarklet.js
+/wordmapper/server/ssl/
+!/wordmapper/server/ssl/README*
