@@ -1,3 +1,1 @@
 Place the *server.key* and *server.crt* in this directory.
-
-See [this article](http://www.akadia.com/services/ssh_test_certificate.html) on how to create a self-signed certificate.
