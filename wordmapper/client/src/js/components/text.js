@@ -98,7 +98,11 @@ TextComponent.prototype.deleteAlignments = function() {
           _this.alignments.removeWord(span.dataset.alignment, _this.sources.createWord(span));
         });
         _this.alignments.removeEmpty();
-        _this.alignments.triggerChange();
+        if(_this.alignments.isEmpty()) {
+          _this.alignments.triggerReset();
+        } else {
+          _this.alignments.triggerChange();
+        }
       }
     }
   };
