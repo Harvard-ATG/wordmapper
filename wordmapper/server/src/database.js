@@ -204,7 +204,7 @@ var pages = {
 			return find_max_version(t).then(function(data) {
 				return do_inserts(t, data.max_version + 1);
 			}, function() {
-				return do_inserts(t, 1);
+				return do_inserts(t, 0);
 			});
 		});
 	}

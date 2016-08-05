@@ -99,7 +99,9 @@ router.route('/sources')
 	repository.fetchSources(hashes, options).then(function(sources) {
 		winston.debug("fetchSources", hashes, options, sources);
 		if (sources.data.length == 0) {
-			res.status(404).json({ code: 404, message: "Sources not found" });
+			res.status(404).json({ code: 404, message: "No sources found" });
+		} else if(sources.data.length !== hashes.length) {
+			res.status(404).json({ code: 404, message: "One or more sources not found" });
 		} else {
 			res.json({ code: 200, message: "Fetched sources", data: sources });
 		}

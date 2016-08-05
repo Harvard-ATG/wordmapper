@@ -31,7 +31,7 @@ CREATE TABLE page_source (
 	id serial PRIMARY KEY,
 	page_id integer not null REFERENCES page(id) ON DELETE CASCADE,
 	source_id integer not null REFERENCES source(id) ON DELETE CASCADE,
-	version integer not null default 1 CONSTRAINT version_check CHECK (version > 0),
+	version integer not null default 0 CONSTRAINT version_check CHECK (version >= 0),
 	created timestamp default current_timestamp
 );
 
