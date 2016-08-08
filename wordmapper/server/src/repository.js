@@ -46,7 +46,15 @@ var repository = {
 		return new Promise(function(resolve, reject) {
 			var parser = new SourcesParser(data);
 			parser.asPromise().then(function() {
-				return database.sources.createSources(parser.sources);
+				return database.sources.getSourcesByHash(parser.source_hashes);
+			}).then(function(rows) {
+				var found_hashes = rows.map(function(row) { return row.hash; });
+				var new_sources = parser.sources.filter(function(source) {
+					return found_hashes.indexOf(source.hash) === -1;
+				});
+				return database.sources.createSources(new_sources);
+			}).then(function() {
+				return database.sources.getSourcesByHash(parser.source_hashes);
 			}).then(function(data) {
 				result = data;
 				var sourceIds = data.map(function(source) {
@@ -61,8 +69,8 @@ var repository = {
 	fetchSources: function(hashes, options) {
 		options = options || {};
 		var promise = database.sources.getSourcesByHash(hashes);
-		return promise.then(function(data) {
-			var serializer = new SourcesSerializer(data, options);
+		return promise.then(function(rows) {
+			var serializer = new SourcesSerializer(rows, options);
 			return serializer.asPromise();
 		});
 	},
@@ -76,8 +84,14 @@ var repository = {
 			}).then(function(data) {
 				pageId = data.id;
 				return database.pages.getPageSourcesByUrl(url);
-			}).then(function() {
-				resolve(pageId);
+			}).then(function(rows) {
+				for(var i = 0, row; i < rows.length; i++) {
+					row = rows[i];
+					if (sourceIds.indexOf(row.source_id) === -1) {
+						return database.pages.createPageSources(pageId, sourceIds);
+					}
+				}
+				return Promise.resolve();
 			}, function() {
 				return database.pages.createPageSources(pageId, sourceIds);
 			}).then(function() {
