@@ -187,7 +187,7 @@ var pages = {
 	},
 	createPageSources: function(pageId, sourceIds) {
 		var find_max_version = function(t) {
-			return t.one('select max(version) as max_version from page_source where page_id = ${pageId}', {pageId:pageId});
+			return t.one('select coalesce(max(version), -1) as max_version from page_source where page_id = ${pageId}', {pageId:pageId});
 		};
 		var do_inserts = function(t, version) {
 				var queries = sourceIds.map(function(sourceId) {
@@ -203,8 +203,6 @@ var pages = {
 		return db.tx(function(t) {
 			return find_max_version(t).then(function(data) {
 				return do_inserts(t, data.max_version + 1);
-			}, function() {
-				return do_inserts(t, 0);
 			});
 		});
 	}
