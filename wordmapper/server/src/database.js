@@ -1,3 +1,4 @@
+var path = require('path');
 var winston = require('winston');
 var config = require('./config');
 var auth = require('./auth');
@@ -13,7 +14,7 @@ var db = pgp(config.database);
 
 // Helper for linking to external query files: 
 function sql(file) {
-	return new pgp.QueryFile('./wordmapper/server/src/sql/'+file, {minify: true});
+	return new pgp.QueryFile(path.join(__dirname, './sql/' + file), {minify: true});
 }
 
 var users = {
