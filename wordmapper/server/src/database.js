@@ -12,11 +12,24 @@ var pgp = require('pg-promise')({
 });
 var db = pgp(config.database);
 
-// Helper for linking to external query files: 
-function sql(file) {
+// Helper for loading queries from external files
+function sqlfile(file) {
 	return new pgp.QueryFile(path.join(__dirname, './sql/' + file), {minify: true});
 }
 
+// SQL loaded from external files
+var sql = {
+	alignments: {
+		find: sqlfile('findAlignments.sql'),
+		delete: sqlfile('deleteAlignments.sql'),
+		userCountPerPage: sqlfile('getUserAlignmentCountPerPage.sql')
+	},
+	pages: {
+		findSources: sqlfile('findPageSources.sql')
+	}
+};
+
+// User queries
 var users = {
 	getAllUsers: function() {
 		return db.any("select * from user_account_view");
@@ -71,14 +84,13 @@ var users = {
 	}
 };
 
+// Alignment queries
 var alignments = {
 	getAllAlignments: function() {
-		var query = sql('findAlignments.sql').query + ' ORDER BY a.id';
-		return db.any(query);
+		return db.any(sql.alignments.find);
 	},
 	getUserAlignmentCountPerPage: function(userId) {
-		var query = sql('getUserAlignmentCountPerPage.sql').query;
-		return db.any(query, {userId:userId});
+		return db.any(sql.alignments.userCountPerPage, {userId:userId});
 	},
 	getAlignmentsByUser: function(userId, options) {
 		options = options || {};
@@ -87,7 +99,7 @@ var alignments = {
 		}
 		var source_col = options.hasOwnProperty('sourceIds') ? 'source_id' : 'hash';
 		var source_vals = options.hasOwnProperty('sourceIds') ? options.sourceIds : options.sourceHashes;
-		var query = sql('findAlignments.sql').query;
+		var query = sql.alignments.find.query;
 		var params = {userId: userId};
 		var conds = ['user_id = ${userId}'];
 
@@ -106,8 +118,7 @@ var alignments = {
 		if (!sources) {
 			throw "Missing sources parameter";
 		}
-		var query = sql('deleteAlignments.sql').query;
-		return db.none(query, {userId: userId, sources: sources});
+		return db.none(sql.alignments.delete, {userId: userId, sources: sources});
 	},
 	createAlignments: function(userId, alignments) {
 		var totalInserts = alignments.reduce(function(total, a) {
@@ -155,6 +166,7 @@ var alignments = {
 	}
 };
 
+// Source queries
 var sources = {
 	getAllSources: function() {
 		return db.any('select id, hash, normalized, original from source');
@@ -172,6 +184,7 @@ var sources = {
 	}
 };
 
+// Page queries
 var pages = {
 	getAllPages: function() {
 		return db.any('select * from page');
@@ -180,8 +193,7 @@ var pages = {
 		return db.one('select id, url from page where url = ${url}', {url:url});
 	},
 	getPageSourcesByUrl: function(url) {
-		var query = sql('findPageSources.sql').query;
-		return db.many(query, {url:url});
+		return db.many(sql.pages.findSources, {url:url});
 	},
 	createPage: function(url) {
 		return db.one('insert into page (url) values (${url}) returning id', {url:url});
