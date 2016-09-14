@@ -1,0 +1,14 @@
+[Unit]
+Description=wordmapper running on node
+
+[Service]
+ExecStart=/usr/bin/node --require /home/ubuntu/wordmapper/node_modules/dotenv/config /home/ubuntu/wordmapper/server.js dotenv_config_path=/home/ubuntu/wordmapper/wordmapper/server/dotenv/.env.xenial
+Restart=always
+StandardOutput=syslog
+SyslogIdentifier==WordMapper
+User=nobody
+Group=root
+Enviroment=PATH=/usr/bin:/usr/local/bin
+
+[Install]
+WantedBy=multi-user.target
