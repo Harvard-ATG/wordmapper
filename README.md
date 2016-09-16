@@ -16,7 +16,7 @@ The project has two parts: a client-side bookmarklet that can run as an overlay 
 
 ### Usage
 
-1. Install the bookmarklet from [https://wordmapper.fas.harvard.edu](https://wordmapper.fas.harvard.edu/) or follow the instructions on our [our github page](https://harvard-atg.github.io/wordmapper). **
+1. Install the bookmarklet from [https://wordmapper.fas.harvard.edu](https://wordmapper.fas.harvard.edu/) or follow the instructions on our [our github page](http://harvard-atg.github.io/wordmapper). **
 2. Navigate to [Ars Medica ch. 10](http://www.graeco-arabic-studies.org/compare-texts/work/ars-medica-2/left/1/right/2/section/10/active/2%2C1.html) to compare the greek and arabic side by side. This is just an example, feel free to navigate to other works.
 3. Click on the bookmark to activate it.
 
