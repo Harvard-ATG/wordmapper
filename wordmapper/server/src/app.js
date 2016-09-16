@@ -69,7 +69,8 @@ app.use('/user', userRouter);
 app.use('/admin', adminRouter);
 
 app.get('/', function (req, res) {
-    var baseUrl = req.protocol + '://' + req.get('host');
+	var proto = req.get('X-Forwarded-Proto') ? req.get('X-Forwarded-Proto') : req.protocol;
+    var baseUrl = proto + '://' + req.get('host');
     res.render('index', {baseUrl: baseUrl});
 });
 
