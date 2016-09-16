@@ -33,12 +33,9 @@ var startServer = function(app) {
 			cert : fs.readFileSync(path.resolve(__dirname + '/../ssl/server.crt'))
 		};
 		winston.info("SSL server key and certificate loaded");
-	} catch (e) {
-		winston.error("SSL server key and certificate file NOT found!");
-		winston.error(e);
 	}
 
-  winston.info("Starting server...");
+	winston.info("Starting server...");
 	http.createServer(app).listen(config.port, callback(config.port));
 	
 	if (options.ssl) {
