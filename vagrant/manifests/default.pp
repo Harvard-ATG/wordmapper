@@ -23,32 +23,21 @@ exec {'setup-nodejs-source':
 }
 
 # Make sure we have some basic tools and libraries available
-package {'build-essential':
-    ensure => latest,
-    require => Exec['apt-get-update'],
-}
-package {'python2.7':
-    ensure => latest,
-    require => Exec['apt-get-update'],
-}
-package {'git':
-    ensure => latest,
-    require => Exec['apt-get-update'],
-}
+$packages = [
+    'build-essential'
+    'python2.7'
+    'git'
+    'postgresql'
+    'postgresql-contrib',
+    'awscli'
+]
+
+package { $packages: ensure => latest, }
+
 package {'nodejs':
     ensure => latest,
     require => [Exec['apt-get-update'],Exec['setup-nodejs-source']],
 }
-
-package {'postgresql':
-    ensure => latest,
-    require => Exec['apt-get-update'],
-}
-package {'postgresql-contrib':
-    ensure => latest,
-    require => Exec['apt-get-update'],
-}
-
 # Install npm libraries
 exec {'install-node-modules':
 	cwd => '/vagrant',
