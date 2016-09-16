@@ -32,7 +32,9 @@ var startServer = function(app) {
 			key  : fs.readFileSync(path.resolve(__dirname + '/../ssl/server.key')),
 			cert : fs.readFileSync(path.resolve(__dirname + '/../ssl/server.crt'))
 		};
-		winston.info("SSL server key and certificate loaded");
+		winston.info("SSL server key and certificate loaded.");
+	} catch(e) {
+		winston.info("SSL server key and certificate not found locally.");
 	}
 
 	winston.info("Starting server...");
