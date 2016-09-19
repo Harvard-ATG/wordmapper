@@ -68,7 +68,7 @@ app.use('/user', userRouter);
 app.use('/admin', adminRouter);
 
 app.get('/', function (req, res) {
-	var proto = req.get('X-Forwarded-Proto') ? req.get('X-Forwarded-Proto') : req.protocol;
+	var proto = 'https'; //req.get('X-Forwarded-Proto') ? req.get('X-Forwarded-Proto') : req.protocol;
     var baseUrl = proto + '://' + req.get('host');
     res.render('index', {baseUrl: baseUrl});
 });
