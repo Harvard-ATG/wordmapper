@@ -24,10 +24,10 @@ exec {'setup-nodejs-source':
 
 # Make sure we have some basic tools and libraries available
 $packages = [
-    'build-essential'
-    'python2.7'
-    'git'
-    'postgresql'
+    'build-essential',
+    'python2.7',
+    'git',
+    'postgresql',
     'postgresql-contrib',
     'awscli'
 ]
