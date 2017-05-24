@@ -21,7 +21,7 @@ var ensureAuthenticated = function() {
 	return passport.authenticate('jwt', { session: false});
 };
 
-router.use(bodyParser.json());
+router.use(bodyParser.json({limit: '5mb'}));
 
 // Base Endpoint.
 router.get('/', function(req, res) {
