@@ -1,42 +1,40 @@
-var path = require('path');
-var NODE_ENV = process.env.NODE_ENV || 'development';
+const path = require('path');
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 module.exports = {
-	entry: path.resolve('wordmapper/client/src/app.js'),
-	files: [],
-	preprocessors: {},
+	mode: NODE_ENV,
+	devServer: {
+		contentBase: path.join(__dirname, 'dist'),
+		compress: true,
+		port: 8000
+	},
+	entry: path.resolve(__dirname, 'src/app.js'),
 	output: {
-		filename: 'app.js'
+		path: path.resolve(__dirname, 'dist'),
+		filename: 'bookmarklet.js'
 	},
 	resolve: {
 		alias: {
-			jquery: path.resolve('wordmapper/client/vendor/jquery-1.12.4.min.js'),
-			logging: path.resolve(__dirname, 'wordmapper/client/src/js/logging'),
-			config: path.join(__dirname, 'wordmapper/client/config', NODE_ENV)
+			jquery: path.resolve('vendor/jquery-1.12.4.min.js'),
+			logging: path.resolve(__dirname, 'src/js/logging'),
+			config: path.join(__dirname, 'config', NODE_ENV)
 		}
 	},
 	module: {
-		preLoaders: [
+		rules: [
 			{
-				test: /\.js$/,
-				include: [path.resolve('wordmapper/client/src')],
-				loader: 'jshint-loader'
-			}
-		],
-		loaders: [
-			{
-				test: /\.css$/,
-				loader: 'style!css'
+				test: /\.css$/i,
+				use: ['style-loader', 'css-loader'],
 			},
 			{
-				test: /\.html$/,
+				test: /\.html$/i,
 				loader: "underscore-template-loader",
+				// options for the loader
 				query: {
 					engine: 'lodash',
 					prependFilenameComment: __dirname
 				}
 			}
-		],
-		postLoaders: []
-	},
+		]
+	}
 };
