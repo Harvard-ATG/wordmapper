@@ -1,8 +1,5 @@
 # Word Mapper
 
-[![Build Status](https://travis-ci.org/Harvard-ATG/wordmapper.svg?branch=master)](https://travis-ci.org/Harvard-ATG/wordmapper)
-[![Coverage Status](https://coveralls.io/repos/github/Harvard-ATG/wordmapper/badge.svg?branch=master)](https://coveralls.io/github/Harvard-ATG/wordmapper?branch=master)
-
 ### Overview 
 The goal of this project is to create a web accessible tool that enables students, faculty and other collaborators to build discontinuous word alignments between two or more texts on [graeco-arabic-studies.org](http://graeco-arabic-studies.org/), so that they can build and share glossaries to aid learning and research.
 
@@ -16,7 +13,7 @@ The project has a client-side bookmarklet that can run as an overlay. Word align
 
 ### Usage
 
-1. Install the bookmarklet from [https://wordmapper.fas.harvard.edu](https://wordmapper.fas.harvard.edu/) or follow the instructions on our [our github page](http://harvard-atg.github.io/wordmapper). **
+1. Install the bookmarklet from [https://harvard-atg.github.io/wordmapper](https://harvard-atg.github.io/wordmapper)
 2. Navigate to [Ars Medica ch. 10](http://www.graeco-arabic-studies.org/compare-texts/work/ars-medica-2/left/1/right/2/section/10/active/2%2C1.html) to compare the greek and arabic side by side. This is just an example, feel free to navigate to other works.
 3. Click on the bookmark to activate it.
 
