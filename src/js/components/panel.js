@@ -1,17 +1,12 @@
 var $ = require('jquery');
 var events = require('../events.js');
 var templates = require('../templates.js');
-var LoginComponent = require('./login.js');
 
 var PanelComponent = function(options) {
   options = options || {};
   this.el = null;
   this.user = options.user;
   this.settings = options.settings;
-  this.loginComponent = new LoginComponent({
-    user: this.user,
-    settings: this.settings
-  });
   this.tplData = {
     user: this.user
   };
@@ -62,7 +57,6 @@ PanelComponent.prototype.onClickButton = function(evt) {
 };
 PanelComponent.prototype.render = function() {
   this.el.html(templates.panel(this.tplData));
-  this.el.find('.wordmapper-panel').append(this.loginComponent.render().el);
   return this;
 };
 PanelComponent.prototype.getHeight = function() {

@@ -12,7 +12,7 @@ The core functionality should include the ability to:
 2. Build, store, display, and export a glossary of the word alignments.
 3. Collaborate with other users to share and build glossaries.
 
-The project has two parts: a client-side bookmarklet that can run as an overlay and then a server-side component that can persist word alignments.
+The project has a client-side bookmarklet that can run as an overlay. Word alignments can be exported and imported.
 
 ### Usage
 
@@ -32,61 +32,25 @@ The alternative solution would be to create a browser extension or create a web 
 
 ### Development Quickstart
 
-Setup your environment:
+Setup your environment (requires [Node](https://nodejs.org/en/) v12+):
 
 ```sh
-$ vagrant up     # start virtual machine
-$ vagrant ssh    # login to virtual machine
-$ cd /vagrant    # change to the shared directory
-$ npm install    # install node depdencies
-$ gulp build     # build the client-side javascript
-$ gulp migrate   # run database migrations to setup the schema
+$ npm install    # install node dependencies
+$ npm test       # test with karma
+$ gulp build     # build the bookmarklet
 ```
 
-Start the NodeJS web server (configuration can be specified via [dotenv](https://www.npmjs.com/package/dotenv) in `wordmapper/server/dotenv/`):
+Run the webpack development server to test the bookmarklet locally:
 
 ```sh
-$ node --require dotenv/config server.js dotenv_config_path=./wordmapper/server/dotenv/.env.vagrant
+$ npm run webpack-dev-server
 ```
-
-Watch your client-side JS files so they're automatically rebuilt whenever they are modified:
-
-```sh
-$ gulp watch
-```
-
-Run unit tests:
-
-- **Client-side unit tests:** 
-    - `$ gulp testclient` or directly via karma:
-    - `$ karma start karma.conf.js --single-run`
-- **Server-side unit tests:**
-    - `$ gulp testserver` or directly via jasmine:
-    - `$ jasmine JASMINE_CONFIG_PATH=jasmine.server.json`
-- **All unit tests:** 
-    - `gulp test`
 
 Install bookmarklet in your browser by creating a new bookmark and copying this code into the URL field:
 
 ```javascript
-javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:8000/static/js/bookmarklet.js';})();
+javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:8000/bookmarklet.js';})();
 ```
-
-### Deployment
-
-**Configuration Files**
-
-- Client config: `./wordmapper/client/config/{env}.js` (Default: `development.js`)
-- Server configuration: `./wordmapper/server/dotenv/.env.{env}` (Default: `.env.vagrant`)
-
-**Deployment Steps**
-
-1. Create an environment-specific configuration for the client code: `./wordmapper/client/config/{env}.js`.
-2. Build the client using the specified configuration via the *NODE_ENV* environment variable: 
-    - `$ NODE_ENV={env} gulp build`
-3. Create an environment-specific configuration for the server code: `./wordmapper/server/dotenv/.env.{env}`
-4. Run the server: 
-    - `$ node --require dotenv/config server.js dotenv_config_path=./wordmapper/server/dotenv/.env.{env}`
 
 ### Testing the Bookmarklet 
 

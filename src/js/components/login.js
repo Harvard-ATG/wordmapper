@@ -2,6 +2,7 @@ var $ = require('jquery');
 var events = require('../events.js');
 var templates = require('../templates.js');
 
+// NOTE: this component is deprecated in v2.0 -- should be removed
 var LoginComponent = function(options) {
   options = options || {};
   this.el = null;
